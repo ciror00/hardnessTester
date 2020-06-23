@@ -15,6 +15,7 @@ class LoadCell{
   HX711 doubleEnded;
   long layover;
   long currentValue;
+  long crudeValue;
   long readValue = 0;
   long t = 0;
   public:
