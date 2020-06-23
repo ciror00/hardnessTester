@@ -7,7 +7,7 @@ long n, m;
 void setup(){
   Serial.begin(115200);
   Serial.println("\nInicio.");
-  measure.begin(DOUT, SCL_SCK);
+  measure.begin(DOUT, SCK);
   Serial.print("Crudo: ");
   Serial.println(measure.raw());
   measure.calibrate(3, 10, 10);

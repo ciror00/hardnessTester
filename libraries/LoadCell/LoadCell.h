@@ -14,8 +14,7 @@ class LoadCell{
   long currentValue;
   long crudeValue;
   long readValue = 0;
-  long t = 0;
-  
+
   public:
     LoadCell() = default;
     void begin(const byte dout, const byte pd_sck, const byte gain = 128);
