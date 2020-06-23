@@ -3,6 +3,7 @@
 void LoadCell::begin(const byte dout, const byte pd_sck, const byte gain){
   this->dout = dout;
   this->pd_sck = pd_sck;
+  this->gain = gain;
   this->doubleEnded.begin(dout, pd_sck, gain);
 }
 
@@ -24,7 +25,7 @@ long LoadCell::raw(){
 }
 
 void LoadCell::calibrate(long patternWeight, int samples, int iteration){
-  //MSG("Modo calibracion.\nMantengan colgado para medir el peso.");
+  PRINT("Modo calibracion.\nMantengan colgado para medir el peso.");
   this->doubleEnded.set_scale();  // Se setea una escala por defecto (1)
   this->doubleEnded.tare(samples); // Se toma el peso actual como Tara
   for (byte i = 0; i < iteration; i++) {
@@ -32,13 +33,13 @@ void LoadCell::calibrate(long patternWeight, int samples, int iteration){
     readValue = readValue + this->doubleEnded.get_value(samples);
   };
   layover = readValue / patternWeight; // Se calcula una factor de escala PESO MEDIDO / PESO REAL
-  //MSG("Factor calculado. Apoyo el equipo para terminar la calibracion...\n");
+  PRINT("Factor calculado. Apoyo el equipo para terminar la calibracion...\n");
   while(t = 5000){t--;};
-  //MSG("Terminando calibracion. Espera un momento...\n");
+  PRINT("Terminando calibracion. Espera un momento...\n");
   // Se establece una escala con el factor calculado
   this->doubleEnded.set_scale(layover);  // Se setea una escala por defecto (1)
   this->doubleEnded.tare(samples); // Se toma el peso actual como Tara
   while(t = 5000){t--;};
   //this->doubleEnded.get_units(samples);
-  //MSG("Equipo calibrado.\n");
+  PRINT("Equipo calibrado.\n");
 }
