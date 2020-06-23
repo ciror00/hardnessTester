@@ -1,5 +1,7 @@
 #include "LoadCell.h"
 
+#define SCK 5 // D1
+#define DOUT 4 // D2
 /*
  * Configuración de pines
  *
@@ -14,11 +16,3 @@
  * D8 = 15
  *
 */
-
-#define SDA 0 // D3
-#define SCL 14  // D5
-
-#define CS_PIN 15 // D8: Defino pin de la microSD
-
-#define LOADCELL_DOUT_PIN 4 // D2
-#define LOADCELL_SCK_PIN 5 // D1

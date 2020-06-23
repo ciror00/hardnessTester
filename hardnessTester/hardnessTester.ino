@@ -1,12 +1,21 @@
 #include "hardnessTester.h"
 
-LoadCell forceTransducer;
+LoadCell measure;
+
+long n, m;
 
 void setup(){
   Serial.begin(115200);
-  forceTransducer.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
+  Serial.println("\nInicio.\n");
+  measure.begin(DOUT, SCK);
+  measure.calibrate(3, 10, 10);
 }
 
 void loop(){
-  Serial.println("Hola Mundo");
+  Serial.print("Crudo: ");
+  Serial.println(measure.raw());
+  Serial.print("Fuerza: ");
+  Serial.println(measure.strength());
+  Serial.print("Fuerza promedio: ");
+  Serial.println(measure.strengthAverage(10));
 }
