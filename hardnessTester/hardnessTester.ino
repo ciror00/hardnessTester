@@ -1,5 +1,6 @@
 #include "hardnessTester.h"
 
+Visualizer display;
 LoadCell measure;
 
 bool conf;
@@ -7,9 +8,10 @@ byte button = 0;
 
 void setup(){
   Serial.begin(115200);
-  Serial.println("\nInicio.");
+  Serial.println("\nProyecto \"hardnessTester\"\n");
+  display.begin(0x3c, SDA, SCL_SCK);
   measure.begin(DOUT, SCK);
-  bool conf = waitForUser(5000);
+  conf = waitForUser(5000);
   if(conf)measure.calibrate(3, 10, 10);
   //Serial.print("Crudo: ");
   //Serial.println(measure.raw());

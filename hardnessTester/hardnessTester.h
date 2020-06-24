@@ -1,4 +1,5 @@
 #include "LoadCell.h"
+#include "Visualizer.h"
 
 #define SCK 5 // D1
 #define DOUT 4 // D2
