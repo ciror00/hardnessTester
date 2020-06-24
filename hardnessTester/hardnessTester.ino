@@ -5,26 +5,37 @@ LoadCell measure;
 
 bool conf;
 byte button = 0;
+int sensibility = 100;
+long strength, average;
 
 void setup(){
   Serial.begin(115200);
   Serial.println("\nProyecto \"hardnessTester\"\n");
   display.begin(0x3c, SDA, SCL_SCK);
   measure.begin(DOUT, SCK);
+  display.showMessage("hardnessTester");
+  display.showImage(LOGO);
   conf = waitForUser(5000);
   if(conf)measure.calibrate(3, 10, 10);
-  //Serial.print("Crudo: ");
-  //Serial.println(measure.raw());
+  Serial.print("Crudo: ");
+  Serial.println(measure.raw());
   pinMode(TOUCH, INPUT); // 0: No pulsado | 1: Pulsado
 }
 
 void loop(){
   button = digitalRead(TOUCH);
-  if(measure.raw() && button == 1){
-    Serial.print("Fuerza: ");
-    Serial.println(measure.strength());
-    Serial.print("Fuerza promedio: ");
-    Serial.println(measure.strengthAverage(10));
+  if(button == 1){
+    Serial.println("Boton presionado");
+    display.showMessage("Listo para medir");
+    if(measure.raw() > sensibility){
+      strength = measure.strength();
+      average = measure.strengthAverage(5);
+      display.showMeasure((String)average, "kgf");
+      Serial.print("Fuerza: "); Serial.println(strength);
+      Serial.print("Fuerza promedio: "); Serial.println(average);
+    }
+  }else{
+    display.showImage(PUSH);
   }
 }
 
@@ -43,4 +54,9 @@ bool waitForUser(int period){
   }else{
     return false;
   }
+}
+
+void waitForMachine(int period){
+  unsigned long time_now = millis();
+  while(millis() < time_now + period);
 }

@@ -6,7 +6,7 @@ void Visualizer::begin(const byte address, const byte sda, const byte scl){
   this->oled.flipScreenVertically();
 }
 
-void Visualizer::showMessage(const String text){
+void Visualizer::showMessage(String text){
   this->oled.clear();
   this->oled.setTextAlignment(TEXT_ALIGN_CENTER);
   this->oled.setFont(ArialMT_Plain_16);
@@ -14,7 +14,7 @@ void Visualizer::showMessage(const String text){
   this->oled.display();
 }
 
-void Visualizer::showMeassure(String value, const String unit){
+void Visualizer::showMeasure(String value, String unit){
   this->oled.clear();
   this->oled.setTextAlignment(TEXT_ALIGN_CENTER);
   this->oled.setFont(ArialMT_Plain_16);
