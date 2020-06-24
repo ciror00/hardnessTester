@@ -26,7 +26,7 @@ long LoadCell::raw(){
 
 void LoadCell::calibrate(long patternWeight, int samples, int iteration){
   int wait = 0;
-  PRINT("Modo calibracion.\nMantengan colgado para medir el peso.");
+  PRINT("\nModo calibracion. Siga las instrucciones.\nMantengan colgado para medir el peso.");
   this->doubleEnded.set_scale();  // Se setea una escala por defecto (1)
   this->doubleEnded.tare(samples); // Se toma el peso actual como Tara
   for (byte i = 0; i < iteration; i++) {
@@ -38,7 +38,7 @@ void LoadCell::calibrate(long patternWeight, int samples, int iteration){
   PRINT("\nApoyá el equipo para terminar la calibracion...\n");
   while(wait < 5000){wait++;};
   wait = 0;
-  PRINT("Terminando calibracion. Espera un momento...\n");
+  PRINT("Terminando calibracion. Espere un momento...\n");
   // Se establece una escala con el factor calculado
   this->doubleEnded.set_scale(layover);  // Se setea una escala por defecto (1)
   this->doubleEnded.tare(samples); // Se toma el peso actual como Tara
