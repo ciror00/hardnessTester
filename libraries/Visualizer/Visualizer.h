@@ -5,16 +5,15 @@
 #include "SSD1306Wire.h"
 #include <SPI.h>
 #include "Images.h"
-#define PRINT(...) Serial.print(__VA_ARGS__)
 
 enum Images {LOGO,PUSH};
 
 class Visualizer{
-  //SSD1306Wire oled;
-  SSD1306Wire oled = SSD1306Wire(0xC3, 0, 14);
+  //SSD1306Wire oled(...);
+  SSD1306Wire oled = SSD1306Wire(0x3c, 0, 14);
   public:
     Visualizer() = default;
-    void begin(const byte address, const byte sda, const byte scl);
+    void begin();
     void showMessage(String text);
     void showMeasure(String value, String unit);
     void showImage(Images img);

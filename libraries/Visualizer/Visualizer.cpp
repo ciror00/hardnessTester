@@ -1,7 +1,7 @@
 #include "Visualizer.h"
 
-void Visualizer::begin(const byte address, const byte sda, const byte scl){
-  //this->oled = SSD1306Wire(address, sda, scl);
+void Visualizer::begin(){
+  //this->oled = SSD1306Wire(0x3c, 0, 14);
   this->oled.init();
   this->oled.flipScreenVertically();
 }

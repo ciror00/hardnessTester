@@ -11,14 +11,14 @@ long strength, average;
 void setup(){
   Serial.begin(115200);
   Serial.println("\nProyecto \"hardnessTester\"\n");
-  display.begin(0x3c, SDA, SCL_SCK);
+  display.begin();
   measure.begin(DOUT, SCK);
   display.showMessage("hardnessTester");
-  display.showImage(LOGO);
+  //display.showImage(LOGO);
   conf = waitForUser(5000);
   if(conf)measure.calibrate(3, 10, 10);
-  Serial.print("Crudo: ");
-  Serial.println(measure.raw());
+  //Serial.print("Crudo: ");
+  //Serial.println(measure.raw());
   pinMode(TOUCH, INPUT); // 0: No pulsado | 1: Pulsado
 }
 
