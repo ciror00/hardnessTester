@@ -13,26 +13,27 @@ void setup(){
   Serial.println("\nProyecto \"hardnessTester\"\n");
   display.begin();
   measure.begin(DOUT, SCK);
-  display.showMessage("hardnessTester");
-  //display.showImage(LOGO);
+  display.showImage(LOGO);
   conf = waitForUser(5000);
   if(conf)measure.calibrate(3, 10, 10);
   //Serial.print("Crudo: ");
   //Serial.println(measure.raw());
   pinMode(TOUCH, INPUT); // 0: No pulsado | 1: Pulsado
+  waitForMachine(1000);
 }
 
 void loop(){
   button = digitalRead(TOUCH);
   if(button == 1){
     Serial.println("Boton presionado");
-    display.showMessage("Listo para medir");
     if(measure.raw() > sensibility){
       strength = measure.strength();
       average = measure.strengthAverage(5);
       display.showMeasure((String)average, "kgf");
       Serial.print("Fuerza: "); Serial.println(strength);
       Serial.print("Fuerza promedio: "); Serial.println(average);
+    }else{
+      display.showMessage("Listo para medir");
     }
   }else{
     display.showImage(PUSH);
