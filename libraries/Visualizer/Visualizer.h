@@ -9,7 +9,7 @@
 enum Images {LOGO,PUSH};
 
 class Visualizer{
-  SSD1306Wire oled = SSD1306Wire(0x3c, 0, 14);
+  SSD1306Wire oled = SSD1306Wire(0x3c, 5, 4);
   public:
     Visualizer() = default;
     void begin();
