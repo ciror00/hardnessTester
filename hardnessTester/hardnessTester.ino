@@ -15,13 +15,19 @@ void setup(){
   display.begin();
   measure.begin(DT_CELL, SCK_CELL);
   display.showImage(LOGO);
-  conf = waitForUser(5000);
+  conf = waitForUser(1000);
   if(conf)measure.calibrate(3, 10, 10);
+  Serial.println();
   //Serial.print("Crudo: ");
   //Serial.println(measure.raw());
   pinMode(TOUCH, INPUT); // 0: No pulsado | 1: Pulsado
-  if(recorder.begin(CS))Serial.print("SD y Reloj funcionando");
-  recorder.setTitles();
+  if(recorder.begin(CS)){
+    Serial.println("SD y Reloj funcionando");
+  }else{
+    Serial.println("Error en SD y/o Reloj");
+  }
+  // Se agregan los titulos de archivos, que viene despues de los "Fecha" y "Hora" (titulos por defecto)
+  recorder.setTitles(7, "Lote", "Frutas total", "Fruta", "Dureza", "Procentaje", "Promedio", "Dureza maxima");
   waitForMachine(1000);
 }
 
