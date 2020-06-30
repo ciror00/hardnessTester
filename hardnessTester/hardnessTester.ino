@@ -9,13 +9,16 @@ byte button = 0;
 int sensibility = 100;
 long strength, average;
 
+char strength_buff[50];
+char average_buff[50];
+
 void setup(){
   Serial.begin(115200);
   Serial.println("\nProyecto \"hardnessTester\"\n");
   display.begin();
   measure.begin(DT_CELL, SCK_CELL);
   display.showImage(LOGO);
-  conf = waitForUser(1000);
+  conf = waitForUser(5000);
   if(conf)measure.calibrate(3, 10, 10);
   Serial.println();
   //Serial.print("Crudo: ");
@@ -23,24 +26,24 @@ void setup(){
   pinMode(TOUCH, INPUT); // 0: No pulsado | 1: Pulsado
   if(recorder.begin(CS)){
     Serial.println("SD y Reloj funcionando");
+    // Se agregan los titulos de archivos, que viene despues de los "Fecha" y "Hora" (titulos por defecto)
+    recorder.setTitles(7, "Lote", "Frutas total", "Fruta", "Dureza", "Procentaje", "Promedio", "Dureza maxima");
   }else{
     Serial.println("Error en SD y/o Reloj");
   }
-  // Se agregan los titulos de archivos, que viene despues de los "Fecha" y "Hora" (titulos por defecto)
-  recorder.setTitles(7, "Lote", "Frutas total", "Fruta", "Dureza", "Procentaje", "Promedio", "Dureza maxima");
   waitForMachine(1000);
 }
 
 void loop(){
   button = digitalRead(TOUCH);
   if(button == 1){
-    Serial.println("Listo para medir");
+    Serial.println("\nListo para medir");
     if(measure.raw() > sensibility){
       strength = measure.strength();
       average = measure.strengthAverage(5);
       display.showMeasure((String)average, "kgf");
-      Serial.print("Fuerza: "); Serial.println(strength);
-      Serial.print("Fuerza promedio: "); Serial.println(average);
+      sprintf(strength_buff, "%ld", strength); sprintf(average_buff, "%ld", average);
+      recorder.saveRegistry(7, "X", "Y", "Z", strength_buff, "%", average_buff, "Maximo");
     }else{
       display.showMessage("Listo para medir");
     }

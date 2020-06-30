@@ -9,8 +9,8 @@
 #define SCL 4 // D2
 
 #define SCK  // D5
-#define MOSI 12 // D6
-#define MISO 13 // D7
+#define MISO 12 // D6
+#define MOSI 13 // D7
 #define CS 15 // D8
 
 #define TOUCH 16  // D0
