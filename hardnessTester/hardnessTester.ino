@@ -2,6 +2,7 @@
 
 Visualizer display;
 LoadCell measure;
+Recorder recorder;
 
 bool conf;
 byte button = 0;
@@ -12,20 +13,22 @@ void setup(){
   Serial.begin(115200);
   Serial.println("\nProyecto \"hardnessTester\"\n");
   display.begin();
-  measure.begin(DOUT, SCK);
+  measure.begin(DT_CELL, SCK_CELL);
   display.showImage(LOGO);
   conf = waitForUser(5000);
   if(conf)measure.calibrate(3, 10, 10);
   //Serial.print("Crudo: ");
   //Serial.println(measure.raw());
   pinMode(TOUCH, INPUT); // 0: No pulsado | 1: Pulsado
+  if(recorder.begin(CS))Serial.print("SD y Reloj funcionando");
+  recorder.setTitles();
   waitForMachine(1000);
 }
 
 void loop(){
   button = digitalRead(TOUCH);
   if(button == 1){
-    Serial.println("Boton presionado");
+    Serial.println("Listo para medir");
     if(measure.raw() > sensibility){
       strength = measure.strength();
       average = measure.strengthAverage(5);
