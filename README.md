@@ -66,6 +66,10 @@ La funcion muestra diferentes mensajes para de guiar al usuario.
 
 Contiene la logica para utiliza el driver SSD1306 para la visualización de datos
 
+```void begin(); ```
+
+Inicializa la clase.
+
 ```void showMessage(String); ```
 
 Muestra un mensaje por pantalla. Recibe el parámetro:
@@ -86,6 +90,27 @@ Muestra una imagen pre definida por pantalla. Recibe el parámetro:
 ```void reset();```
 
 Limpia la panntalla.
+
+### Clase: **Recorder**
+
+Encapsula las librerias para el manejo del modulo SD y el RTC. Crear la logica para registrar datos en formato CSV. Por defecto, crea dos columnas bajo los titulos "fecha" y "hora".
+
+```void begin(const int);```
+
+Inicializa la clase. Recibe los parámetros:
+-	Pin de entrada [int]
+
+```bool setTitles(int numb, ...);```
+
+Configura los titulos que se utilizaran en las columnas del CSV. Recibe el parámetro:
+-	Cantidad de titulos, despues de los *por defecto* [int]
+-   Titulos de cada columna, separados por coma [String]
+
+```bool saveRegistry(int numb, ...);```
+
+Escribe los valores que en una columan del CSV. Recibe el parámetro:
+-	Cantidad de datos, despues de los *por defecto* [int]
+-   Datos separados por coma [String]
 
 ## Implementacion
 
