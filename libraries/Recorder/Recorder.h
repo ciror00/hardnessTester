@@ -16,8 +16,7 @@ class Recorder{
   bool clock;
 	bool setting;
   char buffer[50];
-  //sprintf(buffer, "Esto es una prueba de enteros %d, largos %ld y cadenas %s", num, lnum, str);
-  //Serial.print(buffer);
+  
 	public:
 		Recorder() = default;
     bool begin(const int cs);
