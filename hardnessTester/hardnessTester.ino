@@ -3,33 +3,44 @@
 Visualizer display;
 LoadCell measure;
 Recorder recorder;
-
-bool conf;
-byte button = 0;
-int sensibility = 100;
-long strength, average;
-
-char strength_buff[50];
-char average_buff[50];
+DataHandler dataHandler;
 
 void setup(){
   Serial.begin(115200);
-  Serial.println("\nProyecto \"hardnessTester\"\n");
+  EEPROM.begin(32); // Se reservar 32 Bytes (256 bits) | Tamaño maximo 4K (4096)
   display.begin();
   measure.begin(DT_CELL, SCK_CELL);
-  display.showImage(LOGO);
-  conf = waitForUser(5000);
-  if(conf)measure.calibrate(3, 10, 10);
-  Serial.println();
-  //Serial.print("Crudo: ");
-  //Serial.println(measure.raw());
+  display.showImage(COP);
+  Serial.println("\nProyecto: \"Hardness Tester\"\n");
+  conf = waitForUser(3000, "[INS]\t¿Ingresar factor manualmente? [Y/N]: ");
+  if(conf){
+    scale = askTheUser("[INS]\tIngreses factor de escala: ");
+    Serial.print("ESCALA: "); Serial.println(scale);
+    measure.manualSetup(scale);
+    EEPROM.write(0,scale);
+    EEPROM.commit();
+  }
+  Serial.println("\n[MSJ]\tConfiguracion manual cancelada");
+  conf = waitForUser(3000, "\n[INS]\t¿Iniciar calibracion? [Y/N]: ");
+  if(conf){
+    patternWeight = askTheUser("[INS]\tIngrese el peso real del equipo: ");
+    Serial.print("PESO REAL: "); Serial.println(patternWeight);
+    scale = measure.calibrate(patternWeight); // Se ingresa el peso real del equipo
+    Serial.print("ESCALA: "); Serial.println(scale);
+    EEPROM.write(0,scale);
+    EEPROM.commit();
+  }
+  Serial.println("\n[MSJ]\tCalibracion manual cancelada");
+  Serial.print("ESCALA: ");Serial.println(EEPROM.read(0));
+  //EEPROM.end();
+  // Serial.println();
   pinMode(TOUCH, INPUT); // 0: No pulsado | 1: Pulsado
   if(recorder.begin(CS)){
-    Serial.println("SD y Reloj funcionando");
+    Serial.println("[OK]\tSD & Reloj");
     // Se agregan los titulos de archivos, que viene despues de los "Fecha" y "Hora" (titulos por defecto)
     recorder.setTitles(7, "Lote", "Frutas total", "Fruta", "Dureza", "Procentaje", "Promedio", "Dureza maxima");
   }else{
-    Serial.println("Error en SD y/o Reloj");
+    Serial.println("[ERROR]\tSD & Reloj");
   }
   waitForMachine(1000);
 }
@@ -37,9 +48,8 @@ void setup(){
 void loop(){
   button = digitalRead(TOUCH);
   if(button == 1){
-    Serial.println("\nListo para medir");
-    if(measure.raw() > sensibility){
-      strength = measure.strength();
+    Serial.println("[MJS]\tListo para medir");
+    if(minimumForce(sensibility)){
       average = measure.strengthAverage(5);
       display.showMeasure((String)average, "kgf");
       sprintf(strength_buff, "%ld", strength); sprintf(average_buff, "%ld", average);
@@ -52,10 +62,19 @@ void loop(){
   }
 }
 
-bool waitForUser(int period){
+/*
+  Se encapsulan funciones para mejorar la lectura del codigo.
+*/
+
+bool minimumForce(int threshold){
+  bool mf = (measure.raw() > threshold) ? true : false;
+  return mf;
+}
+
+bool waitForUser(int period, const String& message){
   byte in;
   unsigned long time_now = millis();
-  Serial.print("¿Quiere realiza la calibracion?");
+  Serial.print(message);
   while(millis() < time_now + period){
     if (Serial.available() > 0) {
       in = Serial.read();
@@ -67,6 +86,15 @@ bool waitForUser(int period){
   }else{
     return false;
   }
+}
+
+float askTheUser(const String& message){
+  float in;
+  Serial.print(message);
+  while(true){
+    in = Serial.read();
+  }
+  return in;
 }
 
 void waitForMachine(int period){

@@ -26,7 +26,8 @@ void Visualizer::showMeasure(String value, String unit, bool refresh){
 void Visualizer::showImage(Images img){
   this->oled.clear();
   switch (img) {
-    case LOGO: this->oled.drawXbm(32,5,logo_width,logo_height,(const unsigned char *)logo_ZYX);break;
+    case ZYX: this->oled.drawXbm(32,5,zyx_width,zyx_height,(const unsigned char *)logo_ZYX);break;
+    case COP: this->oled.drawXbm(32,5,cop_width,cop_height,(const unsigned char *)logo_Copain);break;
     case PUSH: this->oled.drawXbm(32,5,push_width,push_height,(const unsigned char *)push);break;
   }
   this->oled.display();

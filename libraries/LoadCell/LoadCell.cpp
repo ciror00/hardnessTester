@@ -24,7 +24,7 @@ long LoadCell::raw(){
   return crudeValue;
 }
 
-void LoadCell::calibrate(long patternWeight, int samples, int iteration){
+float LoadCell::calibrate(long patternWeight, int samples, int iteration){
   int wait = 0;
   PRINT("\nModo calibracion. Siga las instrucciones.\nMantengan colgado para medir el peso.");
   this->doubleEnded.set_scale();  // Se setea una escala por defecto (1)
@@ -45,4 +45,9 @@ void LoadCell::calibrate(long patternWeight, int samples, int iteration){
   while(wait < 5000){wait--;};
   //this->doubleEnded.get_units(samples);
   PRINT("Equipo calibrado.\n");
+  return layover;
+}
+
+void LoadCell::manualSetup(float layover){
+  this->doubleEnded.set_scale(layover);  // Se setea una escala por defecto (1)
 }
