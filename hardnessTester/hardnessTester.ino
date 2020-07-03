@@ -94,7 +94,7 @@ void loop(){
       Serial.print("[MJS]\tPROMEDIO: ");Serial.println(average_buff);
       dataHandler.reset();
       sprintf(lot, "%ld", random(10000, 100000));
-      recorder.saveRegistry(7, lot, " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
+      recorder.saveRegistry(7, lot, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
       Serial.println("[MJS]\tNuevo Lote iniciado");
       Serial.print("[CAL]\tLOTE: ");Serial.println(lot);
     }
