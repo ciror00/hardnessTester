@@ -4,9 +4,10 @@ void DataHandler::begin(const int reserved){
   ;
 }
 
-void DataHandler::preLoad(long sampling){
+void DataHandler::preLoad(float sampling){
   this->list[this->pointer] = sampling;
   this->pointer++;
+  Serial.print(this->pointer);
 }
 
 float DataHandler::average(){
@@ -52,6 +53,5 @@ void DataHandler::reset(){
 }
 
 int DataHandler::incrementor(){
-  // COUNTER es una varible predefinida de avr-gcc que aumenta en 1 cada vez que se utiliza
-  return __COUNTER__;
+  return 0;
 }
