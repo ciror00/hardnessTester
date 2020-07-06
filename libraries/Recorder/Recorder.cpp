@@ -80,7 +80,6 @@ bool Recorder::saveRegistry(int numb, ...){
 			data += ";";
 		}
 		va_end(ap);
-		Serial.print(data);
 		this->registry.print(data);
 		this->registry.println();
 		this->registry.close();
