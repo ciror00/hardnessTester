@@ -2,8 +2,7 @@
 #define __VISUALIZER__h__
 #include <Arduino.h>
 #include <Wire.h>
-//#include "SSD1306Wire.h"
-#include "SH1106Wire.h"
+#include "SH1106Wire.h" //#include "SSD1306Wire.h"
 #include <SPI.h>
 #include "Images.h"
 

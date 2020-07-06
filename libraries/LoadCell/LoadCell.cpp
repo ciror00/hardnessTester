@@ -50,4 +50,5 @@ float LoadCell::calibrate(long patternWeight, int samples, int iteration){
 
 void LoadCell::manualSetup(float layover){
   this->doubleEnded.set_scale(layover);  // Se setea una escala por defecto (1)
+  this->doubleEnded.tare(10); // Se toma el peso actual como Tara
 }

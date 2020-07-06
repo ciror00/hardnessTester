@@ -6,7 +6,7 @@
 #include "DataHandler.h"
 #include "settings.h"
 
-#define FIRMWARE 0.3
+#define FIRMWARE 0.38
 
 bool conf = false;
 bool flag = false;

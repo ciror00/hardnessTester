@@ -7,7 +7,6 @@ void DataHandler::begin(const int reserved){
 void DataHandler::preLoad(float sampling){
   this->list[this->pointer] = sampling;
   this->pointer++;
-  Serial.print(this->pointer);
 }
 
 float DataHandler::average(){
