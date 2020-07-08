@@ -2,23 +2,30 @@
 
 bool Recorder::begin(const int cs){
 	Wire.begin();
-	// Se inicia el RTC
+	this->cs = cs;
+	this->clocker = false;
+	this->setting = false;
+}
+
+bool Recorder::clock(){
 	if (!this->rtc.begin()) {
-		this->setting = false;
-    return this->setting;
+    return this->clocker;
 	}else{
-		this->clock = true;
+		this->clocker = true;
 	}
 	if (this->rtc.lostPower()) {
-      rtc.adjust(DateTime(F(__DATE__), F(__TIME__))); // Fijar a fecha y hora de compilacion
+		// Fijar a fecha y hora de compilacion
+		this->rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
    }
-	 // Se inicia la SD
-	if (!SD.begin(cs)) {
-    this->setting = false;
-    return this->setting;
-  }
-  this->setting = true;
-  return this->setting;
+	 return this->clocker;
+}
+
+bool Recorder::card(){
+ if (!SD.begin(this->cs)) {
+	 return this->setting;
+ }
+ this->setting = true;
+ return this->setting;
 }
 
 /*

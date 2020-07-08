@@ -50,7 +50,3 @@ void DataHandler::reset(){
     this->list[this->pointer] = NULL;
   };
 }
-
-int DataHandler::incrementor(){
-  return 0;
-}
