@@ -25,6 +25,10 @@ long LoadCell::raw(){
 }
 
 float LoadCell::calibrate(long patternWeight, int samples, int iteration){
+  if(patternWeight == 0){
+    PRINT("\nPeso del equipo mal ingresado.\n");
+    return 1;
+  }
   int wait = 0;
   PRINT("\nModo calibracion. Siga las instrucciones.\nMantengan colgado para medir el peso.");
   this->doubleEnded.set_scale();  // Se setea una escala por defecto (1)

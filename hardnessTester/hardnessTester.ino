@@ -16,45 +16,53 @@ void setup(){
   recorder.begin(CS);
   pinMode(TOUCH, INPUT); // 0: No pulsado | 1: Pulsado
   // Logica de configuracion
-  if(!Serial){
+  if(Serial){
     Serial.println("\n[MSJ]\tMonitor serie activado. Opciones de usuario.");
     conf = waitForUser(3000, "\n[INS]\t¿Reiniciar contador de lotes? [Y/N]: ");
     if(conf){
       EEPROM.put(memoryLocation[1], 0);
       EEPROM.commit();
+      Serial.print("\n[CAL]\tLOTE: 0 (Reset)");
     }else{
-      EEPROM.get(memoryLocation[0], lot);
-      Serial.print("[CAL]\tLOTE: ");Serial.println(lot);
+      EEPROM.get(memoryLocation[1], lot);
+      Serial.print("\n[CAL]\tLOTE: ");Serial.println(lot);
     }
     conf = waitForUser(3000, "\n[INS]\t¿Iniciar calibracion? [Y/N]: ");
     if(conf){
-      patternWeight = askTheUser(3000, "[INS]\tIngrese el peso real del equipo: ");
-      Serial.print("[CAL]\tPESO REAL: "); Serial.println(patternWeight);
+      patternWeight = askTheUser(5000, "\n[INS]\tIngrese el peso real del equipo: ");
+      Serial.print("\n[CAL]\tPESO REAL: "); Serial.println(patternWeight);
       manualScale = measure.calibrate(patternWeight); // Se ingresa el peso real del equipo
       Serial.print("[CAL]\tESCALA: "); Serial.println(manualScale);
       EEPROM.put(memoryLocation[0], manualScale);
       EEPROM.commit();
+    }else{
+      Serial.println("\n[MSJ]\tCalibracion manual cancelada");
     }
-    Serial.println("\n[MSJ]\tCalibracion manual cancelada");
     conf = waitForUser(3000, "[INS]\t¿Ingresar factor manualmente? [Y/N]: ");
     if(conf){
-      manualScale = askTheUser(3000, "[INS]\tIngreses factor de escala: ");
-      Serial.print("[CAL]\tESCALA: "); Serial.println(manualScale);
+      manualScale = askTheUser(3000, "\n[INS]\tIngreses factor: ");
+      Serial.print("\n[CAL]\tESCALA: "); Serial.println(manualScale);
       measure.manualSetup(manualScale);
       EEPROM.put(memoryLocation[0],manualScale);
       EEPROM.commit();
     }else{
-      Serial.println("\n[MSJ]\tConfiguracion manual cancelada. Configuracion por programa.");
+      Serial.println("\n[MSJ]\tFactor manual cancelado.");
+    }
+    conf = waitForUser(3000, "[INS]\t¿Ingresar factor configurado? [Y/N]: ");
+    if(conf){
+      Serial.println("\n[MSJ]\tConfiguracion por programa.");
       EEPROM.put(memoryLocation[0], scale);
       EEPROM.commit();
       EEPROM.get(memoryLocation[0], scale);
-      Serial.print("[CAL]\tESCALA: ");Serial.print(scale);Serial.println(" (Default)");
+      measure.manualSetup(scale);
+      Serial.print("[CAL]\tESCALA: ");Serial.println(scale);
+    }else{
+      Serial.println("\n[MSJ]\tFactor por configuración cancelado.");
     }
   }else{
     Serial.println("\n[MSJ]\tCargando configuracion guardada");
     EEPROM.get(memoryLocation[0], manualScale);
     measure.manualSetup(manualScale);
-    //waitForMachine(2500);
     display.showMeasure((String)manualScale, "de escala");
     waitForMachine(2000);
   }
@@ -70,10 +78,9 @@ void setup(){
   }else{
     Serial.println("[ERROR]\tRTC");
   }
-  waitForMachine(1000);
-  //EEPROM.get(memoryLocation[0], lot);
-  recorder.saveRegistry(7, lot, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
-  Serial.println("[MSJ]\tConfiguracion terminada.");
+  sprintf(lot_buff, "%d", lot);
+  recorder.saveRegistry(7, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
+  Serial.println("[MSJ]\tConfiguracion terminada. Listo para medir.");
   EEPROM.end();
 }
 
@@ -119,9 +126,9 @@ void loop(){
       Serial.print("\tMINIMA: ");Serial.println(min_buff);
       Serial.print("\tPROMEDIO: ");Serial.println(average_buff);
       dataHandler.reset();
-      sprintf(lot_buff, "%.0f", counter());
-      recorder.saveRegistry(7, lot, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
-      Serial.println("[MJS]\tNuevo Lote iniciado.");Serial.print("|\tLOTE: ");Serial.println(lot);
+      sprintf(lot_buff, "%0.f", counter());
+      recorder.saveRegistry(7, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
+      Serial.print("[MJS]\tRegistro de lote cerrador.");Serial.print("\t|LOTE: ");Serial.println(lot_buff);
     }
   }
 }
@@ -158,11 +165,12 @@ float askTheUser(int period, const String& message){
   Serial.print(message);
   while(millis() < time_now + period){
     if (Serial.available() > 0) {
-      in = Serial.read();
+      in = Serial.parseFloat();
       break;
     }
-  return in;
   }
+  Serial.print(in);
+  return in;
 }
 
 void waitForMachine(int period){
@@ -170,11 +178,11 @@ void waitForMachine(int period){
   while(millis() < time_now + period);
 }
 
-int counter(){
-  int number;
+float counter(){
+  float number;
+  EEPROM.begin(memorySize);
   EEPROM.get(memoryLocation[1], number);
-  number++;
-  EEPROM.put(memoryLocation[1],number);
+  EEPROM.put(memoryLocation[1],number+1);
   EEPROM.commit();
   EEPROM.end();
   return number;
