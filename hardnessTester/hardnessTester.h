@@ -16,6 +16,7 @@ int fruit = 0;
 byte memorySize = 64;
 byte memoryLocation[] = {0, memorySize/2};
 
+bool sdModule;
 float manualScale, patternWeight, averange;
 long strength;
 unsigned long sum;

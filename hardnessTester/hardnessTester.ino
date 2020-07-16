@@ -11,68 +11,64 @@ void setup(){
                 "\t| Environment: " + (String)ARDUINO + "\t| Compiler: "+ (String)__VERSION__);
   EEPROM.begin(memorySize); // Se reservar 32 Bytes (256 bits) | Tamaño maximo 4K (4096)
   display.begin();
-  measure.begin(DT_CELL, SCK_CELL);
   display.showImage(COP);
+  measure.begin(DT_CELL, SCK_CELL);
   recorder.begin(CS);
-  pinMode(TOUCH, INPUT); // 0: No pulsado | 1: Pulsado
+  
   // Logica de configuracion
-  if(Serial){
-    Serial.println("\n[MSJ]\tMonitor serie activado. Opciones de usuario.");
-    conf = waitForUser(3000, "\n[INS]\t¿Reiniciar contador de lotes? [Y/N]: ");
-    if(conf){
-      EEPROM.put(memoryLocation[1], 0);
-      EEPROM.commit();
-      Serial.print("\n[CAL]\tLOTE: 0 (Reset)");
-    }else{
-      EEPROM.get(memoryLocation[1], lot);
-      Serial.print("\n[CAL]\tLOTE: ");Serial.println(lot);
-    }
-    conf = waitForUser(3000, "\n[INS]\t¿Iniciar calibracion? [Y/N]: ");
-    if(conf){
-      patternWeight = askTheUser(5000, "\n[INS]\tIngrese el peso real del equipo: ");
-      Serial.print("\n[CAL]\tPESO REAL: "); Serial.println(patternWeight);
-      manualScale = measure.calibrate(patternWeight); // Se ingresa el peso real del equipo
-      Serial.print("[CAL]\tESCALA: "); Serial.println(manualScale);
-      EEPROM.put(memoryLocation[0], manualScale);
-      EEPROM.commit();
-    }else{
-      Serial.println("\n[MSJ]\tCalibracion manual cancelada");
-    }
-    conf = waitForUser(3000, "[INS]\t¿Ingresar factor manualmente? [Y/N]: ");
-    if(conf){
-      manualScale = askTheUser(3000, "\n[INS]\tIngreses factor: ");
-      Serial.print("\n[CAL]\tESCALA: "); Serial.println(manualScale);
-      measure.manualSetup(manualScale);
-      EEPROM.put(memoryLocation[0],manualScale);
-      EEPROM.commit();
-    }else{
-      Serial.println("\n[MSJ]\tFactor manual cancelado.");
-    }
-    conf = waitForUser(3000, "[INS]\t¿Ingresar factor configurado? [Y/N]: ");
-    if(conf){
-      Serial.println("\n[MSJ]\tConfiguracion por programa.");
-      EEPROM.put(memoryLocation[0], scale);
-      EEPROM.commit();
-      EEPROM.get(memoryLocation[0], scale);
-      measure.manualSetup(scale);
-      Serial.print("[CAL]\tESCALA: ");Serial.println(scale);
-    }else{
-      Serial.println("\n[MSJ]\tFactor por configuración cancelado.");
-    }
+  Serial.println("\n[MSJ]\tMonitor serie activado. Opciones de usuario.");
+  conf = waitForUser(3000, "\n[INS]\t¿Reiniciar contador de lotes? [Y/N]: ");
+  if(conf){
+    EEPROM.put(memoryLocation[1], 0);
+    EEPROM.commit();
+    Serial.print("\n[CAL]\tLOTE: 0 (Reset)");
   }else{
-    Serial.println("\n[MSJ]\tCargando configuracion guardada");
-    EEPROM.get(memoryLocation[0], manualScale);
+    EEPROM.get(memoryLocation[1], lot);
+    Serial.print("\n[CAL]\tLOTE: ");Serial.println(lot);
+  }
+  conf = waitForUser(3000, "\n[INS]\t¿Iniciar calibracion? [Y/N]: ");
+  if(conf){
+    patternWeight = askTheUser(5000, "\n[INS]\tIngrese el peso real del equipo: ");
+    Serial.print("\n[CAL]\tPESO REAL: "); Serial.println(patternWeight);
+    manualScale = measure.calibrate(patternWeight); // Se ingresa el peso real del equipo
+    Serial.print("[CAL]\tESCALA: "); Serial.println(manualScale);
+    EEPROM.put(memoryLocation[0], manualScale);
+    EEPROM.commit();
+  }else{
+    Serial.println("\n[MSJ]\tCalibracion manual cancelada");
+  }
+  conf = waitForUser(3000, "[INS]\t¿Ingresar factor manualmente? [Y/N]: ");
+  if(conf){
+    manualScale = askTheUser(3000, "\n[INS]\tIngreses factor: ");
+    Serial.print("\n[CAL]\tESCALA: "); Serial.println(manualScale);
     measure.manualSetup(manualScale);
-    display.showMeasure((String)manualScale, "de escala");
-    waitForMachine(2000);
+    EEPROM.put(memoryLocation[0],manualScale);
+    EEPROM.commit();
+  }else{
+    Serial.println("\n[MSJ]\tFactor manual cancelado.");
+  }
+  conf = waitForUser(3000, "[INS]\t¿Ingresar factor configurado? [Y/N]: ");
+  if(conf){
+    Serial.println("\n[MSJ]\tConfiguracion por programa.");
+    EEPROM.put(memoryLocation[0], scale);
+    EEPROM.commit();
+    EEPROM.get(memoryLocation[0], scale);
+    measure.manualSetup(scale);
+    Serial.print("[CAL]\tESCALA: ");Serial.println(scale);
+  }else{
+    Serial.println("\n[MSJ]\tFactor por configuración cancelado.");
   }
   if(recorder.clock()){
     Serial.println("[OK]\tRTC");
     if(recorder.card()){
-      Serial.println("[OK]\tSD");
+		sdModule = true;
+      display.showImage(SDCARD);
       // Se agregan los titulos de archivos, que viene despues de los "Fecha" y "Hora" (titulos por defecto)
       recorder.setTitles(7, "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio");
+	  Serial.println("[OK]\tSD");
     }else{
+		sdModule = false;
+      display.showImage(NOSD);
       Serial.println("[ERROR]\tSD");
     }
   }else{
@@ -82,6 +78,11 @@ void setup(){
   recorder.saveRegistry(7, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
   Serial.println("[MSJ]\tConfiguracion terminada. Listo para medir.");
   EEPROM.end();
+  // Fin de logica de configuracion 
+  
+  // Se configurar los pines usando métodos de Arduino
+  pinMode(TOUCH, INPUT); // 0: No pulsado | 1: Pulsado
+  attachInterrupt(digitalPinToInterrupt(CS), sd_card, CHANGE);
 }
 
 void loop(){
@@ -175,7 +176,7 @@ float askTheUser(int period, const String& message){
 
 void waitForMachine(int period){
   unsigned long time_now = millis();
-  while(millis() < time_now + period);
+  while(millis() < (time_now + period));
 }
 
 float counter(){
@@ -187,3 +188,15 @@ float counter(){
   EEPROM.end();
   return number;
 }
+
+void sd_card(){
+  unsigned long time_now = millis();
+  sdModule = !sdModule;
+  if(sdModule){
+	display.showImage(SDCARD);
+  }else{
+	display.showImage(NOSD);
+  }
+  while(millis() < (time_now + 3000)
+}
+

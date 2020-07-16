@@ -1,5 +1,5 @@
 # Hardness Tester
-Hardness Tester es un proyecto colaborativos de [licencia MIT](LICENSE) para desarrolla un sistema de medición de fuerza, sencillo y económico.
+Hardness Tester es un proyecto propietario con extension de [licencia MIT](LICENSE) para el desarrollo un sistema de medición de fuerza. Sencillo y económico.
 
 ## Sobre el Hardware
 Se utiliza una placa de desarrollo [LoLin NodeMCU v3]( https://www.theengineeringprojects.com/wp-content/uploads/2018/10/Introduction-to-NodeMCU-V3.png), basado en el microprocesador [ESP8266]( https://www.espressif.com/en/products/socs/esp8266/overview), integrando el módulo trasmisor de celda HX711 con una celda de carga. Además se utiliza un módulo RTC DS3231 para configuración de fecha y hora. Posee un modulo para guardar las mediciones y un display Oled de 1.3” para visualizar la información.
@@ -61,6 +61,12 @@ Recibe los parámetros:
 -	Apoyar el equipo, para dejarlo quieto, y espere a que se configure. El equipo está listo para medir
 
 La funcion muestra diferentes mensajes para de guiar al usuario.
+
+```void manualSetup(float)```
+
+Se utiliza para configurar la escala. Recibe el parámetro:
+-	Valor de escala [int]
+
 
 ### Clase: **Visualizer**
 
@@ -136,7 +142,6 @@ Devuelve el maximo de los datos pre cargados.
 ```float minimum()```
 
 Devuelve el minimo de los datos pre cargados.
-
 
 ```void reset()```
 
