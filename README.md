@@ -4,6 +4,12 @@ Hardness Tester es un proyecto propietario con extension de [licencia MIT](LICEN
 ## Sobre el Hardware
 Se utiliza una placa de desarrollo [LoLin NodeMCU v3]( https://www.theengineeringprojects.com/wp-content/uploads/2018/10/Introduction-to-NodeMCU-V3.png), basado en el microprocesador [ESP8266]( https://www.espressif.com/en/products/socs/esp8266/overview), integrando el módulo trasmisor de celda HX711 con una celda de carga. Además se utiliza un módulo RTC DS3231 para configuración de fecha y hora. Posee un modulo para guardar las mediciones y un display Oled de 1.3” para visualizar la información.
 
+### Arquitectura
+
+![Esquemático](doc/img/arquitectura.png)
+
+### Esquematico
+
 ![Esquemático](doc/img/esquematico.png)
 
 *Mapa de conexión de componentes. [Ver](doc/esquematico.pdf)*
