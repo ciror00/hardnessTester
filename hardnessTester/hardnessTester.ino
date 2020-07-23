@@ -17,14 +17,15 @@ void setup(){
 
   // Logica de configuracion
   Serial.println("\n[MSJ]\tMonitor serie activado. Opciones de usuario.");
-  conf = waitForUser(3000, "\n[INS]\t¿Reiniciar contador de lotes? [Y/N]: ");
+  conf = waitForUser(3000, "\n[INS]\t¿Reiniciar configuracion? [Y/N]: ");
   if(conf){
     EEPROM.put(memoryLocation[1], 0);
+    EEPROM.put(memoryLocation[0], scale);
     EEPROM.commit();
-    Serial.print("\n[CAL]\tLOTE: 0 (Reset)");
+    Serial.print("\n[MSJ]\tLote reiniciado. Escala configurada por defecto.");
   }else{
     EEPROM.get(memoryLocation[1], lot);
-    Serial.print("\n[CAL]\tLOTE: ");Serial.println(lot);
+    Serial.print("\n[CAL]\tLOTE: ");Serial.print(lot);
   }
   conf = waitForUser(3000, "\n[INS]\t¿Iniciar calibracion? [Y/N]: ");
   if(conf){
@@ -45,18 +46,10 @@ void setup(){
     EEPROM.put(memoryLocation[0],manualScale);
     EEPROM.commit();
   }else{
-    Serial.println("\n[MSJ]\tFactor manual cancelado.");
-  }
-  conf = waitForUser(3000, "[INS]\t¿Ingresar factor configurado? [Y/N]: ");
-  if(conf){
-    Serial.println("\n[MSJ]\tConfiguracion por programa.");
-    EEPROM.put(memoryLocation[0], scale);
-    EEPROM.commit();
-    EEPROM.get(memoryLocation[0], scale);
-    measure.manualSetup(scale);
-    Serial.print("[CAL]\tESCALA: ");Serial.println(scale);
-  }else{
-    Serial.println("\n[MSJ]\tFactor por configuración cancelado.");
+    Serial.print("\n[MSJ]\tFactor manual cancelado. Utilizando factor guardado.");
+    EEPROM.get(memoryLocation[0], manualScale);
+    Serial.print("\n[CAL]\tESCALA: "); Serial.println(manualScale);
+    measure.manualSetup(manualScale);
   }
   if(recorder.clock()){
     Serial.println("[OK]\tRTC");
@@ -74,7 +67,7 @@ void setup(){
   }else{
     Serial.println("[ERROR]\tRTC");
   }
-  waitForMachine(3000);
+  //waitForMachine(3000);
   sprintf(lot_buff, "%d", lot);
   recorder.saveRegistry(7, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
   Serial.println("[MSJ]\tConfiguracion terminada. Listo para medir.");
@@ -86,15 +79,15 @@ void setup(){
 }
 
 void loop(){
-  button = digitalRead(TOUCH);
-  if(button == 1){
-    Serial.println("[MJS]\tListo para medir");
+  if(digitalRead(TOUCH))switcher();
+  if(button == true){
     if(minimumForce(sensibility)){
       flag = true;
       fruit++;
       while(minimumForce(sensibility)){
         strength = measure.strengthAverage(stabilizer);
-        Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);Serial.print("|\tSEÑAL: ");Serial.println(measure.raw());
+        Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
+        Serial.print("|\tSEÑAL: ");Serial.println(measure.raw());
         display.showMeasure((String)strength, "kgf");
         sum += strength;
         count++;
@@ -116,7 +109,10 @@ void loop(){
       count = 0;
       Serial.print("[CAL]\tMEDICION: ");Serial.println(strength_buff);
     }else{
-      display.showMessage("Listo para medir");
+      strength = measure.strength();
+      Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
+      Serial.print("|\tSEÑAL: ");Serial.print(measure.raw());Serial.println("|\t(Sin guardar)");
+      display.showMeasure((String)strength, "kgf");
     }
   }else{
     display.showImage(PUSH);
@@ -155,6 +151,11 @@ void loop(){
 /*
   Se encapsulan funciones para mejorar la lectura del codigo.
 */
+void switcher(){
+  button = !button;
+  Serial.print("[CAL]\tEstado del botón cambiado: ");Serial.println(button);
+  while(digitalRead(TOUCH) == HIGH);
+}
 
 bool minimumForce(int threshold){
   bool mf = (measure.raw() > threshold) ? true : false;

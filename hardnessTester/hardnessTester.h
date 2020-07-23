@@ -6,11 +6,11 @@
 #include "DataHandler.h"
 #include "settings.h"
 
-#define FIRMWARE 0.42
+#define FIRMWARE 0.51
 
 bool conf = false;
 bool flag = false;
-byte button = 0;
+bool button = false;
 int count = 0;
 int fruit = 0;
 byte memorySize = 64;
