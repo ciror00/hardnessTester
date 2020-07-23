@@ -143,10 +143,26 @@ Devuelve el maximo de los datos pre cargados.
 
 Devuelve el minimo de los datos pre cargados.
 
+```float percentages(long, long)```
+
+Devuelve el valor porcentual de los parametros. Recibe los parámetros:
+-	Valor maximo [float]
+-	Valor de referencia [float]
+
 ```void reset()```
 
 Limpia los datos cargados.
 
 ## Implementacion
 
-En desarrollo...
+Como el proyecto se implementa en el entorno de desarrollo de Arduino, el mismo esta separado en dos funciones. Una función de ejecución unica llamada *Setup* y otra función de ejecución continua llamada *Loop*.
+
+### Setup
+
+![dependencias](doc/img/diagrama_01.png)
+
+Se inicializan todos los módulos anteriormente mencionados. Posteriormente, se muestran las opciones de configuracion por puerto serie y se cargan las configuracion por defecto.
+
+### Loop
+
+![dependencias](doc/img/diagrama_02.png)
