@@ -6,19 +6,23 @@
 #include "DataHandler.h"
 #include "settings.h"
 
-#define FIRMWARE 0.38
+#define FIRMWARE 0.42
 
 bool conf = false;
 bool flag = false;
 byte button = 0;
 int count = 0;
 int fruit = 0;
+byte memorySize = 64;
+byte memoryLocation[] = {0, memorySize/2};
 
+bool sdModule;
 float manualScale, patternWeight, averange;
 long strength;
 unsigned long sum;
+long lot;
 
-char lot[5];
+char lot_buff[10];
 char count_buff[10];
 char strength_buff[10];
 char percentages_buff[10];

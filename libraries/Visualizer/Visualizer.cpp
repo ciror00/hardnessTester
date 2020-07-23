@@ -29,6 +29,8 @@ void Visualizer::showImage(Images img){
     case ZYX: this->oled.drawXbm(32,5,zyx_width,zyx_height,(const unsigned char *)logo_ZYX);break;
     case COP: this->oled.drawXbm(32,5,cop_width,cop_height,(const unsigned char *)logo_Copain);break;
     case PUSH: this->oled.drawXbm(32,5,push_width,push_height,(const unsigned char *)push);break;
+    case CARD: this->oled.drawXbm(50,10,sd_width,sd_height,(const unsigned char *)sdCard);break;
+    case NOCARD: this->oled.drawXbm(50,10,sd_width,sd_height,(const unsigned char *)no_sdCard);break;
   }
   this->oled.display();
 }

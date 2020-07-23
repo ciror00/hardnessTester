@@ -13,13 +13,16 @@ class Recorder{
   DateTime date;
 
   File registry;
-  bool clock;
+  int cs;
+  bool clocker;
 	bool setting;
   char buffer[50];
-  
+
 	public:
 		Recorder() = default;
     bool begin(const int cs);
+    bool clock();
+    bool card();
     bool setTitles(int numb, ...);
     bool saveRegistry(int numb, ...);
 		~Recorder() = default;

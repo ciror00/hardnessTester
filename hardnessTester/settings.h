@@ -10,5 +10,5 @@
 
 // Parametros
 const int sensibility = 100;
-const float scale = 1;  // 439430.25;
+const float scale = 1234;
 const byte stabilizer = 2;

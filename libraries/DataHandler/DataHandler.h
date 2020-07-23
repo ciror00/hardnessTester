@@ -16,7 +16,6 @@ class DataHandler{
     float minimum();
     float percentages(long max_value = 1, long current_value = 1);
     void reset();
-    int incrementor();
     ~DataHandler() = default;
 };
 #endif
