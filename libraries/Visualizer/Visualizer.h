@@ -6,7 +6,7 @@
 #include <SPI.h>
 #include "Images.h"
 
-enum Images {ZYX,COP,PUSH, SDCARD, NOSD};
+enum Images {ZYX,COP,PUSH, CARD, NOCARD};
 
 class Visualizer{
   // Se agregan pines fijos por defecto 5 (D1) y 4 (D2).

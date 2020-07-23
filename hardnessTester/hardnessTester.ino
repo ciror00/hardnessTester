@@ -14,7 +14,7 @@ void setup(){
   display.showImage(COP);
   measure.begin(DT_CELL, SCK_CELL);
   recorder.begin(CS);
-  
+
   // Logica de configuracion
   Serial.println("\n[MSJ]\tMonitor serie activado. Opciones de usuario.");
   conf = waitForUser(3000, "\n[INS]\t¿Reiniciar contador de lotes? [Y/N]: ");
@@ -62,27 +62,27 @@ void setup(){
     Serial.println("[OK]\tRTC");
     if(recorder.card()){
 		sdModule = true;
-      display.showImage(SDCARD);
+      display.showImage(CARD);
       // Se agregan los titulos de archivos, que viene despues de los "Fecha" y "Hora" (titulos por defecto)
       recorder.setTitles(7, "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio");
 	  Serial.println("[OK]\tSD");
     }else{
 		sdModule = false;
-      display.showImage(NOSD);
+      display.showImage(NOCARD);
       Serial.println("[ERROR]\tSD");
     }
   }else{
     Serial.println("[ERROR]\tRTC");
   }
+  waitForMachine(3000);
   sprintf(lot_buff, "%d", lot);
   recorder.saveRegistry(7, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
   Serial.println("[MSJ]\tConfiguracion terminada. Listo para medir.");
   EEPROM.end();
-  // Fin de logica de configuracion 
-  
+  // Fin de logica de configuracion
+
   // Se configurar los pines usando métodos de Arduino
   pinMode(TOUCH, INPUT); // 0: No pulsado | 1: Pulsado
-  attachInterrupt(digitalPinToInterrupt(CS), sd_card, CHANGE);
 }
 
 void loop(){
@@ -104,9 +104,15 @@ void loop(){
       dataHandler.preLoad(averange);
       sprintf(count_buff, "%d", fruit);
       sprintf(strength_buff, "%.0f", averange);
-      sprintf(percentages_buff, "%.0f", dataHandler.percentages());
+      sprintf(percentages_buff, "%.0f", dataHandler.percentages(1, 0));
       //|Columnas| "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio"
-      recorder.saveRegistry(7, " ", count_buff, strength_buff, percentages_buff, " ", " ", " ");
+      if(!recorder.card()){
+        display.showImage(NOCARD);
+        Serial.println("[ERROR]\tSD");
+      }else{
+        Serial.println("[MJS]\tGuardando en SD");
+        recorder.saveRegistry(7, " ", count_buff, strength_buff, percentages_buff, " ", " ", " ");
+      }
       count = 0;
       Serial.print("[CAL]\tMEDICION: ");Serial.println(strength_buff);
     }else{
@@ -121,14 +127,26 @@ void loop(){
       sprintf(min_buff, "%.0f", dataHandler.minimum());
       sprintf(average_buff, "%.0f", dataHandler.average());
       //|Columnas| "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio"
-      recorder.saveRegistry(7, " ", " ", " ", " ", max_buff, min_buff, average_buff);
+      if(!recorder.card()){
+        display.showImage(NOCARD);
+        Serial.println("[ERROR]\tSD");
+      }else{
+        Serial.println("[MJS]\tGuardando en SD");
+        recorder.saveRegistry(7, " ", " ", " ", " ", max_buff, min_buff, average_buff);
+      }
       Serial.println("[MJS]\tResumen de datos calculados");
       Serial.print("\tMAXIMA: ");Serial.println(max_buff);
       Serial.print("\tMINIMA: ");Serial.println(min_buff);
       Serial.print("\tPROMEDIO: ");Serial.println(average_buff);
       dataHandler.reset();
       sprintf(lot_buff, "%0.f", counter());
-      recorder.saveRegistry(7, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
+      if(!recorder.card()){
+        display.showImage(NOCARD);
+        Serial.println("[ERROR]\tSD");
+      }else{
+        Serial.println("[MJS]\tGuardando en SD");
+        recorder.saveRegistry(7, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
+      }
       Serial.print("[MJS]\tRegistro de lote cerrador.");Serial.print("\t|LOTE: ");Serial.println(lot_buff);
     }
   }
@@ -176,7 +194,7 @@ float askTheUser(int period, const String& message){
 
 void waitForMachine(int period){
   unsigned long time_now = millis();
-  while(millis() < (time_now + period));
+  while(millis() < time_now + period);
 }
 
 float counter(){
@@ -188,15 +206,3 @@ float counter(){
   EEPROM.end();
   return number;
 }
-
-void sd_card(){
-  unsigned long time_now = millis();
-  sdModule = !sdModule;
-  if(sdModule){
-	display.showImage(SDCARD);
-  }else{
-	display.showImage(NOSD);
-  }
-  while(millis() < (time_now + 3000)
-}
-
