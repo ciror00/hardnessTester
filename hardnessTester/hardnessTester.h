@@ -6,7 +6,7 @@
 #include "DataHandler.h"
 #include "settings.h"
 
-#define FIRMWARE 0.54
+#define FIRMWARE 0.55
 
 #define SCK_CELL 0 // D3
 #define DT_CELL 2 // D4
@@ -22,7 +22,7 @@ byte memorySize = 64;
 byte memoryLocation[] = {0, memorySize/2};
 
 bool sdModule;
-float manualScale, patternWeight, averange;
+float manualScale, averange;
 long strength;
 unsigned long sum;
 long lot;

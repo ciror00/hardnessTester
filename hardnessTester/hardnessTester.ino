@@ -17,12 +17,13 @@ void setup(){
   Serial.println("\n[MSJ]\tMonitor serie activado. Opciones de usuario.");
 
   // Menu de configuracion manual
+  /*
   conf = waitForUser(between, "\n[INS]\t¿Iniciar calibracion por pasos? [Y/N]: ");
   if(conf){
     patternWeight = askTheUser(between, "\n[INS]\tIngrese el peso real del equipo: ");
     Serial.print("\n[CAL]\tPESO REAL: "); Serial.println(patternWeight);
     manualScale = measure.calibrate(patternWeight); // Se ingresa el peso real del equipo
-    Serial.print("[CAL]\tESCALA: "); Serial.println(manualScale);
+    Serial.print("[CAL]\tFactor calculado: "); Serial.println(manualScale);
     EEPROM.put(memoryLocation[0], manualScale);
     EEPROM.commit();
   }else{
@@ -39,11 +40,11 @@ void setup(){
       EEPROM.get(memoryLocation[0], manualScale);
     }
   }
-  Serial.print("\n[CAL]\tESCALA: "); Serial.print(manualScale);
-  measure.manualSetup(manualScale);
+  */
+  Serial.print("\n[CAL]\tFACTOR: "); Serial.print(scale);
+  measure.manualSetup(scale);
   EEPROM.get(memoryLocation[1], lot);
   Serial.print("\n[CAL]\tLOTE: ");Serial.println(lot);
-
   // Logica de configuracion
   if(recorder.clock()){
     Serial.println("[OK]\tRTC");
