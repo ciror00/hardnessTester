@@ -49,7 +49,7 @@ Devuelve un promedio de la fuerza medida por el sensor de fuerza. Recibe el par�
 
 Devuelve el valor de la señal del sensor (medicion cruda).
 
-``` void calibrate(long, int, int, int) ```
+``` void calibrate(long, int, int) ```
 
 Se utiliza para calcular el factor de calibración. Hay que tener en cuenta, que se debe conocer el peso real del equipo.
 
@@ -59,7 +59,6 @@ Recibe los parámetros:
 -	Peso real del equipo [long]
 -	Cantidad de mediciones para realizar la tara [int]
 -	Cantidad de iteraciones para promediar la medición [int]
--	Tiempo de espera entre mensajes [int]
  Para utilizar este método, se tiene que seguir un procedimiento con el equipo.
 
 ![Calibracion](doc/img/calibracion.png)
