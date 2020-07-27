@@ -40,13 +40,13 @@ float LoadCell::calibrate(long patternWeight, int samples, int iteration){
   layover = readValue / patternWeight; // Se calcula una factor de escala PESO MEDIDO / PESO REAL
   PRINT("Factor calculado: ");PRINT(layover);
   PRINT("\nApoyá el equipo para terminar la calibracion...\n");
-  while(wait < 5000){wait++;};
+  while(wait < 9000){wait++;};
   wait = 0;
   PRINT("Terminando calibracion. Espere un momento...\n");
   // Se establece una escala con el factor calculado
   this->doubleEnded.set_scale(layover);  // Se setea una escala por defecto (1)
   this->doubleEnded.tare(samples); // Se toma el peso actual como Tara
-  while(wait < 5000){wait--;};
+  while(wait < 9000){wait--;};
   //this->doubleEnded.get_units(samples);
   PRINT("Equipo calibrado.\n");
   return layover;
