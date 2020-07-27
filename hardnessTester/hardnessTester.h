@@ -6,7 +6,7 @@
 #include "DataHandler.h"
 #include "settings.h"
 
-#define FIRMWARE 0.53
+#define FIRMWARE 0.54
 
 #define SCK_CELL 0 // D3
 #define DT_CELL 2 // D4

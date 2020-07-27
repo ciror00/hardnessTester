@@ -165,6 +165,7 @@ bool waitForUser(int period, const String& message){
       break;
     }
   }
+  Serial.flush();
   if(in == 121 || in == 89){
     return true;
   }else{
@@ -183,6 +184,7 @@ float askTheUser(int period, const String& message){
     }
   }
   Serial.print(in);
+  Serial.flush();
   return in;
 }
 
