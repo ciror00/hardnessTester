@@ -30,7 +30,7 @@ float LoadCell::calibrate(long patternWeight, int samples, int iteration){
     return 1;
   }
   int wait = 0;
-  PRINT("\nModo calibracion. Siga las instrucciones.\nMantengan colgado para medir el peso.");
+  PRINT("\n(Recuerde que el equipo debe estar apoyado para medir su propio peso)");
   this->doubleEnded.set_scale();  // Se setea una escala por defecto (1)
   this->doubleEnded.tare(samples); // Se toma el peso actual como Tara
   for (byte i = 0; i < iteration; i++) {
@@ -39,7 +39,8 @@ float LoadCell::calibrate(long patternWeight, int samples, int iteration){
   };
   layover = readValue / patternWeight; // Se calcula una factor de escala PESO MEDIDO / PESO REAL
   PRINT("Factor calculado: ");PRINT(layover);
-  PRINT("\nApoyá el equipo para terminar la calibracion...\n");
+  //PRINT("\nMueva el equipo para que el sensor mida en vacío.\n");
+  /*
   while(wait < 9000){wait++;};
   wait = 0;
   PRINT("Terminando calibracion. Espere un momento...\n");
@@ -49,6 +50,7 @@ float LoadCell::calibrate(long patternWeight, int samples, int iteration){
   while(wait < 9000){wait--;};
   //this->doubleEnded.get_units(samples);
   PRINT("Equipo calibrado.\n");
+  */
   return layover;
 }
 

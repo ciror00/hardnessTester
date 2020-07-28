@@ -14,11 +14,35 @@ void setup(){
   display.showImage(COP);
   measure.begin(DT_CELL, SCK_CELL);
   recorder.begin(CS);
-  Serial.println("\n[MSJ]\tMonitor serie activado. Opciones de usuario.");
 
-  // Menu de configuracion manual
+  Serial.println("[MSJ]\tAntes de iniciar el modo configuracion: \n\t - Recuerde que \
+            debe estar pre cargado el peso real del equipo.\n\t - El equipo mismo\
+            deberá pesarse apoyandolo sobre la galga.");
+  conf = waitForUser(between, "\n[INS]\tIngrese cualquier tecla para formatear el equipo: ");
+  if(conf){
+    EEPROM.put(memoryLocation[1], 0);
+    EEPROM.commit();
+    Serial.println("[MSJ]\tLote reiniciado.");
+    Serial.println("[MSJ]\tIniciando calibracion...");
+    display.showMessage("Pesar el equipo");
+    manualScale = measure.calibrate(patternWeight); // Se ingresa el peso real del equipo
+    Serial.print("[CAL]\tFACTOR: "); Serial.println(manualScale);
+    Serial.print("\n[MJS]\tReiniciando el equipo..."); Serial.println(patternWeight);
+    display.showMessage("Reiniciando...");
+    EEPROM.put(memoryLocation[0], manualScale);
+    EEPROM.commit();
+    EEPROM.end();
+    while(wait < 9000){wait++;};
+    ESP.restart();
+  }else{
+    Serial.println("[MSJ]\tCargando configuracion guardada.");
+    EEPROM.get(memoryLocation[0], manualScale);
+    Serial.print("\n[CAL]\tFACTOR: "); Serial.print(manualScale);
+    measure.manualSetup(manualScale);
+    EEPROM.get(memoryLocation[1], lot);
+    Serial.print("\n[CAL]\tLOTE: ");Serial.println(lot);
+  }
   /*
-  conf = waitForUser(between, "\n[INS]\t¿Iniciar calibracion por pasos? [Y/N]: ");
   if(conf){
     patternWeight = askTheUser(between, "\n[INS]\tIngrese el peso real del equipo: ");
     Serial.print("\n[CAL]\tPESO REAL: "); Serial.println(patternWeight);
@@ -41,11 +65,6 @@ void setup(){
     }
   }
   */
-  Serial.print("\n[CAL]\tFACTOR: "); Serial.print(scale);
-  measure.manualSetup(scale);
-  EEPROM.get(memoryLocation[1], lot);
-  Serial.print("\n[CAL]\tLOTE: ");Serial.println(lot);
-  // Logica de configuracion
   if(recorder.clock()){
     Serial.println("[OK]\tRTC");
     if(recorder.card()){
@@ -62,7 +81,7 @@ void setup(){
   }else{
     Serial.println("[ERROR]\tRTC");
   }
-
+  while(wait < 3000){wait++;};
   sprintf(lot_buff, "%d", lot);
   recorder.saveRegistry(7, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
   Serial.println("[MSJ]\tConfiguracion terminada. Listo para medir.");
@@ -103,8 +122,7 @@ void loop(){
       count = 0;
       Serial.print("[CAL]\tMEDICION: ");Serial.println(strength_buff);
     }else{
-      strength = measure.strength();
-      Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
+      Serial.print("[CAL]\tFUERZA: ");Serial.print(measure.strength());
       Serial.print("|\tSEÑAL: ");Serial.print(measure.raw());Serial.println("|\t(Sin guardar)");
       display.showMeasure((String)strength, "kgf");
     }
@@ -157,7 +175,7 @@ bool minimumForce(int threshold){
 }
 
 bool waitForUser(int period, const String& message){
-  byte in;
+  byte in = 0;
   unsigned long time_now = millis();
   Serial.print(message);
   while(millis() < time_now + period){
@@ -166,8 +184,7 @@ bool waitForUser(int period, const String& message){
       break;
     }
   }
-  Serial.flush();
-  if(in == 121 || in == 89){
+  if(in != 0){
     return true;
   }else{
     return false;
@@ -185,7 +202,6 @@ float askTheUser(int period, const String& message){
     }
   }
   Serial.print(in);
-  Serial.flush();
   return in;
 }
 

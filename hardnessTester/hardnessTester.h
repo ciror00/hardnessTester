@@ -6,7 +6,7 @@
 #include "DataHandler.h"
 #include "settings.h"
 
-#define FIRMWARE 0.55
+#define FIRMWARE 0.56
 
 #define SCK_CELL 0 // D3
 #define DT_CELL 2 // D4
@@ -20,6 +20,7 @@ int count = 0;
 int fruit = 0;
 byte memorySize = 64;
 byte memoryLocation[] = {0, memorySize/2};
+float wait = 0;
 
 bool sdModule;
 float manualScale, averange;
