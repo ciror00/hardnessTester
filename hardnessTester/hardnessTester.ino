@@ -15,19 +15,21 @@ void setup(){
   measure.begin(DT_CELL, SCK_CELL);
   recorder.begin(CS);
 
-  Serial.println("[MSJ]\tAntes de iniciar el modo configuracion: \n\t - Recuerde que \
-            debe estar pre cargado el peso real del equipo.\n\t - El equipo mismo\
-            deberá pesarse apoyandolo sobre la galga.");
+  Serial.println("[MSJ]\tAntes de iniciar el modo configuracion: \n\t - Recuerde que debe estar pre cargado el peso real del equipo.\n\t - El equipo mismo deberá pesarse apoyandolo sobre la galga.");
   conf = waitForUser(between, "\n[INS]\tIngrese cualquier tecla para formatear el equipo: ");
   if(conf){
     EEPROM.put(memoryLocation[1], 0);
     EEPROM.commit();
-    Serial.println("[MSJ]\tLote reiniciado.");
-    Serial.println("[MSJ]\tIniciando calibracion...");
+    Serial.println("\n[MSJ]\tLote reiniciado.");
+    Serial.print("[MSJ]\tIniciando calibracion. Peso: "); Serial.println(patternWeight);
     display.showMessage("Pesar el equipo");
     manualScale = measure.calibrate(patternWeight); // Se ingresa el peso real del equipo
+    if(manualScale == 0){
+      Serial.println("\n[MSJ]\tFactor incorrecto. Utilizando factor pre cargado.");
+      manualScale = scale;
+    }
     Serial.print("[CAL]\tFACTOR: "); Serial.println(manualScale);
-    Serial.print("\n[MJS]\tReiniciando el equipo..."); Serial.println(patternWeight);
+    Serial.print("[MJS]\tReiniciando el equipo...");
     display.showMessage("Reiniciando...");
     EEPROM.put(memoryLocation[0], manualScale);
     EEPROM.commit();
@@ -35,7 +37,7 @@ void setup(){
     while(wait < 9000){wait++;};
     ESP.restart();
   }else{
-    Serial.println("[MSJ]\tCargando configuracion guardada.");
+    Serial.println("\n[MSJ]\tCargando configuracion guardada.");
     EEPROM.get(memoryLocation[0], manualScale);
     Serial.print("\n[CAL]\tFACTOR: "); Serial.print(manualScale);
     measure.manualSetup(manualScale);
