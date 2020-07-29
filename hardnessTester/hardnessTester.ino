@@ -15,60 +15,37 @@ void setup(){
   measure.begin(DT_CELL, SCK_CELL);
   recorder.begin(CS);
 
-  Serial.println("[MSJ]\tAntes de iniciar el modo configuracion: \n\t - Recuerde que debe estar pre cargado el peso real del equipo.\n\t - El equipo mismo deberá pesarse apoyandolo sobre la galga.");
-  conf = waitForUser(between, "\n[INS]\tIngrese cualquier tecla para formatear el equipo: ");
-  if(conf){
+  // Menu de configuración
+  Serial.println("\n[MSJ]\tIngrese el peso real para calibrar el equipo.");
+  patternWeight = askTheUser("[INS]\tPeso real: ", between);
+  if(patternWeight != 0){
+    display.showImage(TOOL);
     EEPROM.put(memoryLocation[1], 0);
     EEPROM.commit();
     Serial.println("\n[MSJ]\tLote reiniciado.");
     Serial.print("[MSJ]\tIniciando calibracion. Peso: "); Serial.println(patternWeight);
-    display.showMessage("Pesar el equipo");
     manualScale = measure.calibrate(patternWeight); // Se ingresa el peso real del equipo
+    /*
     if(manualScale == 0){
       Serial.println("\n[MSJ]\tFactor incorrecto. Utilizando factor pre cargado.");
       manualScale = scale;
     }
+    */
     Serial.print("[CAL]\tFACTOR: "); Serial.println(manualScale);
-    Serial.print("[MJS]\tReiniciando el equipo...");
-    display.showMessage("Reiniciando...");
     EEPROM.put(memoryLocation[0], manualScale);
     EEPROM.commit();
-    EEPROM.end();
-    while(wait < 9000){wait++;};
-    ESP.restart();
   }else{
-    Serial.println("\n[MSJ]\tCargando configuracion guardada.");
+    Serial.println("[MSJ]\tCargando configuracion guardada.");
     EEPROM.get(memoryLocation[0], manualScale);
     Serial.print("\n[CAL]\tFACTOR: "); Serial.print(manualScale);
     measure.manualSetup(manualScale);
     EEPROM.get(memoryLocation[1], lot);
     Serial.print("\n[CAL]\tLOTE: ");Serial.println(lot);
   }
-  /*
-  if(conf){
-    patternWeight = askTheUser(between, "\n[INS]\tIngrese el peso real del equipo: ");
-    Serial.print("\n[CAL]\tPESO REAL: "); Serial.println(patternWeight);
-    manualScale = measure.calibrate(patternWeight); // Se ingresa el peso real del equipo
-    Serial.print("[CAL]\tFactor calculado: "); Serial.println(manualScale);
-    EEPROM.put(memoryLocation[0], manualScale);
-    EEPROM.commit();
-  }else{
-    Serial.println("\n[MSJ]\tCalibracion por pasos no iniciada.");
-    conf = waitForUser(between, "[INS]\t¿Realizar calibracion por defecto? [Y/N]: ");
-    if(conf){
-      EEPROM.put(memoryLocation[0], scale);
-      manualScale = scale;
-      EEPROM.put(memoryLocation[1], 0);
-      EEPROM.commit();
-      Serial.print("\n[MSJ]\tLote reiniciado. Escala configurada por defecto.");
-    }else{
-      Serial.print("\n[MSJ]\tUtilizando factor guardado.");
-      EEPROM.get(memoryLocation[0], manualScale);
-    }
-  }
-  */
+
   if(recorder.clock()){
     Serial.println("[OK]\tRTC");
+    recorder.showTime();
     if(recorder.card()){
 		sdModule = true;
       display.showImage(CARD);
@@ -124,7 +101,8 @@ void loop(){
       count = 0;
       Serial.print("[CAL]\tMEDICION: ");Serial.println(strength_buff);
     }else{
-      Serial.print("[CAL]\tFUERZA: ");Serial.print(measure.strength());
+      strength = measure.strength();
+      Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
       Serial.print("|\tSEÑAL: ");Serial.print(measure.raw());Serial.println("|\t(Sin guardar)");
       display.showMeasure((String)strength, "kgf");
     }
@@ -176,7 +154,7 @@ bool minimumForce(int threshold){
   return mf;
 }
 
-bool waitForUser(int period, const String& message){
+bool waitForUser(const String& message, int period){
   byte in = 0;
   unsigned long time_now = millis();
   Serial.print(message);
@@ -193,8 +171,8 @@ bool waitForUser(int period, const String& message){
   }
 }
 
-float askTheUser(int period, const String& message){
-  float in;
+float askTheUser(const String& message, int period){
+  float in = 0;
   unsigned long time_now = millis();
   Serial.print(message);
   while(millis() < time_now + period){

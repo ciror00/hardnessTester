@@ -1,5 +1,6 @@
 #ifndef __RECORDER__h__
 #define __RECORDER__h__
+#define PRINT(...) Serial.print(__VA_ARGS__)
 
 #include <Arduino.h>
 #include <Wire.h>
@@ -23,6 +24,7 @@ class Recorder{
     bool begin(const int cs);
     bool clock();
     bool card();
+    void showTime();
     bool setTitles(int numb, ...);
     bool saveRegistry(int numb, ...);
 		~Recorder() = default;

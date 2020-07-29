@@ -26,31 +26,23 @@ long LoadCell::raw(){
 
 float LoadCell::calibrate(long patternWeight, int samples, int iteration){
   if(patternWeight == 0){
-    PRINT("\nPeso del equipo mal ingresado.\n");
+    PRINT("\n> Peso del equipo mal ingresado.\n");
     return 1;
   }
-  int wait = 0;
-  PRINT("(Recuerde que el equipo debe estar apoyado para medir su propio peso)");
   this->doubleEnded.set_scale();  // Se setea una escala por defecto (1)
-  this->doubleEnded.tare(samples); // Se toma el peso actual como Tara
-  for (byte i = 0; i < iteration; i++) {
-    // Se toman las muestras para determinar el peso aproximado del equipo
-    readValue = readValue + this->doubleEnded.get_value(samples);
-  };
-  layover = readValue / patternWeight; // Se calcula una factor de escala PESO MEDIDO / PESO REAL
-  PRINT("\nFactor calculado: ");PRINT(layover);
-  //PRINT("\nMueva el equipo para que el sensor mida en vacío.\n");
-  /*
-  while(wait < 9000){wait++;};
-  wait = 0;
-  PRINT("Terminando calibracion. Espere un momento...\n");
-  // Se establece una escala con el factor calculado
-  this->doubleEnded.set_scale(layover);  // Se setea una escala por defecto (1)
-  this->doubleEnded.tare(samples); // Se toma el peso actual como Tara
-  while(wait < 9000){wait--;};
-  //this->doubleEnded.get_units(samples);
-  PRINT("Equipo calibrado.\n");
-  */
+  this->doubleEnded.tare(); // Se toma el peso actual como Tara
+  int wait = 0;
+  long layover = -999;
+  long censusWeight = 0;
+  PRINT("> Peso de referencia: ");PRINT(patternWeight);
+  while(wait < 5000){wait--;};
+  while(abs(patternWeight - censusWeight) > 10){
+    this->doubleEnded.set_scale(layover);
+    censusWeight = this->strengthAverage(samples);
+    layover = layover + 10;
+    PRINT("\n> Censo: ");PRINT(censusWeight);
+    PRINT("|\tFactor: ");PRINT(layover);
+  }
   return layover;
 }
 

@@ -31,6 +31,7 @@ void Visualizer::showImage(Images img){
     case PUSH: this->oled.drawXbm(32,5,push_width,push_height,(const unsigned char *)push);break;
     case CARD: this->oled.drawXbm(50,10,sd_width,sd_height,(const unsigned char *)sdCard);break;
     case NOCARD: this->oled.drawXbm(50,10,sd_width,sd_height,(const unsigned char *)no_sdCard);break;
+    case TOOL: this->oled.drawXbm(40,10,tools_width,tools_height,(const unsigned char *)tools);break;
   }
   this->oled.display();
 }

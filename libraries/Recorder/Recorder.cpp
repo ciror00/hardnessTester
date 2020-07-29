@@ -35,6 +35,16 @@ bool Recorder::card(){
 	se pasan los todos los titulos separados por coma.
 
 */
+
+void Recorder::showTime(){
+	char t[32];
+	this->date = this->rtc.now();
+	sprintf(t, "> %02d:%02d:%02d %02d/%02d/%02d \n",  \
+		this->date.hour(), this->date.minute(), this->date.second(), \
+		this->date.day(), this->date.month(), this->date.year());
+		PRINT(t);
+}
+
 bool Recorder::setTitles(int numb, ...){
 	this->date = this->rtc.now();
 	sprintf(buffer, "%d%d%d.CSV", this->date.year(), this->date.month(), this->date.day());
