@@ -53,20 +53,14 @@ Devuelve el valor de la señal del sensor (medicion cruda).
 
 Se utiliza para calcular el factor de calibración. Hay que tener en cuenta, que se debe conocer el peso real del equipo.
 
-![Peso real](doc/img/equipo_pesado.png)
-
 Recibe los parámetros:
 -	Peso real del equipo [long]
 -	Cantidad de mediciones para realizar la tara [int]
 -	Cantidad de iteraciones para promediar la medición [int]
- Para utilizar este método, se tiene que seguir un procedimiento con el equipo.
 
-![Calibracion](doc/img/calibracion.png)
+ *Para utilizar este método, se tiene que seguir un procedimiento con el equipo*
 
--	Colgar el equipo desde el punto de medición, para que el peso propio del equipo actue sobre el sensor de fuerza. Espere hasta que el equipo calcule el factor de calibración.
--	Apoyar el equipo, para dejarlo quieto, y espere a que se configure. El equipo está listo para medir
-
-La funcion muestra diferentes mensajes para de guiar al usuario.
+*La funcion muestra diferentes mensajes para de guiar al usuario.*
 
 ```void manualSetup(float)```
 
