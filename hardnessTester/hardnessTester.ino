@@ -46,10 +46,12 @@ void setup(){
       // Se agregan los titulos de archivos, que viene despues de los "Fecha" y "Hora" (titulos por defecto)
       recorder.setTitles(7, "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio");
 	  Serial.println("[OK]\tSD");
+		waitForMachine(3000);
     }else{
 			sdModule = false;
       display.showImage(NOCARD);
       Serial.println("[ERROR]\tSD");
+			waitForMachine(3000);
     }
   }else{
     Serial.println("[ERROR]\tRTC");
@@ -86,8 +88,9 @@ void loop(){
       sprintf(averange_buff, "%.2f", averange);
       //|Columnas| "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio"
       if(!recorder.card()){
-        display.showImage(NOCARD);
+        display.showMeasure(strength_buff, "gr.\n(no guardado)");
         Serial.println("[ERROR]\tSD");
+				waitForMachine(6000);
       }else{
         Serial.println("[MJS]\tGuardando en SD");
         recorder.saveRegistry(7, " ", count_buff, averange_buff, " ", " ", " ", " ");
