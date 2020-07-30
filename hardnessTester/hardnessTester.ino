@@ -6,7 +6,7 @@ Recorder recorder;
 DataHandler dataHandler;
 
 void setup(){
-	while(wait < 6000){wait++;};
+	waitForMachine(6000);
   Serial.begin(115200);
   Serial.println("\n\"HARDNESS TESTER\"\nFirmware: "+ (String)FIRMWARE + \
                 "\t| Environment: " + (String)ARDUINO + "\t| Compiler: "+ (String)__VERSION__);
@@ -17,24 +17,26 @@ void setup(){
   recorder.begin(CS);
 
   // Menu de configuración
-  Serial.println("\n[MSJ]\t¿Ingresar el factor de forma manual?.");
-  manualScale = askTheUser("[INS]\tIngresar factor: ", between);
+  Serial.println("\n[MSJ]\t¿Formatear la configuración?.");
+  manualScale = askTheUser("[INS]\tIngresar nuevo factor: ", between);
   if(manualScale != 0){
     display.showImage(TOOL);
     EEPROM.put(memoryLocation[1], 0);
-    EEPROM.commit();
+    //EEPROM.commit();
+		Serial.println("\n[MJS]\tLOTE: 0");
     Serial.print("[CAL]\tFACTOR: "); Serial.println(manualScale);
     EEPROM.put(memoryLocation[0], manualScale);
     EEPROM.commit();
   }else{
     Serial.println("[MSJ]\tCargando configuracion guardada.");
     EEPROM.get(memoryLocation[0], manualScale);
-    Serial.print("\n[CAL]\tFACTOR: "); Serial.print(manualScale);
+    Serial.print("\n[CAL]\tFACTOR: "); Serial.println(manualScale);
     measure.manualSetup(manualScale);
     EEPROM.get(memoryLocation[1], lot);
-    Serial.print("\n[CAL]\tLOTE: ");Serial.println(lot);
+    Serial.print("[CAL]\tLOTE: ");Serial.println(lot);
   }
 
+	// Configuacion de modulo
   if(recorder.clock()){
     Serial.println("[OK]\tRTC");
     recorder.showTime();
@@ -45,14 +47,14 @@ void setup(){
       recorder.setTitles(7, "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio");
 	  Serial.println("[OK]\tSD");
     }else{
-		sdModule = false;
+			sdModule = false;
       display.showImage(NOCARD);
       Serial.println("[ERROR]\tSD");
     }
   }else{
     Serial.println("[ERROR]\tRTC");
   }
-  while(wait < 3000){wait++;};
+  waitForMachine(3000);
   sprintf(lot_buff, "%d", lot);
   recorder.saveRegistry(7, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
   Serial.println("[MSJ]\tConfiguracion terminada. Listo para medir.");
@@ -69,7 +71,7 @@ void loop(){
       flag = true;
       fruit++;
       while(minimumForce(sensibility)){
-        strength = measure.strengthAverage(stabilizer);
+        strength = measure.strengthAverage(stabilizer) / 10;
         Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
         Serial.print("|\tSEÑAL: ");Serial.println(measure.raw());
         display.showMeasure((String)strength, "kgf");
@@ -80,20 +82,19 @@ void loop(){
       averange = sum / count;
       dataHandler.preLoad(averange);
       sprintf(count_buff, "%d", fruit);
-      sprintf(strength_buff, "%.0f", averange);
-      sprintf(percentages_buff, "%.0f", dataHandler.percentages(1, 0));
+      sprintf(strength_buff, "%.2f", averange);
       //|Columnas| "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio"
       if(!recorder.card()){
         display.showImage(NOCARD);
         Serial.println("[ERROR]\tSD");
       }else{
         Serial.println("[MJS]\tGuardando en SD");
-        recorder.saveRegistry(7, " ", count_buff, strength_buff, percentages_buff, " ", " ", " ");
+        recorder.saveRegistry(7, " ", count_buff, strength_buff, " ", " ", " ", " ");
       }
       count = 0;
       Serial.print("[CAL]\tMEDICION: ");Serial.println(strength_buff);
     }else{
-      strength = measure.strength();
+      strength = measure.strength() / 10;
       Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
       Serial.print("|\tSEÑAL: ");Serial.print(measure.raw());Serial.println("|\t(Sin guardar)");
       display.showMeasure((String)strength, "kgf");
@@ -103,21 +104,23 @@ void loop(){
     if(flag){
       flag = false;
       fruit = 0;
-      sprintf(max_buff, "%.0f", dataHandler.maximum());
-      sprintf(min_buff, "%.0f", dataHandler.minimum());
-      sprintf(average_buff, "%.0f", dataHandler.average());
+      sprintf(max_buff, "%.2f", dataHandler.maximum());
+      sprintf(min_buff, "%.2f", dataHandler.minimum());
+      sprintf(average_buff, "%.2f", dataHandler.average());
+      sprintf(percentages_buff, "%.2f", dataHandler.percentages(dataHandler.maximum(), dataHandler.minimum()));
       //|Columnas| "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio"
       if(!recorder.card()){
         display.showImage(NOCARD);
         Serial.println("[ERROR]\tSD");
       }else{
         Serial.println("[MJS]\tGuardando en SD");
-        recorder.saveRegistry(7, " ", " ", " ", " ", max_buff, min_buff, average_buff);
+        recorder.saveRegistry(7, " ", " ", " ", percentages_buff, max_buff, min_buff, average_buff);
       }
       Serial.println("[MJS]\tResumen de datos calculados");
       Serial.print("\tMAXIMA: ");Serial.println(max_buff);
       Serial.print("\tMINIMA: ");Serial.println(min_buff);
       Serial.print("\tPROMEDIO: ");Serial.println(average_buff);
+      Serial.print("\tPORCENTAJE: ");Serial.println(percentages_buff);
       dataHandler.reset();
       sprintf(lot_buff, "%0.f", counter());
       if(!recorder.card()){
@@ -145,7 +148,7 @@ bool minimumForce(int threshold){
   bool mf = (measure.raw() > threshold) ? true : false;
   return mf;
 }
-
+/*
 bool waitForUser(const String& message, int period){
   byte in = 0;
   unsigned long time_now = millis();
@@ -162,7 +165,7 @@ bool waitForUser(const String& message, int period){
     return false;
   }
 }
-
+*/
 float askTheUser(const String& message, int period){
   float in = 0;
   unsigned long time_now = millis();
@@ -178,8 +181,10 @@ float askTheUser(const String& message, int period){
 }
 
 void waitForMachine(int period){
-  unsigned long time_now = millis();
-  while(millis() < time_now + period);
+	int wait = 0;
+  while(wait < period){
+		wait++;
+	};
 }
 
 float counter(){
