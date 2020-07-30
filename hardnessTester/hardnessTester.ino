@@ -75,7 +75,7 @@ void loop(){
         Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
         Serial.print("|\tSEÑAL: ");Serial.println(measure.raw());
         sprintf(strength_buff, "%.0f", strength);
-        display.showMeasure(strength_buff, "kgf");
+        display.showMeasure(strength_buff, "gr.");
         sum += strength;
         count++;
       };
@@ -99,7 +99,7 @@ void loop(){
       Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
       Serial.print("|\tSEÑAL: ");Serial.print(measure.raw());Serial.println("|\t(Sin guardar)");
       sprintf(strength_buff, "%.0f", strength);
-      display.showMeasure(strength_buff, "kgf");
+      display.showMeasure(strength_buff, "gr.");
     }
   }else{
     display.showImage(PUSH);
