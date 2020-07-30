@@ -89,12 +89,14 @@ void loop(){
       sprintf(averange_buff, "%.2f", averange);
       //|Columnas| "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio"
       if(!recorder.card()){
-        display.showMeasure(strength_buff, "gr.\n(no guardado)");
+        display.showMeasure(averange_buff, "gr.\n(no guardado)");
         Serial.println("[ERROR]\tSD");
 				waitForMachine(6000);
       }else{
         Serial.println("[MJS]\tGuardando en SD");
         recorder.saveRegistry(7, " ", count_buff, averange_buff, " ", " ", " ", " ");
+	      display.showMeasure(averange_buff, "gr.");
+	      waitForMachine(6000);
       }
       count = 0;
       Serial.print("[CAL]\tMEDICION: ");Serial.println(averange_buff);
