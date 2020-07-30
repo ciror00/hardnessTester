@@ -15,6 +15,7 @@
 const int sensibility = 100; // Valor minimo de señal para no descargar la muestra
 const byte stabilizer = 2; // Cantidad de muestras antes de devolver una medicion
 const int between = 10000; // Tiempo de espera para entrar en modo configuracion
+const int trick = 0; // Cantidad de digitos a truncar en el valor de medicion
 
 // Otras declaraciones
 bool conf = false;
@@ -36,6 +37,7 @@ long lot;
 char lot_buff[10];
 char count_buff[10];
 char strength_buff[10];
+char averange_buff[10];
 char percentages_buff[10];
 
 char max_buff[10];

@@ -71,10 +71,11 @@ void loop(){
       flag = true;
       fruit++;
       while(minimumForce(sensibility)){
-        strength = measure.strengthAverage(stabilizer) / 10;
+        strength = measure.strengthAverage(stabilizer) / pow(10, trick);
         Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
         Serial.print("|\tSEÑAL: ");Serial.println(measure.raw());
-        display.showMeasure((String)strength, "kgf");
+        sprintf(strength_buff, "%.0f", strength);
+        display.showMeasure(strength_buff, "kgf");
         sum += strength;
         count++;
       };
@@ -82,30 +83,31 @@ void loop(){
       averange = sum / count;
       dataHandler.preLoad(averange);
       sprintf(count_buff, "%d", fruit);
-      sprintf(strength_buff, "%.2f", averange);
+      sprintf(averange_buff, "%.2f", averange);
       //|Columnas| "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio"
       if(!recorder.card()){
         display.showImage(NOCARD);
         Serial.println("[ERROR]\tSD");
       }else{
         Serial.println("[MJS]\tGuardando en SD");
-        recorder.saveRegistry(7, " ", count_buff, strength_buff, " ", " ", " ", " ");
+        recorder.saveRegistry(7, " ", count_buff, averange_buff, " ", " ", " ", " ");
       }
       count = 0;
-      Serial.print("[CAL]\tMEDICION: ");Serial.println(strength_buff);
+      Serial.print("[CAL]\tMEDICION: ");Serial.println(averange_buff);
     }else{
-      strength = measure.strength() / 10;
+      strength = measure.strength() / pow(10, trick);
       Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
       Serial.print("|\tSEÑAL: ");Serial.print(measure.raw());Serial.println("|\t(Sin guardar)");
-      display.showMeasure((String)strength, "kgf");
+      sprintf(strength_buff, "%.0f", strength);
+      display.showMeasure(strength_buff, "kgf");
     }
   }else{
     display.showImage(PUSH);
     if(flag){
       flag = false;
       fruit = 0;
-      sprintf(max_buff, "%.2f", dataHandler.maximum());
-      sprintf(min_buff, "%.2f", dataHandler.minimum());
+      sprintf(max_buff, "%.0f", dataHandler.maximum());
+      sprintf(min_buff, "%.0f", dataHandler.minimum());
       sprintf(average_buff, "%.2f", dataHandler.average());
       sprintf(percentages_buff, "%.2f", dataHandler.percentages(dataHandler.maximum(), dataHandler.minimum()));
       //|Columnas| "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio"
