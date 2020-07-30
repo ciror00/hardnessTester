@@ -6,6 +6,7 @@ Recorder recorder;
 DataHandler dataHandler;
 
 void setup(){
+	while(wait < 6000){wait++;};
   Serial.begin(115200);
   Serial.println("\n\"HARDNESS TESTER\"\nFirmware: "+ (String)FIRMWARE + \
                 "\t| Environment: " + (String)ARDUINO + "\t| Compiler: "+ (String)__VERSION__);
