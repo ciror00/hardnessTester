@@ -16,23 +16,20 @@ void setup(){
   recorder.begin(CS);
 
   // Menu de configuración
-  //Serial.println("\n[MSJ]\tIngrese el peso real para calibrar el equipo.");
-  //patternWeight = askTheUser("[INS]\tPeso real: ", between);
-  if(patternWeight != 0){
+  Serial.println("\n[MSJ]\t¿Ingresar el factor de forma manual?.");
+  manualScale = askTheUser("[INS]\tIngresar factor: ", between);
+  if(manualScale != 0){
     display.showImage(TOOL);
     EEPROM.put(memoryLocation[1], 0);
     EEPROM.commit();
-    Serial.println("\n[MSJ]\tLote reiniciado.");
-    Serial.print("[MSJ]\tIniciando calibracion. Peso: "); Serial.println(patternWeight);
-    manualScale = measure.calibrate(patternWeight); // Se ingresa el peso real del equipo
     Serial.print("[CAL]\tFACTOR: "); Serial.println(manualScale);
     EEPROM.put(memoryLocation[0], manualScale);
     EEPROM.commit();
   }else{
     Serial.println("[MSJ]\tCargando configuracion guardada.");
-    //EEPROM.get(memoryLocation[0], manualScale);
-    Serial.print("\n[CAL]\tFACTOR: "); Serial.print(scale);
-    measure.manualSetup(scale);
+    EEPROM.get(memoryLocation[0], manualScale);
+    Serial.print("\n[CAL]\tFACTOR: "); Serial.print(manualScale);
+    measure.manualSetup(manualScale);
     EEPROM.get(memoryLocation[1], lot);
     Serial.print("\n[CAL]\tLOTE: ");Serial.println(lot);
   }
