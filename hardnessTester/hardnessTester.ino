@@ -76,6 +76,7 @@ void loop(){
         strength = measure.strengthAverage(stabilizer) / pow(10, trick);
         Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
         Serial.print("|\tSEÑAL: ");Serial.println(measure.raw());
+        if(strength < 0)strength = 0;
         sprintf(strength_buff, "%.0f", strength);
         display.showMeasure(strength_buff, "gr.");
         sum += strength;
@@ -102,6 +103,7 @@ void loop(){
       Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
       Serial.print("|\tSEÑAL: ");Serial.print(measure.raw());Serial.println("|\t(Sin guardar)");
       sprintf(strength_buff, "%.0f", strength);
+      if(strength < 0)strength = 0;
       display.showMeasure(strength_buff, "gr.");
     }
   }else{
