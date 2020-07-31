@@ -90,13 +90,13 @@ void loop(){
       if(!sdModule){
         display.showMeasure(force_buff, " ", "No guardado. Error en SD");
         Serial.println("[ERROR]\tSD mal configurada");
-				// waitForUser(" ", between);
-				waitForMachine(between);
+				waitForUser(" ", between);
       }else{
         Serial.println("[MJS]\tGuardando en SD");
         recorder.saveRegistry(7, " ", count_buff, averange_buff, " ", " ", " ", " ");
 	      display.showMeasure(force_buff, " ", "Guardado");
       }
+			waitForUser(" ", between);
       count = 0;
       Serial.print("[CAL]\tMEDICION: ");Serial.println(averange_buff);
     }else{
