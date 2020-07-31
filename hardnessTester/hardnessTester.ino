@@ -87,17 +87,18 @@ void loop(){
 			sprintf(force_buff, "%.0f g", averange);
       sprintf(averange_buff, "%.0f", averange);
       //|Columnas| "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio"
-      if(!recorder.card()){
+      if(!sdModule){
         display.showMeasure(force_buff, " ", "No guardado. Error en SD");
-        Serial.println("[ERROR]\tSD");
+        Serial.println("[ERROR]\tSD mal configurada");
+				// waitForUser(" ", between);
+				waitForMachine(between);
       }else{
         Serial.println("[MJS]\tGuardando en SD");
         recorder.saveRegistry(7, " ", count_buff, averange_buff, " ", " ", " ", " ");
-	      display.showMeasure(force_buff);
+	      display.showMeasure(force_buff, " ", "Guardado");
       }
       count = 0;
       Serial.print("[CAL]\tMEDICION: ");Serial.println(averange_buff);
-      waitForUser(" ", between);
     }else{
       strength = measure.strength() / pow(10, trick);
       if(strength < 0)strength = 0;
