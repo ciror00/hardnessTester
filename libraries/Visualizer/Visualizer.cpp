@@ -9,21 +9,21 @@ void Visualizer::showMessage(String text, String header, String footer, bool cle
   if(clear)this->oled.clear();
   this->oled.setTextAlignment(TEXT_ALIGN_CENTER);
   this->oled.setFont(ArialMT_Plain_16);
-  this->oled.drawString(64, 10, header);
+  this->oled.drawString(64, 5, header);
   this->oled.setFont(ArialMT_Plain_16);
-  this->oled.drawString(64, 30, text);
+  this->oled.drawString(64, 25, text);
   this->oled.setFont(ArialMT_Plain_16);
-  this->oled.drawString(64, 40, footer);
+  this->oled.drawString(64, 35, footer);
   this->oled.display();
 }
 
-void Visualizer::showMeasure(String value, String unit, String footer){
+void Visualizer::showMeasure(String value, String subtitle, String footer){
   this->oled.clear();
   this->oled.setTextAlignment(TEXT_ALIGN_CENTER);
   this->oled.setFont(ArialMT_Plain_24);
   this->oled.drawString(64, 10, value);
   this->oled.setFont(ArialMT_Plain_16);
-  this->oled.drawString(64, 30, unit);
+  this->oled.drawString(64, 30, subtitle);
   this->oled.setFont(ArialMT_Plain_10);
   this->oled.drawString(64, 45, footer);
   this->oled.display();

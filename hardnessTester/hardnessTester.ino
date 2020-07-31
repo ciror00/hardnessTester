@@ -75,8 +75,8 @@ void loop(){
         if(strength < 0)strength = 0;
         Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
         Serial.print("|\tSEÑAL: ");Serial.println(measure.raw());
-        sprintf(strength_buff, "%.0f", strength);
-        display.showMeasure(strength_buff, unit);
+        sprintf(strength_buff, "%.0f g", strength);
+        display.showMeasure(strength_buff);
         sum += strength;
         count++;
       };
@@ -84,15 +84,16 @@ void loop(){
       averange = sum / count;
       dataHandler.preLoad(averange);
       sprintf(count_buff, "%d", fruit);
+			sprintf(force_buff, "%.0f g", averange);
       sprintf(averange_buff, "%.0f", averange);
       //|Columnas| "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio"
       if(!recorder.card()){
-        display.showMeasure(averange_buff, unit, "Error en SD. No guardado");
+        display.showMeasure(force_buff, " ", "No guardado. Error en SD");
         Serial.println("[ERROR]\tSD");
       }else{
         Serial.println("[MJS]\tGuardando en SD");
         recorder.saveRegistry(7, " ", count_buff, averange_buff, " ", " ", " ", " ");
-	      display.showMeasure(averange_buff, unit);
+	      display.showMeasure(force_buff);
       }
       count = 0;
       Serial.print("[CAL]\tMEDICION: ");Serial.println(averange_buff);
@@ -102,11 +103,12 @@ void loop(){
       if(strength < 0)strength = 0;
       Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
       Serial.print("|\tSEÑAL: ");Serial.print(measure.raw());Serial.println("|\t(Sin guardar)");
-      sprintf(strength_buff, "%.0f", strength);
-      display.showMeasure(strength_buff, unit);
+      sprintf(strength_buff, "%.0f g", strength);
+      display.showMeasure(strength_buff);
     }
   }else{
     if(flag){
+			display.showMessage("Cerrando lote...");
       flag = false;
       fruit = 0;
       sprintf(max_buff, "%.0f", dataHandler.maximum());

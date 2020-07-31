@@ -88,7 +88,7 @@ Muestra un mensaje por pantalla. Recibe el parámetro:
 
 Muestra el mensaje por pantalla, con el formato de la medición realizada. Recibe los parámetros:
 -	Valor de la medición [String]
--	Unidad de la medición [String]
+-	Subtitulo debajo de la medicion [String]
 -	Pie de pantalla [String]
 
 ```void showImage(Images, String) ```
