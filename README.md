@@ -76,22 +76,26 @@ Contiene la logica para utiliza el driver SSD1306 para la visualización de dato
 
 Inicializa la clase.
 
-```void showMessage(String) ```
+```void showMessage(String , String , String , bool ) ```
 
 Muestra un mensaje por pantalla. Recibe el parámetro:
 -	Mensaje a mostrar [String]
+-	Titulo [String]
+-	Pie de pantalla [String]
+-	Limpiar pantalla antes de mostrar el mensaje [bool]
 
-```void showMeasure(String, String, bool) ```
+```void showMeasure(String, String, String) ```
 
 Muestra el mensaje por pantalla, con el formato de la medición realizada. Recibe los parámetros:
 -	Valor de la medición [String]
 -	Unidad de la medición [String]
--	Refrescar pantalla [bool]
+-	Pie de pantalla [String]
 
-```void showImage(Images) ```
+```void showImage(Images, String) ```
 
-Muestra una imagen pre definida por pantalla. Recibe el parámetro:
+Muestra una imagen pre definida por pantalla. Recibe los parámetros:
 -	Codigo de la imagen pre cargada [Images]
+-	Pie de pantalla [String]
 
 ```void reset()```
 
