@@ -5,7 +5,7 @@
 #include "Recorder.h"
 #include "DataHandler.h"
 
-#define FIRMWARE 0.584
+#define FIRMWARE 0.585
 
 #define SCK_CELL 0 // D3
 #define DT_CELL 2 // D4
@@ -14,7 +14,7 @@
 
 const int sensibility = 100; // Valor minimo de señal para no descargar la muestra
 const byte stabilizer = 2; // Cantidad de muestras antes de devolver una medicion
-const int between = 10000; // Tiempo de espera para entrar en modo configuracion
+const int between = 6000; // Tiempo que se muestra la medicion por pantalla
 const int trick = 0; // Cantidad de digitos a truncar en el valor de medicion
 
 // Otras declaraciones

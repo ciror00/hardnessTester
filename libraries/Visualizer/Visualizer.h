@@ -15,9 +15,9 @@ class Visualizer{
   public:
     Visualizer() = default;
     void begin();
-    void showMessage(String text);
-    void showMeasure(String value, String unit, bool refresh = true);
-    void showImage(Images img);
+    void showMessage(String text, String header = " ", String footer = " ", bool clear = true);
+    void showMeasure(String value, String unit, String footer = " ");
+    void showImage(Images img, String footer = " ");
     void reset();
     ~Visualizer() = default;
 };

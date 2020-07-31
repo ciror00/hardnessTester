@@ -5,25 +5,31 @@ void Visualizer::begin(){
   this->oled.flipScreenVertically();
 }
 
-void Visualizer::showMessage(String text){
-  this->oled.clear();
+void Visualizer::showMessage(String text, String header, String footer, bool clear){
+  if(clear)this->oled.clear();
   this->oled.setTextAlignment(TEXT_ALIGN_CENTER);
+  this->oled.setFont(ArialMT_Plain_16);
+  this->oled.drawString(64, 10, header);
   this->oled.setFont(ArialMT_Plain_16);
   this->oled.drawString(64, 30, text);
+  this->oled.setFont(ArialMT_Plain_16);
+  this->oled.drawString(64, 40, footer);
   this->oled.display();
 }
 
-void Visualizer::showMeasure(String value, String unit, bool refresh){
-  if(refresh)this->oled.clear();
+void Visualizer::showMeasure(String value, String unit, String footer){
+  this->oled.clear();
   this->oled.setTextAlignment(TEXT_ALIGN_CENTER);
   this->oled.setFont(ArialMT_Plain_24);
-  this->oled.drawString(64, 15, value);
+  this->oled.drawString(64, 10, value);
   this->oled.setFont(ArialMT_Plain_16);
-  this->oled.drawString(64, 45, unit);
+  this->oled.drawString(64, 30, unit);
+  this->oled.setFont(ArialMT_Plain_10);
+  this->oled.drawString(64, 45, footer);
   this->oled.display();
 }
 
-void Visualizer::showImage(Images img){
+void Visualizer::showImage(Images img, String footer){
   this->oled.clear();
   switch (img) {
     case ZYX: this->oled.drawXbm(32,5,zyx_width,zyx_height,(const unsigned char *)logo_ZYX);break;
@@ -33,6 +39,8 @@ void Visualizer::showImage(Images img){
     case NOCARD: this->oled.drawXbm(50,10,sd_width,sd_height,(const unsigned char *)no_sdCard);break;
     case TOOL: this->oled.drawXbm(40,10,tools_width,tools_height,(const unsigned char *)tools);break;
   }
+  this->oled.setFont(ArialMT_Plain_10);
+  this->oled.drawString(64, 45, footer);
   this->oled.display();
 }
 
