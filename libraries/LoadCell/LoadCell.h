@@ -10,7 +10,6 @@ class LoadCell{
   HX711 doubleEnded;
 
   byte dout, pd_sck, gain;
-  long layover;
   long currentValue;
   long crudeValue;
   long readValue = 0;
@@ -21,7 +20,7 @@ class LoadCell{
     long strength();
     long strengthAverage(int amount);
     long raw();
-    float calibrate(long patternWeight, int samples = 20, int iteration = 1);
+    float calibrate(long patternWeight, int samples = 1, int iteration = 1);
     void manualSetup(float layover = 1 );
     ~LoadCell() = default;
 };
