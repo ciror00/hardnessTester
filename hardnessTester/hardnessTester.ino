@@ -101,14 +101,15 @@ void loop(){
 			waitForUser(" ", showMeasure);
       //count = 0;
       Serial.print("[CAL]\tMEDICION: ");Serial.println(strength);
- strength = 0;
+			strength = 0;
     }else{
       disposable = measure.strength() / pow(10, trick);
       if(disposable < 0)disposable = 0;
       Serial.print("[CAL]\tFUERZA: ");Serial.print(disposable);
       Serial.print("|\tSEÑAL: ");Serial.print(measure.raw());Serial.println("|\t(Sin guardar)");
-      sprintf(disposable_buff, "%.0f g", disposable);
-      display.showMeasure(disposable_buff);
+      //sprintf(disposable_buff, "%.0f g", disposable);
+      //display.showMeasure(disposable_buff);
+			display.showImage(ARROW);
     }
   }else{
     if(flag){
