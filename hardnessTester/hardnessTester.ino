@@ -101,6 +101,7 @@ void loop(){
 			waitForUser(" ", showMeasure);
       //count = 0;
       Serial.print("[CAL]\tMEDICION: ");Serial.println(strength);
+ strength = 0;
     }else{
       disposable = measure.strength() / pow(10, trick);
       if(disposable < 0)disposable = 0;
