@@ -5,7 +5,7 @@
 #include "Recorder.h"
 #include "DataHandler.h"
 
-#define FIRMWARE 0.65
+#define FIRMWARE 0.652
 
 #define SCK_CELL 0 // D3
 #define DT_CELL 2 // D4
@@ -13,11 +13,12 @@
 #define TOUCH 16  // D0
 
 // Declaraciones de la configuracion, editables
-const long sensibility = 40; // Valor minimo de fuerza para tomar un registro [gr]
+const long delta = 40; // Valor minimo de fuerza para tomar un registro [gr]
+const long sigma = 0.9; // Correccion del error
+
 const byte stabilizer = 5; // Cantidad de muestras antes de devolver una medicion
 const int showMeasure = 1000; // Tiempo que se muestra la medicion por pantalla
 const int waitConfiguration = 6000; // Tiempo de espera para entrar en modo configuracion
-const int trick = 0; // Cantidad de digitos a truncar en el valor de medicion
 //const long elasticLimit = 13000; // Valor maximo relativo soportado por el equipo [gr]
 
 // Otras declaraciones

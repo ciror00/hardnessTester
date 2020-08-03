@@ -28,7 +28,7 @@ void setup(){
     EEPROM.put(memoryLocation[0], manualScale);
     EEPROM.commit();
   }else{
-    Serial.println("[MSJ]\tCargando configuracion guardada.");
+    Serial.println("\n[MSJ]\tCargando configuracion guardada.");
     EEPROM.get(memoryLocation[0], manualScale);
     Serial.print("\n[CAL]\tFACTOR: "); Serial.println(manualScale);
     measure.manualSetup(manualScale);
@@ -68,11 +68,11 @@ void setup(){
 void loop(){
   if(digitalRead(TOUCH))switcher();
   if(button == true){
-    if(minimumForce(sensibility)){
+    if(minimumForce(delta)){
       flag = true;
       fruit++;
-      while(minimumForce(sensibility)){
-        disposable = measure.strengthAverage(stabilizer) / pow(10, trick);
+      while(minimumForce(delta)){
+        disposable = measure.strengthAverage(stabilizer) * delta;
         Serial.print("[CAL]\tFUERZA: ");Serial.print(disposable);
         Serial.print("|\tSEÑAL: ");Serial.println(measure.raw());
 	      if(disposable < 0)disposable = 0;
@@ -104,7 +104,7 @@ void loop(){
       Serial.print("[CAL]\tMEDICION: ");Serial.println(strength);
 			strength = 0;
     }else{
-      disposable = measure.strength() / pow(10, trick);
+      disposable = measure.strength() * delta;
       Serial.print("[CAL]\tFUERZA: ");Serial.print(disposable);
       Serial.print("|\tSEÑAL: ");Serial.print(measure.raw());Serial.println("|\tFuerza insuficiente");
 	    if(disposable < 0)disposable = 0;
