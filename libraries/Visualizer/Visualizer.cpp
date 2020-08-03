@@ -38,7 +38,6 @@ void Visualizer::showImage(Images img, String footer){
     case CARD: this->oled.drawXbm(50,10,sd_width,sd_height,(const unsigned char *)sdCard);break;
     case NOCARD: this->oled.drawXbm(50,10,sd_width,sd_height,(const unsigned char *)no_sdCard);break;
     case TOOL: this->oled.drawXbm(40,10,tools_width,tools_height,(const unsigned char *)tools);break;
-    case ARROW: this->oled.drawXbm(40,10,arrow_width,arrow_height,(const unsigned char *)arrows);break;
   }
   this->oled.setFont(ArialMT_Plain_10);
   this->oled.drawString(64, 45, footer);

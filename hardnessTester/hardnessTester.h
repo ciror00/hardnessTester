@@ -5,7 +5,7 @@
 #include "Recorder.h"
 #include "DataHandler.h"
 
-#define FIRMWARE 0.63
+#define FIRMWARE 0.640
 
 #define SCK_CELL 0 // D3
 #define DT_CELL 2 // D4
@@ -18,7 +18,7 @@ const byte stabilizer = 2; // Cantidad de muestras antes de devolver una medicio
 const int showMeasure = 1000; // Tiempo que se muestra la medicion por pantalla
 const int waitConfiguration = 6000; // Tiempo de espera para entrar en modo configuracion
 const int trick = 0; // Cantidad de digitos a truncar en el valor de medicion
-const long elasticLimit = 13000; // Valor maximo relativo soportado por el equipo [gr]
+//const long elasticLimit = 13000; // Valor maximo relativo soportado por el equipo [gr]
 
 // Otras declaraciones
 bool conf = false;

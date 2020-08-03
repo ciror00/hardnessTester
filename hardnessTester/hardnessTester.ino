@@ -17,8 +17,8 @@ void setup(){
   recorder.begin(CS);
 
   // Menu de configuración
-  Serial.println("\n[MSJ]\t¿Formatear la configuración?.");
-  manualScale = askTheUser("[INS]\tIngresar nuevo factor: ", waitConfiguration);
+  Serial.println("\n[MSJ]\tIngrese nuevo facto para formatear.");
+  manualScale = askTheUser("[INS]\tFactor: ", waitConfiguration);
   if(manualScale != 0){
     display.showImage(TOOL);
     EEPROM.put(memoryLocation[1], 1);
@@ -44,7 +44,7 @@ void setup(){
 		sdModule = true;
       display.showImage(CARD, "SD operativa");
       // Se agregan los titulos de archivos, que viene despues de los "Fecha" y "Hora" (titulos por defecto)
-      recorder.setTitles(7, "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio");
+      recorder.setTitles(6, "Lote", "Unidad", "Fuerza", "Maximo", "Minimo", "Promedio");
 	  Serial.println("[OK]\tSD");
     }else{
 			sdModule = false;
@@ -56,7 +56,8 @@ void setup(){
   }
   waitForMachine(9000);
   sprintf(lot_buff, "%d", lot);
-  recorder.saveRegistry(7, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
+	//|Columnas| "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio"
+  recorder.saveRegistry(6, lot_buff, " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
   Serial.println("[MSJ]\tConfiguracion terminada. Listo para medir.");
   EEPROM.end();
 
@@ -87,15 +88,15 @@ void loop(){
       sprintf(count_buff, "%d", fruit);
 			sprintf(force_buff, "%.0f g", strength);
       sprintf(strength_buff, "%.0f", strength);
-			sprintf(percentages_buff, "%.2f", dataHandler.percentages(elasticLimit, strength));
-      //|Columnas| "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio"
+			//sprintf(percentages_buff, "%.2f", dataHandler.percentages(elasticLimit, strength));
       if(!sdModule){
         display.showMeasure(force_buff, " ", "No guardado. Error en SD");
         Serial.println("[ERROR]\tSD mal configurada");
 				waitForUser(" ", showMeasure);
       }else{
         Serial.println("[MJS]\tGuardando en SD");
-        recorder.saveRegistry(7, " ", count_buff, strength_buff, percentages_buff, " ", " ", " ");
+				//|Columnas| "Lote", "Unidad", "Fuerza", "Maximo", "Minimo", "Promedio"
+        recorder.saveRegistry(6, " ", count_buff, strength_buff, " ", " ", " ");
 	      display.showMeasure(force_buff, " ", "Guardado");
       }
 			waitForUser(" ", showMeasure);
@@ -106,10 +107,9 @@ void loop(){
       disposable = measure.strength() / pow(10, trick);
       if(disposable < 0)disposable = 0;
       Serial.print("[CAL]\tFUERZA: ");Serial.print(disposable);
-      Serial.print("|\tSEÑAL: ");Serial.print(measure.raw());Serial.println("|\t(Sin guardar)");
+      Serial.print("|\tSEÑAL: ");Serial.print(measure.raw());Serial.println("|\tFuerza insuficiente");
       sprintf(disposable_buff, "0 g"); // Se fija un cero para que se muestre por pantalla
       display.showMeasure(disposable_buff);
-			//display.showImage(ARROW);
     }
   }else{
     if(flag){
@@ -120,19 +120,19 @@ void loop(){
       sprintf(min_buff, "%.0f", dataHandler.minimum());
       sprintf(average_buff, "%.2f", dataHandler.average());
       //sprintf(percentages_buff, "%.2f", dataHandler.percentages(dataHandler.maximum(), dataHandler.minimum()));
-      //|Columnas| "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio"
       if(!recorder.card()){
         display.showImage(NOCARD, "Error en SD");
         Serial.println("[ERROR]\tSD no reconocida");
       }else{
         Serial.println("[MJS]\tGuardando en SD");
-        recorder.saveRegistry(7, " ", " ", " ", " ", max_buff, min_buff, average_buff);
+				//|Columnas| "Lote", "Unidad", "Fuerza", "Maximo", "Minimo", "Promedio"
+        recorder.saveRegistry(6, " ", " ", " ", max_buff, min_buff, average_buff);
       }
       Serial.println("[MJS]\tResumen de datos calculados");
       Serial.print("\tMAXIMA: ");Serial.println(max_buff);
       Serial.print("\tMINIMA: ");Serial.println(min_buff);
       Serial.print("\tPROMEDIO: ");Serial.println(average_buff);
-      Serial.print("\tPORCENTAJE: ");Serial.println(percentages_buff);
+      //Serial.print("\tPORCENTAJE: ");Serial.println(percentages_buff);
       dataHandler.reset();
       sprintf(lot_buff, "%0.f", counter());
       if(!recorder.card()){
@@ -140,7 +140,8 @@ void loop(){
         Serial.println("[ERROR]\tSD no reconocida");
       }else{
         Serial.println("[MJS]\tGuardando en SD");
-        recorder.saveRegistry(7, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
+				//|Columnas| "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio"
+        recorder.saveRegistry(6, lot_buff, " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
       }
       Serial.print("[MJS]\tRegistro de lote cerrador.");Serial.print("\t|LOTE: ");Serial.println(lot_buff);
     }
