@@ -16,7 +16,7 @@
 const long delta = 40; // Valor minimo de fuerza para tomar un registro [gr]
 const float sigma = 0.9; // Correccion del error
 
-const byte stabilizer = 5; // Cantidad de muestras antes de devolver una medicion
+const byte stabilizer = 2; // Cantidad de muestras antes de devolver una medicion
 const int showMeasure = 1000; // Tiempo que se muestra la medicion por pantalla
 const int waitConfiguration = 6000; // Tiempo de espera para entrar en modo configuracion
 //const long elasticLimit = 13000; // Valor maximo relativo soportado por el equipo [gr]
