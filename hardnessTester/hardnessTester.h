@@ -14,7 +14,7 @@
 
 // Declaraciones de la configuracion, editables
 const long delta = 40; // Valor minimo de fuerza para tomar un registro [gr]
-const long sigma = 0.9; // Correccion del error
+const float sigma = 0.9; // Correccion del error
 
 const byte stabilizer = 5; // Cantidad de muestras antes de devolver una medicion
 const int showMeasure = 1000; // Tiempo que se muestra la medicion por pantalla
