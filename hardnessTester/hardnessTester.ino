@@ -68,11 +68,11 @@ void setup(){
 void loop(){
   if(digitalRead(TOUCH))switcher();
   if(button == true){
-    if(minimumForce(delta)){
+    if(minimumForce(sensibility)){
       flag = true;
       fruit++;
-      while(minimumForce(delta)){
-        disposable = measure.strengthAverage(stabilizer) * delta;
+      while(minimumForce(sensibility)){
+        disposable = measure.strengthAverage(stabilizer) / pow(10, trick);
         Serial.print("[CAL]\tFUERZA: ");Serial.print(disposable);
         Serial.print("|\tSEÑAL: ");Serial.println(measure.raw());
 	      if(disposable < 0)disposable = 0;
@@ -104,7 +104,7 @@ void loop(){
       Serial.print("[CAL]\tMEDICION: ");Serial.println(strength);
 			strength = 0;
     }else{
-      disposable = measure.strength() * delta;
+      disposable = measure.strength() / pow(10, trick);
       Serial.print("[CAL]\tFUERZA: ");Serial.print(disposable);
       Serial.print("|\tSEÑAL: ");Serial.print(measure.raw());Serial.println("|\tFuerza insuficiente");
 	    if(disposable < 0)disposable = 0;
