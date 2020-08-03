@@ -73,9 +73,9 @@ void loop(){
       fruit++;
       while(minimumForce(sensibility)){
         disposable = measure.strengthAverage(stabilizer) / pow(10, trick);
-        if(disposable < 0)disposable = 0;
         Serial.print("[CAL]\tFUERZA: ");Serial.print(disposable);
         Serial.print("|\tSEÑAL: ");Serial.println(measure.raw());
+	      if(disposable < 0)disposable = 0;
         sprintf(disposable_buff, "%.0f g", disposable);
         display.showMeasure(disposable_buff);
         //sum += strength;
@@ -105,9 +105,9 @@ void loop(){
 			strength = 0;
     }else{
       disposable = measure.strength() / pow(10, trick);
-      if(disposable < 0)disposable = 0;
       Serial.print("[CAL]\tFUERZA: ");Serial.print(disposable);
       Serial.print("|\tSEÑAL: ");Serial.print(measure.raw());Serial.println("|\tFuerza insuficiente");
+	    if(disposable < 0)disposable = 0;
       sprintf(disposable_buff, "0 g"); // Se fija un cero para que se muestre por pantalla
       display.showMeasure(disposable_buff);
     }
