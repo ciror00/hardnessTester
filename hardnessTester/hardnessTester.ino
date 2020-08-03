@@ -107,9 +107,9 @@ void loop(){
       if(disposable < 0)disposable = 0;
       Serial.print("[CAL]\tFUERZA: ");Serial.print(disposable);
       Serial.print("|\tSEÑAL: ");Serial.print(measure.raw());Serial.println("|\t(Sin guardar)");
-      //sprintf(disposable_buff, "%.0f g", disposable);
-      //display.showMeasure(disposable_buff);
-			display.showImage(ARROW);
+      sprintf(disposable_buff, "0 g"); // Se fija un cero para que se muestre por pantalla
+      display.showMeasure(disposable_buff);
+			//display.showImage(ARROW);
     }
   }else{
     if(flag){
