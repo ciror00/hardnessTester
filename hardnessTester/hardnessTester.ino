@@ -17,24 +17,33 @@ void setup(){
   recorder.begin(CS);
 
   // Menu de configuración
-  Serial.println("\n[MSJ]\tIngrese nuevo facto para formatear.");
-  manualScale = askTheUser("[INS]\tFactor: ", waitConfiguration);
-  if(manualScale != 0){
+  Serial.println("\n[MSJ]\tIngrese un peso para iniciar la calibracion automática.");
+  scaleCalculation = askTheUser("[INS]\tPeso: ", waitConfiguration);
+  if(scaleCalculation > 0){
     display.showImage(TOOL);
-    EEPROM.put(memoryLocation[1], 1);
-    //EEPROM.commit();
-		Serial.println("\n[MJS]\tLOTE: 1");
-    Serial.print("[CAL]\tFACTOR: "); Serial.println(manualScale);
+		manualScale = measure.calibrate(scaleCalculation);
+		Serial.print("\n[CAL]\tFACTOR: "); Serial.println(manualScale);
     EEPROM.put(memoryLocation[0], manualScale);
     EEPROM.commit();
-  }else{
-    Serial.println("\n[MSJ]\tCargando configuracion guardada.");
+    EEPROM.end();
+		Serial.println("\n[MJS]\tReiniciando equipo...");
+		waitForMachine(waitConfiguration);
+		ESP.restart();
+  }else if(scaleCalculation == 0){
+		EEPROM.put(memoryLocation[1], 1);
+    //EEPROM.commit();
+		Serial.println("\n[MJS]\tLOTE: 1");
+    Serial.print("[CAL]\tFACTOR: "); Serial.println(scale);
+    EEPROM.put(memoryLocation[0], scale);
+    EEPROM.commit();
+  }else if(scaleCalculation == -1){
+		Serial.println("\n[MSJ]\tCargando configuracion guardada.");
     EEPROM.get(memoryLocation[0], manualScale);
-    Serial.print("\n[CAL]\tFACTOR: "); Serial.println(manualScale);
+    Serial.print("[MSJ]\tFACTOR: "); Serial.println(manualScale);
     measure.manualSetup(manualScale);
     EEPROM.get(memoryLocation[1], lot);
     Serial.print("[CAL]\tLOTE: ");Serial.println(lot);
-  }
+	}
 
 	// Configuacion de modulo
   if(recorder.clock()){
@@ -182,7 +191,7 @@ bool waitForUser(const String& message, int period){
 }
 
 float askTheUser(const String& message, int period){
-  float in = 0;
+  float in = -1;
   unsigned long time_now = millis();
   Serial.print(message);
   while(millis() < time_now + period){
