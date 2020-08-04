@@ -7,7 +7,7 @@ bool Recorder::begin(const int cs){
 	this->setting = false;
 }
 
-bool Recorder::clock(){
+bool Recorder::clock(int gmt){
 	if (!this->rtc.begin()) {
     return this->clocker;
 	}else{
@@ -16,6 +16,7 @@ bool Recorder::clock(){
 	if (this->rtc.lostPower()) {
 		// Fijar a fecha y hora de compilacion
 		this->rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+		this->setUTC(gmt);
    }
 	 return this->clocker;
 }
@@ -28,13 +29,12 @@ bool Recorder::card(){
  return this->setting;
 }
 
-/*
-		Se crea un método para configurar los titulos del CSV.
-		Por defecto, se crean los titulos "Fecha" y "Hora" como primeras columnas.
-		Se pasa por parametro la cantidad de titulos, despues de los por defecto. Tambien
-	se pasan los todos los titulos separados por coma.
-
-*/
+void Recorder::setUTC(int sinc){
+	PRINT("> Correccion de hora UTC\n");
+	this->date = this->rtc.now();
+	this->rtc.adjust(DateTime(this->date.year(), this->date.month(), this->date.day(),\
+	this->date.hour()+sinc, this->date.minute(), this->date.second()));
+}
 
 void Recorder::showTime(){
 	char t[32];
@@ -44,6 +44,14 @@ void Recorder::showTime(){
 		this->date.day(), this->date.month(), this->date.year());
 		PRINT(t);
 }
+
+/*
+		Se crea un método para configurar los titulos del CSV.
+		Por defecto, se crean los titulos "Fecha" y "Hora" como primeras columnas.
+		Se pasa por parametro la cantidad de titulos, despues de los por defecto. Tambien
+	se pasan los todos los titulos separados por coma.
+
+*/
 
 bool Recorder::setTitles(int numb, ...){
 	this->date = this->rtc.now();

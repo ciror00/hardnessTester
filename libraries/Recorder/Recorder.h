@@ -22,9 +22,10 @@ class Recorder{
 	public:
 		Recorder() = default;
     bool begin(const int cs);
-    bool clock();
+    bool clock(int gmt = -3);
     bool card();
     void showTime();
+    void setUTC(int sinc);
     bool setTitles(int numb, ...);
     bool saveRegistry(int numb, ...);
 		~Recorder() = default;
