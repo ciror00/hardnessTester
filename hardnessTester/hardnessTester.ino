@@ -22,6 +22,7 @@ void setup(){
   if(scaleCalculation > 0){
     display.showImage(TOOL);
 		manualScale = measure.calibrate(scaleCalculation);
+ manualScale = (-1) * manualScale;
 		Serial.print("\n[CAL]\tFACTOR: "); Serial.println(manualScale);
     EEPROM.put(memoryLocation[0], manualScale);
     EEPROM.commit();
