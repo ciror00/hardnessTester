@@ -17,12 +17,11 @@ void setup(){
   recorder.begin(CS);
 
   // Menu de configuración
-  Serial.println("\n[MSJ]\tIngrese un peso para iniciar la calibracion automática.");
+  Serial.println("\n[MSJ]\tIngrese un peso para iniciar la calibración automática.");
   scaleCalculation = askTheUser("[INS]\tPeso: ", waitConfiguration);
   if(scaleCalculation > 0){
     display.showImage(TOOL);
-		manualScale = measure.calibrate(scaleCalculation);
- manualScale = (-1) * manualScale;
+		manualScale = -(measure.calibrate(scaleCalculation));
 		Serial.print("\n[CAL]\tFACTOR: "); Serial.println(manualScale);
     EEPROM.put(memoryLocation[0], manualScale);
     EEPROM.commit();
@@ -31,11 +30,21 @@ void setup(){
 		waitForMachine(waitConfiguration);
 		ESP.restart();
   }else if(scaleCalculation == 0){
+		Serial.println("\n[MSJ]\tCalibración automática cancelada.");
+		Serial.println("\n[MSJ]\t¿Ingresar el facto de forma manual?");
+		manualScale = askTheUser("[INS]\tFactor: ", waitConfiguration);
+		if(manualScale != 0){
+			Serial.print(manualScale);
+			Serial.println("\n[MSJ]\tConfiguracion manual aceptada.");
+		}else{
+			manualScale = scale;
+			Serial.print(manualScale);
+			Serial.println("\n[MSJ]\tConfiguracion por defecto tomada.");
+		}
 		EEPROM.put(memoryLocation[1], 1);
-    //EEPROM.commit();
 		Serial.println("\n[MJS]\tLOTE: 1");
-    Serial.print("[CAL]\tFACTOR: "); Serial.println(scale);
-    EEPROM.put(memoryLocation[0], scale);
+    Serial.print("[CAL]\tFACTOR: "); Serial.println(manualScale);
+    EEPROM.put(memoryLocation[0], manualScale);
     EEPROM.commit();
   }else if(scaleCalculation == -1){
 		Serial.println("\n[MSJ]\tCargando configuracion guardada.");
