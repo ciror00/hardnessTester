@@ -31,16 +31,9 @@ void setup(){
 		ESP.restart();
   }else if(scaleCalculation == 0){
 		Serial.println("\n[MSJ]\tCalibración automática cancelada.");
-		Serial.println("\n[MSJ]\t¿Ingresar el facto de forma manual?");
-		manualScale = askTheUser("[INS]\tFactor: ", waitConfiguration);
-		if(manualScale != 0){
-			Serial.print(manualScale);
-			Serial.println("\n[MSJ]\tConfiguracion manual aceptada.");
-		}else{
-			manualScale = scale;
-			Serial.print(manualScale);
-			Serial.println("\n[MSJ]\tConfiguracion por defecto tomada.");
-		}
+    Serial.println("\n[MSJ]\tCalibración por defecto.");
+    manualScale = scale;
+    Serial.print(manualScale);
 		EEPROM.put(memoryLocation[1], 1);
 		Serial.println("\n[MJS]\tLOTE: 1");
     Serial.print("[CAL]\tFACTOR: "); Serial.println(manualScale);
