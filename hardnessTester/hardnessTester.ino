@@ -218,7 +218,8 @@ float counter(){
   float number;
   EEPROM.begin(memorySize);
   EEPROM.get(memoryLocation[1], number);
-  EEPROM.put(memoryLocation[1],number+1);
+	number++;
+  EEPROM.put(memoryLocation[1],number);
   EEPROM.commit();
   EEPROM.end();
   return number;
