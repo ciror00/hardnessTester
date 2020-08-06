@@ -87,7 +87,7 @@ void loop(){
         disposable = measure.strengthAverage(stabilizer);
         Serial.print("[CAL]\tFUERZA: ");Serial.print(disposable);
         Serial.print("|\tSEÑAL: ");Serial.println(measure.raw());
-	      if(disposable < 0)disposable = 0;
+	      if(disposable < sensibility)disposable = sensibility;
         sprintf(disposable_buff, "%.0f g", disposable);
         display.showMeasure(disposable_buff);
         //sum += strength;
