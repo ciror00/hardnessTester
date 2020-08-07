@@ -110,6 +110,28 @@ Encapsula las librerias para el manejo del modulo SD y el RTC. Crear la logica p
 Inicializa la clase. Recibe los parámetros:
 -	Pin de entrada [int]
 
+```bool clock(int)```
+
+Chequeo y configuracion de RTC. Recibe el parámetro:
+-	Desfasaje de hora GMT (de fecto cero) [int]
+
+```bool card()```
+
+Chequeo y configuracion de modulo SD.
+
+```void showTime()```
+
+Llama al metodo para imprimir por pantalla la hora configurada por el equipo.
+
+```void setDate(int, int , int , int , int)```
+
+Configura manualmente el RTC. Recibe los parámetros:
+-	Año [int]
+-	Mes [int]
+-	Dia [int]
+-	Horas [int]
+-	Minutos [int]
+
 ```bool setTitles(int numb, ...)```
 
 Configura los titulos que se utilizaran en las columnas del CSV. Recibe el parámetro:
@@ -146,12 +168,6 @@ Devuelve el maximo de los datos pre cargados.
 ```float minimum()```
 
 Devuelve el minimo de los datos pre cargados.
-
-```float percentages(long, long)```
-
-Devuelve el valor porcentual de los parametros. Recibe los parámetros:
--	Valor maximo [float]
--	Valor de referencia [float]
 
 ```void reset()```
 
