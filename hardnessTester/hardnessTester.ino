@@ -46,7 +46,6 @@ void setup(){
     Serial.print("[MSJ]\tFACTOR: "); Serial.println(manualScale);
     measure.manualSetup(manualScale);
     EEPROM.get(memoryLocation[1], lot);
-		lot++;
     Serial.print("[CAL]\tLOTE: ");Serial.println(lot);
 	}
 
@@ -93,17 +92,13 @@ void loop(){
 	      if(disposable < sensibility)disposable = sensibility;
         sprintf(disposable_buff, "%.0f g", disposable);
         display.showMeasure(disposable_buff);
-        //sum += strength;
-        //count++;
 				if(disposable >= strength)strength = disposable;
       };
       display.showMessage("Procesando...");
-      //averange = sum / count;
       dataHandler.preLoad(strength);
       sprintf(count_buff, "%d", fruit);
 			sprintf(force_buff, "%.0f g", strength);
       sprintf(strength_buff, "%.0f", strength);
-			//sprintf(percentages_buff, "%.2f", dataHandler.percentages(elasticLimit, strength));
       if(!sdModule){
         display.showMeasure(force_buff, " ", "No guardado. Error en SD");
         Serial.println("[ERROR]\tSD mal configurada");
@@ -134,7 +129,6 @@ void loop(){
       sprintf(max_buff, "%.0f", dataHandler.maximum());
       sprintf(min_buff, "%.0f", dataHandler.minimum());
       sprintf(average_buff, "%.2f", dataHandler.average());
-      //sprintf(percentages_buff, "%.2f", dataHandler.percentages(dataHandler.maximum(), dataHandler.minimum()));
       if(!recorder.card()){
         display.showImage(NOCARD, "Error en SD");
         Serial.println("[ERROR]\tSD no reconocida");
@@ -147,7 +141,6 @@ void loop(){
       Serial.print("\tMAXIMA: ");Serial.println(max_buff);
       Serial.print("\tMINIMA: ");Serial.println(min_buff);
       Serial.print("\tPROMEDIO: ");Serial.println(average_buff);
-      //Serial.print("\tPORCENTAJE: ");Serial.println(percentages_buff);
       dataHandler.reset();
       lot = counter();
       sprintf(lot_buff, "%d", lot);
