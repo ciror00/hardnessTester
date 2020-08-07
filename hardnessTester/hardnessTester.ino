@@ -24,6 +24,8 @@ void setup(){
 		manualScale = -(measure.calibrate(scaleCalculation));
 		Serial.print("\n[CAL]\tFACTOR: "); Serial.println(manualScale);
     EEPROM.put(memoryLocation[0], manualScale);
+		EEPROM.put(memoryLocation[1], 1);
+		Serial.println("[MJS]\tLOTE: 1");
     EEPROM.commit();
     EEPROM.end();
 		Serial.println("\n[MJS]\tReiniciando equipo...");
@@ -44,6 +46,7 @@ void setup(){
     Serial.print("[MSJ]\tFACTOR: "); Serial.println(manualScale);
     measure.manualSetup(manualScale);
     EEPROM.get(memoryLocation[1], lot);
+		lot++;
     Serial.print("[CAL]\tLOTE: ");Serial.println(lot);
 	}
 
@@ -56,7 +59,7 @@ void setup(){
 		sdModule = true;
       display.showImage(CARD, "SD operativa");
       // Se agregan los titulos de archivos, que viene despues de los "Fecha" y "Hora" (titulos por defecto)
-      recorder.setTitles(6, "Lote", "Unidad", "Fuerza", "Maximo", "Minimo", "Promedio");
+      titles = recorder.setTitles(6, "Lote", "Unidad", "Fuerza", "Maximo", "Minimo", "Promedio");
 	  Serial.println("[OK]\tSD");
     }else{
 			sdModule = false;
@@ -69,7 +72,7 @@ void setup(){
   waitForMachine(9000);
   sprintf(lot_buff, "%d", lot);
 	//|Columnas| "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio"
-  recorder.saveRegistry(6, lot_buff, " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
+  if(titles)recorder.saveRegistry(6, lot_buff, " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
   Serial.println("[MSJ]\tConfiguracion terminada. Listo para medir.");
   EEPROM.end();
 
@@ -147,7 +150,7 @@ void loop(){
       //Serial.print("\tPORCENTAJE: ");Serial.println(percentages_buff);
       dataHandler.reset();
       lot = counter();
-      sprintf(lot_buff, "%0.d", lot);
+      sprintf(lot_buff, "%d", lot);
       if(!recorder.card()){
         display.showImage(NOCARD, "Error en SD");
         Serial.println("[ERROR]\tSD no reconocida");
