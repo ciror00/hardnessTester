@@ -31,11 +31,10 @@ void setup(){
 		ESP.restart();
   }else if(scaleCalculation == 0){
 		Serial.println("\n[MSJ]\tCalibración automática cancelada.");
-    Serial.println("\n[MSJ]\tCalibración por defecto.");
+    Serial.println("[MSJ]\tCalibración por defecto.");
     manualScale = scale;
-    Serial.print(manualScale);
 		EEPROM.put(memoryLocation[1], 1);
-		Serial.println("\n[MJS]\tLOTE: 1");
+		Serial.println("[MJS]\tLOTE: 1");
     Serial.print("[CAL]\tFACTOR: "); Serial.println(manualScale);
     EEPROM.put(memoryLocation[0], manualScale);
     EEPROM.commit();
@@ -51,6 +50,7 @@ void setup(){
 	// Configuacion de modulo
   if(recorder.clock()){
     Serial.println("[OK]\tRTC");
+		if(dateTimeSetting)recorder.setDate(dates[2],dates[1],dates[0],times[0],times[1]);
     recorder.showTime();
     if(recorder.card()){
 		sdModule = true;
@@ -146,7 +146,8 @@ void loop(){
       Serial.print("\tPROMEDIO: ");Serial.println(average_buff);
       //Serial.print("\tPORCENTAJE: ");Serial.println(percentages_buff);
       dataHandler.reset();
-      sprintf(lot_buff, "%0.f", counter());
+      lot = counter();
+      sprintf(lot_buff, "%0.d", lot);
       if(!recorder.card()){
         display.showImage(NOCARD, "Error en SD");
         Serial.println("[ERROR]\tSD no reconocida");
@@ -214,8 +215,8 @@ void waitForMachine(int period){
 	};
 }
 
-float counter(){
-  float number;
+unsigned int counter(){
+  unsigned int number;
   EEPROM.begin(memorySize);
   EEPROM.get(memoryLocation[1], number);
 	number++;
