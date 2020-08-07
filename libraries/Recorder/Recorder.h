@@ -22,7 +22,7 @@ class Recorder{
 	public:
 		Recorder() = default;
     bool begin(const int cs);
-    bool clock(int gmt = -3);
+    bool clock(int gmt = 0);
     bool card();
     void showTime();
     void setDate(int y=2020, int m=1, int d=1, int h=0, int x=0);

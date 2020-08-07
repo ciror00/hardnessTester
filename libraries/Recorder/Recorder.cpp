@@ -16,7 +16,7 @@ bool Recorder::clock(int gmt){
 	if (this->rtc.lostPower()) {
 		// Fijar a fecha y hora de compilacion
 		this->rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
-		this->setUTC(gmt);
+		//this->setUTC(gmt);
    }
 	 return this->clocker;
 }
