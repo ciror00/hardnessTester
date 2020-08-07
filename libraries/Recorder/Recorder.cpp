@@ -29,6 +29,12 @@ bool Recorder::card(){
  return this->setting;
 }
 
+void Recorder::setDate(int y, int m, int d, int h, int x){
+	PRINT("> Ajute de hora por defecto\n");
+	//this->date = this->rtc.now();
+	this->rtc.adjust(DateTime(y, m, d, h, x, 0));
+}
+
 void Recorder::setUTC(int sinc){
 	PRINT("> Correccion de hora UTC\n");
 	this->date = this->rtc.now();

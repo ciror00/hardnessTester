@@ -25,6 +25,7 @@ class Recorder{
     bool clock(int gmt = -3);
     bool card();
     void showTime();
+    void setDate(int y=2020, int m=1, int d=1, int h=0, int x=0);
     void setUTC(int sinc);
     bool setTitles(int numb, ...);
     bool saveRegistry(int numb, ...);
