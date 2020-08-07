@@ -45,7 +45,7 @@ void Recorder::setUTC(int sinc){
 void Recorder::showTime(){
 	char t[32];
 	this->date = this->rtc.now();
-	sprintf(t, "> %02d:%02d:%02d %02d/%02d/%02d \n",  \
+	sprintf(t, "> %02d:%02d:%02d %02d/%02d/%04d \n",  \
 		this->date.hour(), this->date.minute(), this->date.second(), \
 		this->date.day(), this->date.month(), this->date.year());
 		PRINT(t);
@@ -61,7 +61,7 @@ void Recorder::showTime(){
 
 bool Recorder::setTitles(int numb, ...){
 	this->date = this->rtc.now();
-	sprintf(buffer, "%d%d%d.CSV", this->date.year(), this->date.month(), this->date.day());
+	sprintf(buffer, "%04d%02d%02d.CSV", this->date.year(), this->date.month(), this->date.day());
 	// Primero se chequea que el archivo NO exista
 	if(SD.exists(buffer) != true){
 		this->registry = SD.open(buffer, FILE_WRITE);
@@ -94,14 +94,14 @@ bool Recorder::setTitles(int numb, ...){
 */
 bool Recorder::saveRegistry(int numb, ...){
 	this->date = this->rtc.now();
-	sprintf(buffer, "%d%d%d.CSV", this->date.year(), this->date.month(), this->date.day());
+	sprintf(buffer, "%04d%02d%02d.CSV", this->date.year(), this->date.month(), this->date.day());
 	// Primero se chequea que el archivo exista
 	if(SD.exists(buffer)){
 		this->registry = SD.open(buffer, FILE_WRITE);
 		String data;
-		sprintf(buffer, "%d/%d/%d;", this->date.day(), this->date.month(), this->date.year());
+		sprintf(buffer, "%02d/%02d/%04d;", this->date.day(), this->date.month(), this->date.year());
 		data += buffer;
-		sprintf(buffer, "%d:%d:%d;", this->date.hour(), this->date.minute(), this->date.second());
+		sprintf(buffer, "%02d:%02d:%02d;", this->date.hour(), this->date.minute(), this->date.second());
 		data += buffer;
 		// Se recorren todos los datos que se quieren ingresar en el archivo
 		va_list ap;
