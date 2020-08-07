@@ -6,7 +6,12 @@
 #include "DataHandler.h"
 #include "settings.h"
 
-#define FIRMWARE 0.665
+#define FIRMWARE 0.67
+
+#define SCK_CELL 0 // D3
+#define DT_CELL 2 // D4
+#define CS 15 // D8
+#define TOUCH 16  // D0
 
 // Declaraciones internas del programa
 bool conf = false;

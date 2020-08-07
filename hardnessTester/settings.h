@@ -1,8 +1,3 @@
-#define SCK_CELL 0 // D3
-#define DT_CELL 2 // D4
-#define CS 15 // D8
-#define TOUCH 16  // D0
-
 // Declaraciones de la configuracion
 const long sensibility = 40; // Valor minimo de fuerza para tomar un registro [gr]
 const byte stabilizer = 2; // Cantidad de muestras antes de devolver una medicion
