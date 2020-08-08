@@ -91,7 +91,6 @@ void loop(){
     if(minimumForce(sensibility)){
 			if(close){
 				close = false;
-				lot = counter();
 	      sprintf(lot_buff, "%d", lot);
 				recorder.saveRegistry(6, lot_buff, " ", " ", " ", " ", " ");
 				Serial.print("[CAL]\tLOTE: ");Serial.println(lot);
@@ -164,7 +163,8 @@ void loop(){
 				//|Columnas| "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio"
         //recorder.saveRegistry(6, lot_buff, " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
       }
-      Serial.print("[MJS]\tRegistro de lote cerrador.");//Serial.print("\t|LOTE: ");Serial.println(lot_buff);
+      Serial.print("[MJS]\tRegistro de lote cerrador.");
+			lot = counter();
 			close = true;
     }
 		display.showImage(PUSH);
