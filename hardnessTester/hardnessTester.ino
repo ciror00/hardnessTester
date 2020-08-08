@@ -22,8 +22,6 @@ void setup(){
     if(recorder.card()){
 		sdModule = true;
       display.showImage(CARD, "SD operativa");
-      // Se agregan los titulos de archivos, que viene despues de los "Fecha" y "Hora" (titulos por defecto)
-      titles = recorder.setTitles(6, "Lote", "Unidad", "Fuerza", "Maximo", "Minimo", "Promedio");
 	  Serial.println("[OK]\tSD");
     }else{
 			sdModule = false;
@@ -75,6 +73,8 @@ void setup(){
 	recorder.showTime();
 	}
 
+	// Se agregan los titulos de archivos, que viene despues de los "Fecha" y "Hora" (titulos por defecto)
+    titles = recorder.setTitles(6, "Lote", "Unidad", "Fuerza", "Maximo", "Minimo", "Promedio");
   sprintf(lot_buff, "%d", lot);
 	//|Columnas| "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio"
   if(titles)recorder.saveRegistry(6, lot_buff, " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
