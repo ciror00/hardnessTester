@@ -34,7 +34,7 @@ void setup(){
   waitForMachine(9000);
 
   // Menu de configuración
-  Serial.println("\n[MSJ]\tIngrese un peso para iniciar la calibración automática.");
+  Serial.println("[MSJ]\tIngrese un peso para iniciar la calibración automática.");
   scaleCalculation = askTheUser("[INS]\tPeso: ", waitConfiguration);
   if(scaleCalculation > 0){
     display.showImage(TOOL);
