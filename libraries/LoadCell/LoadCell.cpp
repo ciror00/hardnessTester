@@ -10,14 +10,14 @@ void LoadCell::begin(const byte dout, const byte pd_sck, const byte gain){
 // Devuelve el valor actual restado del peso de tara y dividido por la escala
 long LoadCell::strength(){
   currentValue = this->doubleEnded.get_units();
-  constrain(currentValue, 0, 100);
+  constrain(currentValue, 40, 100);
   return currentValue;
 }
 
 // Igual que strength() pero devuelve el promedio
 long LoadCell::strengthAverage(int amount){
   currentValue = this->doubleEnded.get_units(amount);
-  constrain(currentValue, 0, 100);
+  constrain(currentValue, 40, 100);
   return currentValue;
 }
 
