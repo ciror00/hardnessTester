@@ -77,7 +77,7 @@ void setup(){
     titles = recorder.setTitles(6, "Lote", "Unidad", "Fuerza", "Maximo", "Minimo", "Promedio");
   sprintf(lot_buff, "%d", lot);
 	//|Columnas| "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio"
-  if(titles)recorder.saveRegistry(6, lot_buff, " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
+ 	recorder.saveRegistry(6, lot_buff, " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
   Serial.println("\n[MSJ]\tConfiguracion terminada. Listo para medir.");
   EEPROM.end();
 
