@@ -107,6 +107,7 @@ void loop(){
 				if(disposable >= strength)strength = disposable;
       };
       display.showMessage("Procesando...");
+      if(strength == 0)strength = sensibility;
       dataHandler.preLoad(strength);
       sprintf(count_buff, "%d", fruit);
 			sprintf(force_buff, "%.0f g", strength);
