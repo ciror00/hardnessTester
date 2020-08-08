@@ -15,45 +15,10 @@ void setup(){
   display.showImage(COP);
   measure.begin(DT_CELL, SCK_CELL);
   recorder.begin(CS);
-
-  // Menu de configuración
-  Serial.println("\n[MSJ]\tIngrese un peso para iniciar la calibración automática.");
-  scaleCalculation = askTheUser("[INS]\tPeso: ", waitConfiguration);
-  if(scaleCalculation > 0){
-    display.showImage(TOOL);
-		manualScale = -(measure.calibrate(scaleCalculation));
-		Serial.print("\n[CAL]\tFACTOR: "); Serial.println(manualScale);
-    EEPROM.put(memoryLocation[0], manualScale);
-		EEPROM.put(memoryLocation[1], 1);
-		Serial.println("[MJS]\tLOTE: 1");
-    EEPROM.commit();
-    EEPROM.end();
-		Serial.println("\n[MJS]\tReiniciando equipo...");
-		waitForMachine(waitConfiguration);
-		ESP.restart();
-  }else if(scaleCalculation == 0){
-		Serial.println("\n[MSJ]\tCalibración automática cancelada.");
-    Serial.println("[MSJ]\tCalibración por defecto.");
-    manualScale = scale;
-		EEPROM.put(memoryLocation[1], 1);
-		Serial.println("[MJS]\tLOTE: 1");
-    Serial.print("[CAL]\tFACTOR: "); Serial.println(manualScale);
-    EEPROM.put(memoryLocation[0], manualScale);
-    EEPROM.commit();
-  }else if(scaleCalculation == -1){
-		Serial.println("\n[MSJ]\tCargando configuracion guardada.");
-    EEPROM.get(memoryLocation[0], manualScale);
-    Serial.print("[MSJ]\tFACTOR: "); Serial.println(manualScale);
-    measure.manualSetup(manualScale);
-    EEPROM.get(memoryLocation[1], lot);
-    Serial.print("[CAL]\tLOTE: ");Serial.println(lot);
-	}
-
-	// Configuacion de modulo
+  
+  // Configuacion de modulo
   if(recorder.clock()){
     Serial.println("[OK]\tRTC");
-		if(dateTimeSetting)recorder.setDate(dates[2],dates[1],dates[0],times[0],times[1]);
-    recorder.showTime();
     if(recorder.card()){
 		sdModule = true;
       display.showImage(CARD, "SD operativa");
@@ -69,10 +34,51 @@ void setup(){
     Serial.println("[ERROR]\tRTC");
   }
   waitForMachine(9000);
+
+  // Menu de configuración
+  Serial.println("\n[MSJ]\tIngrese un peso para iniciar la calibración automática.");
+  scaleCalculation = askTheUser("[INS]\tPeso: ", waitConfiguration);
+  if(scaleCalculation > 0){
+    display.showImage(TOOL);
+		manualScale = -(measure.calibrate(scaleCalculation));
+		Serial.print("\n[CAL]\tFACTOR: "); Serial.println(manualScale);
+    EEPROM.put(memoryLocation[0], manualScale);
+		EEPROM.put(memoryLocation[1], 1);
+		Serial.println("[MJS]\tLOTE: 1");
+    EEPROM.commit();
+    EEPROM.end();
+	Serial.println("[MSJ]\tConfigurando reloj.");
+	if(dateTimeSetting)recorder.setDate(dates[2],dates[1],dates[0],times[0],times[1]);
+    recorder.showTime();
+		Serial.println("\n[MJS]\tReiniciando equipo...");
+		waitForMachine(waitConfiguration);
+		ESP.restart();
+  }else if(scaleCalculation == 0){
+		Serial.println("\n[MSJ]\tCalibración automática cancelada.");
+    Serial.println("[MSJ]\tCalibración por defecto.");
+    manualScale = scale;
+		EEPROM.put(memoryLocation[1], 1);
+		Serial.println("[MJS]\tLOTE: 1");
+    Serial.print("[CAL]\tFACTOR: "); Serial.println(manualScale);
+    EEPROM.put(memoryLocation[0], manualScale);
+    EEPROM.commit();
+	Serial.println("[MSJ]\tConfigurando hora por defecto.");
+	if(dateTimeSetting)recorder.setDate(dates[2],dates[1],dates[0],times[0],times[1]);
+    recorder.showTime();
+  }else if(scaleCalculation == -1){
+		Serial.println("\n[MSJ]\tCargando configuracion guardada.");
+    EEPROM.get(memoryLocation[0], manualScale);
+    Serial.print("[MSJ]\tFACTOR: "); Serial.println(manualScale);
+    measure.manualSetup(manualScale);
+    EEPROM.get(memoryLocation[1], lot);
+    Serial.print("[CAL]\tLOTE: ");Serial.println(lot);
+	recorder.showTime();
+	}
+
   sprintf(lot_buff, "%d", lot);
 	//|Columnas| "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio"
   if(titles)recorder.saveRegistry(6, lot_buff, " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
-  Serial.println("[MSJ]\tConfiguracion terminada. Listo para medir.");
+  Serial.println("\n[MSJ]\tConfiguracion terminada. Listo para medir.");
   EEPROM.end();
 
   // Se configurar los pines usando métodos de Arduino
