@@ -144,6 +144,7 @@ void loop(){
       dataHandler.reset();
       lot = counter();
       sprintf(lot_buff, "%d", lot);
+			delay(1000);
       if(!recorder.card()){
         display.showImage(NOCARD, "Error en SD");
         Serial.println("[ERROR]\tSD no reconocida");
