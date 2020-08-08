@@ -6,7 +6,7 @@
 #include "DataHandler.h"
 #include "settings.h"
 
-#define FIRMWARE 0.677
+#define FIRMWARE 0.681
 
 #define SCK_CELL 0 // D3
 #define DT_CELL 2 // D4
@@ -18,6 +18,7 @@ bool conf = false;
 bool flag = false;
 bool button = false;
 bool titles = false;
+bool close = false;
 int fruit = 0;
 byte memorySize = 64;
 byte memoryLocation[] = {0, memorySize/2};

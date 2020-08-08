@@ -7,5 +7,5 @@ const float scale = -110.18; // Escala para configuracion por defecto
 const int trick = 0; // Cantidad de espacio que se corre para la coma
 
 const bool dateTimeSetting = true;
-const int dates[] = {7, 8, 2020}; // Configuracion de fecha DD/MM/AAAA
-const int times[] = {21, 10}; // Configuracion de hora HH:MM
+const int dates[] = {8, 8, 2020}; // Configuracion de fecha DD/MM/AAAA
+const int times[] = {00, 00}; // Configuracion de hora HH:MM
