@@ -10,41 +10,18 @@ void setup(){
   Serial.begin(115200);
   Serial.println("\n\"HARDNESS TESTER\"\nFirmware: "+ (String)FIRMWARE + \
                 "\t| Environment: " + (String)ARDUINO + "\t| Compiler: "+ (String)__VERSION__);
-  EEPROM.begin(memorySize); // Se reservar 32 Bytes (256 bits) | Tamaño maximo 4K (4096)
+  EEPROM.begin(memorySize); // Se reserva espacio en memoria | Tamaño maximo 4K (4096)
   display.begin();
   display.showImage(COP);
   measure.begin(DT_CELL, SCK_CELL);
   recorder.begin(CS);
 
-  // Menu de configuración
-  Serial.println("\n[MSJ]\t¿Formatear la configuración?.");
-  manualScale = askTheUser("[INS]\tIngresar nuevo factor: ", between);
-  if(manualScale != 0){
-    display.showImage(TOOL);
-    EEPROM.put(memoryLocation[1], 0);
-    //EEPROM.commit();
-		Serial.println("\n[MJS]\tLOTE: 0");
-    Serial.print("[CAL]\tFACTOR: "); Serial.println(manualScale);
-    EEPROM.put(memoryLocation[0], manualScale);
-    EEPROM.commit();
-  }else{
-    Serial.println("[MSJ]\tCargando configuracion guardada.");
-    EEPROM.get(memoryLocation[0], manualScale);
-    Serial.print("\n[CAL]\tFACTOR: "); Serial.println(manualScale);
-    measure.manualSetup(manualScale);
-    EEPROM.get(memoryLocation[1], lot);
-    Serial.print("[CAL]\tLOTE: ");Serial.println(lot);
-  }
-
-	// Configuacion de modulo
+  // Configuacion de modulo
   if(recorder.clock()){
     Serial.println("[OK]\tRTC");
-    recorder.showTime();
     if(recorder.card()){
 		sdModule = true;
       display.showImage(CARD, "SD operativa");
-      // Se agregan los titulos de archivos, que viene despues de los "Fecha" y "Hora" (titulos por defecto)
-      recorder.setTitles(7, "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio");
 	  Serial.println("[OK]\tSD");
     }else{
 			sdModule = false;
@@ -55,9 +32,53 @@ void setup(){
     Serial.println("[ERROR]\tRTC");
   }
   waitForMachine(9000);
+
+  // Menu de configuración
+  Serial.println("[MSJ]\tIngrese un peso para iniciar la calibración automática.");
+  scaleCalculation = askTheUser("[INS]\tPeso: ", waitConfiguration);
+  if(scaleCalculation > 0){
+    display.showImage(TOOL);
+		manualScale = -(measure.calibrate(scaleCalculation));
+		Serial.print("\n[CAL]\tFACTOR: "); Serial.println(manualScale);
+    EEPROM.put(memoryLocation[0], manualScale);
+		EEPROM.put(memoryLocation[1], 1);
+		Serial.println("[MJS]\tLOTE: 1");
+    EEPROM.commit();
+    EEPROM.end();
+	Serial.println("[MSJ]\tConfigurando reloj.");
+	if(dateTimeSetting)recorder.setDate(dates[2],dates[1],dates[0],times[0],times[1]);
+    recorder.showTime();
+		Serial.println("\n[MJS]\tReiniciando equipo...");
+		waitForMachine(waitConfiguration);
+		ESP.restart();
+  }else if(scaleCalculation == 0){
+		Serial.println("\n[MSJ]\tCalibración automática cancelada.");
+    Serial.println("[MSJ]\tCalibración por defecto.");
+    manualScale = scale;
+		EEPROM.put(memoryLocation[1], 1);
+		Serial.println("[MJS]\tLOTE: 1");
+    Serial.print("[CAL]\tFACTOR: "); Serial.println(manualScale);
+    EEPROM.put(memoryLocation[0], manualScale);
+    EEPROM.commit();
+	Serial.println("[MSJ]\tConfigurando hora por defecto.");
+	if(dateTimeSetting)recorder.setDate(dates[2],dates[1],dates[0],times[0],times[1]);
+    recorder.showTime();
+  }else if(scaleCalculation == -1){
+		Serial.println("\n[MSJ]\tCargando configuracion guardada.");
+    EEPROM.get(memoryLocation[0], manualScale);
+    Serial.print("[MSJ]\tFACTOR: "); Serial.println(manualScale);
+    measure.manualSetup(manualScale);
+    EEPROM.get(memoryLocation[1], lot);
+    Serial.print("[CAL]\tLOTE: ");Serial.println(lot);
+	recorder.showTime();
+	}
+
+	// Se agregan los titulos de archivos, que viene despues de los "Fecha" y "Hora" (titulos por defecto)
+	//|Columnas| "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio"
+  titles = recorder.setTitles(6, "Lote", "Unidad", "Fuerza", "Maximo", "Minimo", "Promedio");
   sprintf(lot_buff, "%d", lot);
-  recorder.saveRegistry(7, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
-  Serial.println("[MSJ]\tConfiguracion terminada. Listo para medir.");
+ 	recorder.saveRegistry(6, lot_buff, " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
+  Serial.println("\n[MSJ]\tConfiguracion terminada. Listo para medir.");
   EEPROM.end();
 
   // Se configurar los pines usando métodos de Arduino
@@ -68,44 +89,50 @@ void loop(){
   if(digitalRead(TOUCH))switcher();
   if(button == true){
     if(minimumForce(sensibility)){
+			if(close){
+				close = false;
+	      sprintf(lot_buff, "%d", lot);
+				recorder.saveRegistry(6, lot_buff, " ", " ", " ", " ", " ");
+				Serial.print("[CAL]\tLOTE: ");Serial.println(lot);
+			}
       flag = true;
       fruit++;
       while(minimumForce(sensibility)){
-        strength = measure.strengthAverage(stabilizer) / pow(10, trick);
-        if(strength < 0)strength = 0;
-        Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
+        disposable = measure.strengthAverage(stabilizer);
+        Serial.print("[CAL]\tFUERZA: ");Serial.print(disposable);
         Serial.print("|\tSEÑAL: ");Serial.println(measure.raw());
-        sprintf(strength_buff, "%.0f g", strength);
-        display.showMeasure(strength_buff);
-        sum += strength;
-        count++;
+	      if(disposable < sensibility)disposable = sensibility;
+        sprintf(disposable_buff, "%.0f g", disposable);
+        display.showMeasure(disposable_buff);
+				if(disposable >= strength)strength = disposable;
       };
       display.showMessage("Procesando...");
-      averange = sum / count;
-      dataHandler.preLoad(averange);
+      if(strength == 0)strength = sensibility; // Parche para evitar ceros en CSV
+      dataHandler.preLoad(strength);
       sprintf(count_buff, "%d", fruit);
-			sprintf(force_buff, "%.0f g", averange);
-      sprintf(averange_buff, "%.0f", averange);
-      //|Columnas| "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio"
+			sprintf(force_buff, "%.0f g", strength);
+      sprintf(strength_buff, "%.0f", strength);
       if(!sdModule){
         display.showMeasure(force_buff, " ", "No guardado. Error en SD");
         Serial.println("[ERROR]\tSD mal configurada");
-				waitForUser(" ", between);
+				waitForUser(" ", showMeasure);
       }else{
         Serial.println("[MJS]\tGuardando en SD");
-        recorder.saveRegistry(7, " ", count_buff, averange_buff, " ", " ", " ", " ");
+				//|Columnas| "Lote", "Unidad", "Fuerza", "Maximo", "Minimo", "Promedio"
+        recorder.saveRegistry(6, " ", count_buff, strength_buff, " ", " ", " ");
 	      display.showMeasure(force_buff, " ", "Guardado");
       }
-			waitForUser(" ", between);
-      count = 0;
-      Serial.print("[CAL]\tMEDICION: ");Serial.println(averange_buff);
+			waitForUser(" ", showMeasure);
+      //count = 0;
+      Serial.print("[CAL]\tMEDICION: ");Serial.println(strength);
+			strength = 0;
     }else{
-      strength = measure.strength() / pow(10, trick);
-      if(strength < 0)strength = 0;
-      Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
-      Serial.print("|\tSEÑAL: ");Serial.print(measure.raw());Serial.println("|\t(Sin guardar)");
-      sprintf(strength_buff, "%.0f g", strength);
-      display.showMeasure(strength_buff);
+      disposable = measure.strength();
+      Serial.print("[CAL]\tFUERZA: ");Serial.print(disposable);
+      Serial.print("|\tSEÑAL: ");Serial.print(measure.raw());Serial.println("|\tFuerza insuficiente");
+	    if(disposable < 0)disposable = 0;
+      sprintf(disposable_buff, "0 g"); // Se fija un cero para que se muestre por pantalla
+      display.showMeasure(disposable_buff);
     }
   }else{
     if(flag){
@@ -115,30 +142,29 @@ void loop(){
       sprintf(max_buff, "%.0f", dataHandler.maximum());
       sprintf(min_buff, "%.0f", dataHandler.minimum());
       sprintf(average_buff, "%.2f", dataHandler.average());
-      sprintf(percentages_buff, "%.2f", dataHandler.percentages(dataHandler.maximum(), dataHandler.minimum()));
-      //|Columnas| "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio"
       if(!recorder.card()){
         display.showImage(NOCARD, "Error en SD");
         Serial.println("[ERROR]\tSD no reconocida");
       }else{
         Serial.println("[MJS]\tGuardando en SD");
-        recorder.saveRegistry(7, " ", " ", " ", percentages_buff, max_buff, min_buff, average_buff);
+				//|Columnas| "Lote", "Unidad", "Fuerza", "Maximo", "Minimo", "Promedio"
+        recorder.saveRegistry(6, " ", " ", " ", max_buff, min_buff, average_buff);
       }
       Serial.println("[MJS]\tResumen de datos calculados");
       Serial.print("\tMAXIMA: ");Serial.println(max_buff);
       Serial.print("\tMINIMA: ");Serial.println(min_buff);
       Serial.print("\tPROMEDIO: ");Serial.println(average_buff);
-      Serial.print("\tPORCENTAJE: ");Serial.println(percentages_buff);
       dataHandler.reset();
-      sprintf(lot_buff, "%0.f", counter());
+			delay(1000);
       if(!recorder.card()){
         display.showImage(NOCARD, "Error en SD");
         Serial.println("[ERROR]\tSD no reconocida");
       }else{
         Serial.println("[MJS]\tGuardando en SD");
-        recorder.saveRegistry(7, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
       }
-      Serial.print("[MJS]\tRegistro de lote cerrador.");Serial.print("\t|LOTE: ");Serial.println(lot_buff);
+      Serial.print("[MJS]\tRegistro de lote cerrador.");
+			lot = counter();
+			close = true;
     }
 		display.showImage(PUSH);
   }
@@ -154,7 +180,7 @@ void switcher(){
 }
 
 bool minimumForce(int threshold){
-  bool mf = (measure.raw() > threshold) ? true : false;
+	bool mf = (measure.strength() > threshold) ? true : false;
   return mf;
 }
 
@@ -176,7 +202,7 @@ bool waitForUser(const String& message, int period){
 }
 
 float askTheUser(const String& message, int period){
-  float in = 0;
+  float in = -1;
   unsigned long time_now = millis();
   Serial.print(message);
   while(millis() < time_now + period){
@@ -196,11 +222,12 @@ void waitForMachine(int period){
 	};
 }
 
-float counter(){
-  float number;
+unsigned int counter(){
+  unsigned int number;
   EEPROM.begin(memorySize);
   EEPROM.get(memoryLocation[1], number);
-  EEPROM.put(memoryLocation[1],number+1);
+	number++;
+  EEPROM.put(memoryLocation[1],number);
   EEPROM.commit();
   EEPROM.end();
   return number;
