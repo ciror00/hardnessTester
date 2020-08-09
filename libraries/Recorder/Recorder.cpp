@@ -16,7 +16,6 @@ bool Recorder::clock(int gmt){
 	if (this->rtc.lostPower()) {
 		// Fijar a fecha y hora de compilacion
 		this->rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
-		//this->setUTC(gmt);
    }
 	 return this->clocker;
 }
@@ -31,7 +30,6 @@ bool Recorder::card(){
 
 void Recorder::setDate(int y, int m, int d, int h, int x){
 	PRINT("> Ajute de hora por defecto\n");
-	//this->date = this->rtc.now();
 	this->rtc.adjust(DateTime(y, m, d, h, x, 0));
 }
 
