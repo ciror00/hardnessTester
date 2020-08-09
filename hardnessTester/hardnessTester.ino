@@ -10,7 +10,7 @@ void setup(){
   Serial.begin(115200);
   Serial.println("\n\"HARDNESS TESTER\"\nFirmware: "+ (String)FIRMWARE + \
                 "\t| Environment: " + (String)ARDUINO + "\t| Compiler: "+ (String)__VERSION__);
-  EEPROM.begin(memorySize); // Se reservar 32 Bytes (256 bits) | Tamaño maximo 4K (4096)
+  EEPROM.begin(memorySize); // Se reserva espacio en memoria | Tamaño maximo 4K (4096)
   display.begin();
   display.showImage(COP);
   measure.begin(DT_CELL, SCK_CELL);
@@ -74,9 +74,9 @@ void setup(){
 	}
 
 	// Se agregan los titulos de archivos, que viene despues de los "Fecha" y "Hora" (titulos por defecto)
-    titles = recorder.setTitles(6, "Lote", "Unidad", "Fuerza", "Maximo", "Minimo", "Promedio");
-  sprintf(lot_buff, "%d", lot);
 	//|Columnas| "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio"
+  titles = recorder.setTitles(6, "Lote", "Unidad", "Fuerza", "Maximo", "Minimo", "Promedio");
+  sprintf(lot_buff, "%d", lot);
  	recorder.saveRegistry(6, lot_buff, " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
   Serial.println("\n[MSJ]\tConfiguracion terminada. Listo para medir.");
   EEPROM.end();
@@ -107,7 +107,7 @@ void loop(){
 				if(disposable >= strength)strength = disposable;
       };
       display.showMessage("Procesando...");
-      if(strength == 0)strength = sensibility;
+      if(strength == 0)strength = sensibility; // Parche para evitar ceros en CSV
       dataHandler.preLoad(strength);
       sprintf(count_buff, "%d", fruit);
 			sprintf(force_buff, "%.0f g", strength);
@@ -161,8 +161,6 @@ void loop(){
         Serial.println("[ERROR]\tSD no reconocida");
       }else{
         Serial.println("[MJS]\tGuardando en SD");
-				//|Columnas| "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio"
-        //recorder.saveRegistry(6, lot_buff, " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
       }
       Serial.print("[MJS]\tRegistro de lote cerrador.");
 			lot = counter();
@@ -182,7 +180,6 @@ void switcher(){
 }
 
 bool minimumForce(int threshold){
-  //bool mf = (measure.raw() > threshold) ? true : false;
 	bool mf = (measure.strength() > threshold) ? true : false;
   return mf;
 }
