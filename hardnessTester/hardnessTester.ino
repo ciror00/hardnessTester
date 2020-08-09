@@ -15,7 +15,7 @@ void setup(){
   display.showImage(COP);
   measure.begin(DT_CELL, SCK_CELL);
   recorder.begin(CS);
-  
+
   // Configuacion de modulo
   if(recorder.clock()){
     Serial.println("[OK]\tRTC");
@@ -77,7 +77,7 @@ void setup(){
     titles = recorder.setTitles(6, "Lote", "Unidad", "Fuerza", "Maximo", "Minimo", "Promedio");
   sprintf(lot_buff, "%d", lot);
 	//|Columnas| "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio"
-  if(titles)recorder.saveRegistry(6, lot_buff, " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
+ 	recorder.saveRegistry(6, lot_buff, " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
   Serial.println("\n[MSJ]\tConfiguracion terminada. Listo para medir.");
   EEPROM.end();
 
@@ -89,6 +89,12 @@ void loop(){
   if(digitalRead(TOUCH))switcher();
   if(button == true){
     if(minimumForce(sensibility)){
+			if(close){
+				close = false;
+	      sprintf(lot_buff, "%d", lot);
+				recorder.saveRegistry(6, lot_buff, " ", " ", " ", " ", " ");
+				Serial.print("[CAL]\tLOTE: ");Serial.println(lot);
+			}
       flag = true;
       fruit++;
       while(minimumForce(sensibility)){
@@ -101,6 +107,7 @@ void loop(){
 				if(disposable >= strength)strength = disposable;
       };
       display.showMessage("Procesando...");
+      if(strength == 0)strength = sensibility;
       dataHandler.preLoad(strength);
       sprintf(count_buff, "%d", fruit);
 			sprintf(force_buff, "%.0f g", strength);
@@ -148,8 +155,6 @@ void loop(){
       Serial.print("\tMINIMA: ");Serial.println(min_buff);
       Serial.print("\tPROMEDIO: ");Serial.println(average_buff);
       dataHandler.reset();
-      lot = counter();
-      sprintf(lot_buff, "%d", lot);
 			delay(1000);
       if(!recorder.card()){
         display.showImage(NOCARD, "Error en SD");
@@ -157,9 +162,11 @@ void loop(){
       }else{
         Serial.println("[MJS]\tGuardando en SD");
 				//|Columnas| "Lote", "Unidad", "Fuerza", "Porcentaje", "Maximo", "Minimo", "Promedio"
-        recorder.saveRegistry(6, lot_buff, " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
+        //recorder.saveRegistry(6, lot_buff, " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
       }
-      Serial.print("[MJS]\tRegistro de lote cerrador.");Serial.print("\t|LOTE: ");Serial.println(lot_buff);
+      Serial.print("[MJS]\tRegistro de lote cerrador.");
+			lot = counter();
+			close = true;
     }
 		display.showImage(PUSH);
   }
