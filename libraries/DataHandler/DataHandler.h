@@ -3,7 +3,7 @@
 #include <Arduino.h>
 
 class DataHandler{
-  float list[200];
+  float list[50];
   //long sampling[];
   int pointer = 0;
 
