@@ -1,4 +1,4 @@
-#include "hardnessTester.h"
+#include "fruit.h"
 
 Visualizer display;
 LoadCell measure;

@@ -6,5 +6,5 @@ const int waitConfiguration = 7000; // Tiempo de espera para entrar y salir de m
 const float scale = -110.18; // Escala para configuracion por defecto
 const int trick = 0; // Cantidad de espacio que se corre para la coma
 const bool dateTimeSetting = true; // Habila que se cargue la hora desde settings.h
-const int dates[] = {10, 8, 2020}; // Configuracion de fecha DD/MM/AAAA
-const int times[] = {00, 00}; // Configuracion de hora HH:MM
+//const int dates[] = {10, 8, 2020}; // Configuracion de fecha DD/MM/AAAA
+//const int times[] = {00, 00}; // Configuracion de hora HH:MM
