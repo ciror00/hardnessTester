@@ -138,7 +138,7 @@ void loop(){
       //disposable = measure.strengthAverage(stabilizer);
       // Medicion de fuerza
       strength = measure.strengthAverage(stabilizer);
-      Serial.print("[CAL]\tFUERZA: ");Serial.print(disposable);
+      Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
       Serial.print("|\tSEÑAL: ");Serial.println(measure.raw());
       // Medicion de distancia
       reducible = rule.ping_cm();
