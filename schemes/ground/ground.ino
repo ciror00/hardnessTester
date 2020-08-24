@@ -236,7 +236,9 @@ void switcher(){
 */
 
 bool minimumForce(int threshold){
-	bool mf = (measure.strength() > threshold) ? true : false;
+  int t = 0;
+  while(measure.strength() > threshold)t++;
+	bool mf = (t > 100) ? true : false;
   return mf;
 }
 
