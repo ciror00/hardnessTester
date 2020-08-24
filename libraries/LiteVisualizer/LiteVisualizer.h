@@ -1,23 +1,22 @@
-#ifndef __VISUALIZER__h__
-#define __VISUALIZER__h__
+#ifndef __LITEVISUALIZER__h__
+#define __LITEVISUALIZER__h__
 #include <Arduino.h>
+#include <LiquidCrystal_I2C.h>
 #include <Wire.h>
-#include "SH1106Wire.h" //libreria alternativa de "SSD1306Wire.h"
-#include <SPI.h>
-#include "Images.h"
 
-enum Images {ZYX,COP,PUSH, CARD, NOCARD, TOOL};
+//#include "Symbol.h"
 
-class Visualizer{
-  // Se agregan pines fijos por defecto 5 (D1) y 4 (D2).
-  SH1106Wire oled = SH1106Wire(0x3c, 5, 4);
+class LiteVisualizer{
+  LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x27, 20, 4);
+  
   public:
-    Visualizer() = default;
+    LiteVisualizer() = default;
     void begin();
-    void showMessage(String text, String header = " ", String footer = " ", bool clear = true);
-    void showMeasure(String value, String subtitle = " ", String footer = " ");
-    void showImage(Images img, String footer = " ");
+    bool switcher(bool n);
+    void showSettings();
+    void showMessage(String text, String header = " ", String footer = " ", bool clear = false);
+    void showMeasure(int line, String value, String unit = "[Kg]", String footer = " ");
     void reset();
-    ~Visualizer() = default;
+    ~LiteVisualizer() = default;
 };
 #endif

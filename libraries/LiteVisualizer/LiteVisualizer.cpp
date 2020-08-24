@@ -1,50 +1,45 @@
-#include "Visualizer.h"
+#include "LiteVisualizer.h"
 
-void Visualizer::begin(){
-  this->oled.init();
-  this->oled.flipScreenVertically();
+void LiteVisualizer::begin(){
+  this->lcd.init();
 }
 
-void Visualizer::showMessage(String text, String header, String footer, bool clear){
-  if(clear)this->oled.clear();
-  this->oled.setTextAlignment(TEXT_ALIGN_CENTER);
-  this->oled.setFont(ArialMT_Plain_16);
-  this->oled.drawString(64, 5, header);
-  this->oled.setFont(ArialMT_Plain_16);
-  this->oled.drawString(64, 25, text);
-  this->oled.setFont(ArialMT_Plain_16);
-  this->oled.drawString(64, 35, footer);
-  this->oled.display();
-}
-
-void Visualizer::showMeasure(String value, String subtitle, String footer){
-  this->oled.clear();
-  this->oled.setTextAlignment(TEXT_ALIGN_CENTER);
-  this->oled.setFont(ArialMT_Plain_24);
-  this->oled.drawString(64, 10, value);
-  this->oled.setFont(ArialMT_Plain_16);
-  this->oled.drawString(64, 30, subtitle);
-  this->oled.setFont(ArialMT_Plain_10);
-  this->oled.drawString(64, 45, footer);
-  this->oled.display();
-}
-
-void Visualizer::showImage(Images img, String footer){
-  this->oled.clear();
-  switch (img) {
-    case ZYX: this->oled.drawXbm(32,5,zyx_width,zyx_height,(const unsigned char *)logo_ZYX);break;
-    case COP: this->oled.drawXbm(32,5,cop_width,cop_height,(const unsigned char *)logo_Copain);break;
-    case PUSH: this->oled.drawXbm(32,5,push_width,push_height,(const unsigned char *)push);break;
-    case CARD: this->oled.drawXbm(50,10,sd_width,sd_height,(const unsigned char *)sdCard);break;
-    case NOCARD: this->oled.drawXbm(50,10,sd_width,sd_height,(const unsigned char *)no_sdCard);break;
-    case TOOL: this->oled.drawXbm(40,10,tools_width,tools_height,(const unsigned char *)tools);break;
+bool LiteVisualizer::switcher(bool n){
+  if(n==1){
+    this->lcd.backlight();
+    return true;
+  }else{
+    this->lcd.noBacklight();
+    return false;
   }
-  this->oled.setFont(ArialMT_Plain_10);
-  this->oled.drawString(64, 45, footer);
-  this->oled.display();
 }
 
-void Visualizer::reset(){
-  this->oled.clear();
-  this->oled.display();
+void LiteVisualizer::showSettings(){
+  ;
+}
+
+void LiteVisualizer::showMessage(String text, String header, String footer, bool clear){
+  if(clear)this->lcd.clear();
+  this->lcd.setCursor(1, 1);
+  this->lcd.print(header);
+  this->lcd.setCursor(2, 1);
+  this->lcd.print(text);
+  this->lcd.setCursor(3, 1);
+  this->lcd.print(footer);
+}
+
+void LiteVisualizer::showMeasure(int line, String value, String unit, String footer){
+  this->lcd.clear();
+  if(line == 1 || line == 2){
+    this->lcd.setCursor(line, 1);
+    this->lcd.print(value);
+    this->lcd.setCursor(line, 10);
+    this->lcd.print(unit);
+  }
+  this->lcd.setCursor(3, 10);
+    this->lcd.print(footer);
+}
+
+void LiteVisualizer::reset(){
+  this->lcd.clear();
 }
