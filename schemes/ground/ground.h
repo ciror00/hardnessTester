@@ -28,35 +28,45 @@ SoftwareSerial serial_gps(TXD, RXD);
 TinyGPS gps;
 
 // Declaraciones internas del programa
-unsigned long age;
-float lat;
-float lon;
-int y = 0;
-byte hour, m, d, min, seg, hundredths;
+long lat, lon;
+float flat, flon;
+unsigned long age, date, time, chars;
+unsigned short sentences, failed;
+int year;
+byte month, day, hour, minute, second, hundredths;
 
 bool conf = false;
 bool flag = false;
-bool button = false;
-bool titles = false;
+//bool button = false;
+bool geo = false;
+bool headers = false;
 bool close = false;
-int fruit = 0;
+//int fruit = 0;
 byte memorySize = 64;
 byte memoryLocation[] = {0, memorySize/2};
 float patternWeight = 0;
 float manualScale = 0;
 float scaleCalculation = -1;
 float strength = 0;
+float range = 0; 
+float depth = 0;
 unsigned int lot = 1;
 
 bool sdModule;
-float disposable;
+float disposable, reducible;
 float maximum, minimum;
+
+char *titles[] = {"Medicion", "Distancia", "Latitud", "Longitud", "Dist. Max", "F. Maxima", "F. Minima", "F. Promedio"};
 
 char lot_buff[10];
 char count_buff[10];
 char strength_buff[10];
 char average_buff[10];
-char force_buff[10];
+//char force_buff[10];
+char range_buff[10];
+char depth_buff[10];
+char lat_buff[10];
+char lon_buff[10];
 char percentages_buff[10];
 char max_buff[10];
 char min_buff[10];

@@ -8,7 +8,7 @@ DataHandler dataHandler;
 void setup(){
 	waitForMachine(6000);
   Serial.begin(115200);
-  Serial.println("\n\"HARDNESS TESTER\"\nFirmware: "+ (String)FIRMWARE + \
+  Serial.println("\n\"HARDNESS TESTER (fruit)\"\nFirmware: "+ (String)FIRMWARE + \
                 "\t| Environment: " + (String)ARDUINO + "\t| Compiler: "+ (String)__VERSION__);
   EEPROM.begin(memorySize); // Se reserva espacio en memoria | Tamaño maximo 4K (4096)
   display.begin();
