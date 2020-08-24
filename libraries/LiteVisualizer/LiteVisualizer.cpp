@@ -5,7 +5,7 @@ void LiteVisualizer::begin(){
 }
 
 bool LiteVisualizer::switcher(bool n){
-  if(n==1){
+  if(n==true){
     this->lcd.backlight();
     return true;
   }else{

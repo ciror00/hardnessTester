@@ -15,7 +15,7 @@ void setup(){
                 "\t| Environment: " + (String)ARDUINO + "\t| Compiler: "+ (String)__VERSION__);
   //EEPROM.begin(memorySize); // Se reserva espacio en memoria | Tamaño maximo 4K (4096)
   display.begin();
-  display.switcher(1);
+  display.switcher(true);
   //display.showImage(COP);
   display.showMessage("COPAIN SRL");
   measure.begin(DT_CELL, SCK_CELL);
@@ -117,12 +117,12 @@ void setup(){
   pinMode(TRIG, OUTPUT);
   pinMode(ECHO, INPUT);
   range = rule.ping_cm();
-  Serial.print("\n[CAL]\tLargo de lanza medida: ");Serial.println(range);
+  Serial.print("[CAL]\tLargo de lanza medida: ");Serial.println(range);
   Serial.println("[MSJ]\tConfiguracion terminada. Listo para medir.");
 }
 
 void loop(){
-  display.switcher(0);
+  display.switcher(false);
   //if(digitalRead(TOUCH))switcher();
   //if(button == true){
   if(minimumForce(sensibility)){
@@ -132,7 +132,7 @@ void loop(){
       recorder.saveRegistry(sizeof(titles), lot_buff, " ", " ", " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
       Serial.print("[CAL]\tMEDICION: ");Serial.println(lot);
     }
-    display.switcher(1);
+    display.switcher(true);
     flag = true;
     //while(minimumForce(sensibility)){
       //disposable = measure.strengthAverage(stabilizer);
@@ -170,6 +170,7 @@ void loop(){
       recorder.saveRegistry(sizeof(titles), lot, strength_buff, range_buff, lat_buff, lon_buff, " ", " ", " ", " ");
       display.showMeasure(1, strength_buff);
       display.showMeasure(2, range_buff);
+      delay(2000);
     }
     waitForUser(" ", showMeasure);
     //count = 0;
@@ -237,7 +238,13 @@ void switcher(){
 
 bool minimumForce(int threshold){
   int t = 0;
-  while(measure.strength() > threshold)t++;
+  float s = threshold;
+  while(s >= threshold){
+    t++;
+    s = measure.strength();
+    Serial.print("\t> SENSOR: ");Serial.println(s);
+  }
+  Serial.print("\t> MUESTRAS: ");Serial.println(t);
 	bool mf = (t > 5) ? true : false;
   return mf;
 }
