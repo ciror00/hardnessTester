@@ -113,12 +113,12 @@ void setup(){
   //EEPROM.end();
 
   // Se configurar los pines usando métodos de Arduino
-  Serial.println("\n[MSJ]\tMidiendo jabalina.");
+  Serial.println("[MSJ]\tMidiendo jabalina.");
   pinMode(TRIG, OUTPUT);
   pinMode(ECHO, INPUT);
   range = rule.ping_cm();
   Serial.print("\n[CAL]\tLargo de lanza medida: ");Serial.println(range);
-  Serial.println("\n[MSJ]\tConfiguracion terminada. Listo para medir.");
+  Serial.println("[MSJ]\tConfiguracion terminada. Listo para medir.");
 }
 
 void loop(){
@@ -144,7 +144,7 @@ void loop(){
       reducible = rule.ping_cm();
       Serial.print("[CAL]\tALTURA: ");Serial.print(reducible);
       depth = range - reducible;
-      Serial.print("|\tPROFUNDIDAD: ");Serial.print(depth);
+      Serial.print("|\tPROFUNDIDAD: ");Serial.println(depth);
       //if(disposable < sensibility)disposable = sensibility;
       //sprintf(disposable_buff, "%.0f", disposable);
       //display.showMeasure(disposable_buff);
@@ -173,7 +173,7 @@ void loop(){
     }
     waitForUser(" ", showMeasure);
     //count = 0;
-    Serial.print("[CAL]\tMEDICION: ");Serial.println(strength);
+    //Serial.print("[CAL]\tMEDICION: ");Serial.println(strength);
     strength = 0;
   }else{
     /*
