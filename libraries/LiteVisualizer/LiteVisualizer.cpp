@@ -33,7 +33,7 @@ void LiteVisualizer::showMeasure(int line, String value, String unit, String foo
   if(line == 1 || line == 2){
     this->lcd.setCursor(line, 1);
     this->lcd.print(value);
-    this->lcd.setCursor(line, 10);
+    this->lcd.setCursor(line, 5);
     this->lcd.print(unit);
   }
   this->lcd.setCursor(3, 10);

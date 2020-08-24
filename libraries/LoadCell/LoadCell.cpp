@@ -14,8 +14,9 @@ long LoadCell::strength(){
 }
 
 // Igual que strength() pero devuelve el promedio
-long LoadCell::strengthAverage(int amount){
+long LoadCell::strengthAverage(int amount, bool constraining){
   currentValue = this->doubleEnded.get_units(amount);
+  if(constraining)constrain(currentValue, 0, 100);
   return currentValue;
 }
 

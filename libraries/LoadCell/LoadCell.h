@@ -18,7 +18,7 @@ class LoadCell{
     LoadCell() = default;
     void begin(const byte dout, const byte pd_sck, const byte gain = 128);
     long strength();
-    long strengthAverage(int amount);
+    long strengthAverage(int amount, bool constraining=false);
     long raw();
     float calibrate(float patternWeight, int samples = 20, int iteration = 1);
     void manualSetup(float layover = 1 );
