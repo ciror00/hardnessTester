@@ -8,8 +8,8 @@ DataHandler forceAnalyzer;
 DataHandler distanceAnalyzer;
 
 void setup(){
-	waitForMachine(6000);
-  Serial.begin(9600);
+	//waitForMachine(6000);
+  Serial.begin(115200);
   serial_gps.begin(9600);
   Serial.println("\n\"HARDNESS TESTER (ground)\"\nFirmware: "+ (String)FIRMWARE + \
                 "\t| Environment: " + (String)ARDUINO + "\t| Compiler: "+ (String)__VERSION__);
@@ -43,7 +43,7 @@ void setup(){
   scaleCalculation = askTheUser("[INS]\tPeso: ", waitConfiguration);
   if(scaleCalculation > 0){
     //display.showImage(TOOL);
-		manualScale = -(measure.calibrate(scaleCalculation));
+		manualScale = measure.calibrate(scaleCalculation);
 		Serial.print("\n[CAL]\tFACTOR: "); Serial.println(manualScale);
     //EEPROM.put(memoryLocation[0], manualScale);
 		//EEPROM.put(memoryLocation[1], 1);
