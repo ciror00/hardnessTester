@@ -14,18 +14,20 @@ bool LiteVisualizer::switcher(bool n){
   }
 }
 
-void LiteVisualizer::showSettings(bool sd_status, bool gps_status){
+void LiteVisualizer::showSettings(bool sd_status, bool gps_status, String banner){
   this->lcd.clear();
   this->lcd.createChar(0, card_ok);
   this->lcd.createChar(1, global);
   this->lcd.createChar(2, error);
-  this->lcd.setCursor(1, 0);
+  this->lcd.setCursor(0, 0);
+  this->lcd.print(banner);
+  this->lcd.setCursor(16, 0);
   if(sd_status){
     this->lcd.write(0);
   }else{
     this->lcd.write(2);
   }
-  this->lcd.setCursor(11, 0);
+  this->lcd.setCursor(18, 0);
   if(gps_status){
     this->lcd.write(1);
   }else{
