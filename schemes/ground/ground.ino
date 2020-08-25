@@ -63,10 +63,10 @@ void setup(){
 		//EEPROM.put(memoryLocation[1], 1);
     EEPROM.update(memoryLocation[1], 1);
 		Serial.println("[MJS]\tMedicion: 1");
-    Serial.print("[CAL]\tFACTOR: "); Serial.println(manualScale);
     //EEPROM.put(memoryLocation[0], manualScale);
     //EEPROM.commit();
     EEPROM.update(memoryLocation[0], manualScale);
+    Serial.print("[CAL]\tFACTOR: "); Serial.println(manualScale);
 	  //Serial.println("[MSJ]\tConfigurando hora por defecto.");
 	  //if(dateTimeSetting)recorder.setDate(dates[2],dates[1],dates[0],times[0],times[1]);
     //recorder.showTime();
@@ -242,9 +242,9 @@ bool minimumForce(int threshold){
   while(s >= threshold){
     t++;
     s = measure.strength();
-    Serial.print("\t> SENSOR: ");Serial.println(s);
+    Serial.print("> SENSOR: ");Serial.println(s);
   }
-  Serial.print("\t> MUESTRAS: ");Serial.println(t);
+  Serial.print("> MUESTRAS: ");Serial.println(t);
 	bool mf = (t > 5) ? true : false;
   return mf;
 }
