@@ -9,15 +9,15 @@ bool Recorder::begin(const int cs){
 
 bool Recorder::clock(int gmt){
 	if (!this->rtc.begin()) {
-    return this->clocker;
+		return this->clocker;
 	}else{
 		this->clocker = true;
 	}
 	if (this->rtc.lostPower()) {
 		// Fijar a fecha y hora de compilacion
 		this->rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
-   }
-	 return this->clocker;
+	}
+	return this->clocker;
 }
 
 bool Recorder::card(){
