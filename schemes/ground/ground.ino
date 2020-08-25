@@ -63,20 +63,21 @@ void setup(){
 	}
 
   Serial.println("[MSJ]\tConfiguranndo GPS\n> ");
-  if(connecting(4000)){
+  geo = connecting(4000);
+  if(geo){
     Serial.println("\n[MSJ]\tPuerto serie conectado a Modulo GPS");
-    geo = true;
     gps.stats(&chars, &sentences, &failed);
     Serial.print("> Estaditicas: \n> char: "); Serial.print(chars); Serial.print("| sentences: ");
     Serial.print(sentences); Serial.print(" failed checksum: "); Serial.println(failed);
     // Se obtiene posocion, fecha y hora
     Serial.println("[MSJ]\tObteniendo geolocalización");
-    gps.f_get_position(&flat, &flon, &age); // Obtengo posicion
+    //gps.f_get_position(&flat, &flon, &age); // Obtengo posicion
     Serial.print(">Lat: "); Serial.print(flat);Serial.print("\t|Lon: "); Serial.println(flon);
-    sprintf(lat_buff, "%d", flat);
-    sprintf(lon_buff, "%d", flon);
+    sprintf(lat_buff, "%f", flat);
+    sprintf(lon_buff, "%f", flon);
+    sprintf(location_buff, "%.2f - %.2f", flat, flon);
     Serial.println("[MSJ]\tSincronizando RTC");
-    gps.crack_datetime(&year, &month, &day, &hour, &minute, &second, &hundredths, &age); // Obtengo fecha y hora
+    //gps.crack_datetime(&year, &month, &day, &hour, &minute, &second, &hundredths, &age); // Obtengo fecha y hora
     if(year!=0){
       recorder.setDate(year,month,day,hour,minute);
     }else{
@@ -102,7 +103,7 @@ void setup(){
   range = rule.ping_cm();
   Serial.print("[CAL]\tLargo de lanza medida: ");Serial.println(range);
   Serial.println("[MSJ]\tConfiguracion terminada. Listo para medir.");
-  display.showSettings(sdModule, geo);
+  display.showSettings(sdModule, geo, location_buff);
 }
 
 void loop(){
@@ -132,6 +133,9 @@ void loop(){
       Serial.println("[ERROR]\tSD mal configurada");
     }else{
       Serial.println("[MJS]\tGuardando en SD");
+      sprintf(lat_buff, "%f", flat);
+      sprintf(lon_buff, "%f", flon);
+      sprintf(location_buff, "%.2f - %.2f", flat, flon);
       //|Columnas| {Medición", "Distancia", "Latitud", "Longitud", "Dist. Max", "F. Maxima", "F. Minima", "F. Promedio"}
       recorder.saveRegistry(sizeof(titles), lot, strength_buff, range_buff, lat_buff, lon_buff, " ", " ", " ", " ");
     }
@@ -141,6 +145,14 @@ void loop(){
     strength = 0;
   }else{
     display.showMessage("Listo para medir");
+    token = witness(updateTime);
+    if(token > update){
+      display.showMessage("Sincronizando");
+      Serial.print("Actualizando GPS");
+      update = token;
+      geo = connecting(4000);
+    }
+    display.showSettings(sdModule, geo, location_buff);
   }
   if(flag){
     display.showMessage("Procesando...");
@@ -184,7 +196,9 @@ void loop(){
 
 bool minimumForce(int threshold){
   display.switcher(true);
-  display.showMessage("Iniciando medición");
+  display.showMessage("Cargando");
+  //Serial.print("Actualizando GPS");
+  //geo = connecting(4000);
   int t = 0;
   float s = threshold;
   while(s >= threshold && t < 5){
@@ -234,6 +248,12 @@ void waitForMachine(int period){
 	};
 }
 
+long witness(long tht){
+  unsigned long time_now = millis();
+  float ring = round(time_now / tht);
+  return ring;
+}
+
 unsigned int counter(){
   unsigned int number;
   EEPROM.get(memoryLocation[1], number);
@@ -250,6 +270,9 @@ bool connecting(int wait){
       // Se realiza un "ping" a modulo GSP
       char c = gps.encode(c);
       if (gps.encode(c)) {
+        gps.f_get_position(&flat, &flon, &age); // Obtengo posicion
+        gps.crack_datetime(&year, &month, &day, \
+          &hour, &minute, &second, &hundredths, &age); // Obtengo fecha y hora
         return true;
       }
     }

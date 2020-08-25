@@ -11,7 +11,7 @@
 
 #include "settings.h"
 
-#define FIRMWARE 0.12
+#define FIRMWARE 0.13
 
 #define SCK_CELL A12
 #define DT_CELL A11
@@ -58,6 +58,9 @@ bool sdModule;
 float disposable, reducible;
 float maximum, minimum;
 
+float token = 0;
+long update = 0;
+
 char *titles[] = {"Medicion", "Distancia", "Latitud", "Longitud", "Dist. Max", "F. Maxima", "F. Minima", "F. Promedio"};
 
 char lot_buff[10];
@@ -69,7 +72,7 @@ char range_buff[10];
 char depth_buff[10];
 char lat_buff[10];
 char lon_buff[10];
-char percentages_buff[10];
+char location_buff[10];
 char max_buff[10];
 char min_buff[10];
 char disposable_buff[10];
