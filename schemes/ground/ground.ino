@@ -39,8 +39,8 @@ void setup(){
   if(scaleCalculation > 0){
 		manualScale = measure.calibrate(scaleCalculation);
 		Serial.print("\n[CAL]\tFACTOR: "); Serial.println(manualScale);
-    EEPROM.write(memoryLocation[0], manualScale);
-		EEPROM.write(memoryLocation[1], 1);
+    EEPROM.put(memoryLocation[0], manualScale);
+		EEPROM.put(memoryLocation[1], 1);
 		Serial.println("[MJS]\tMedicion: 1 (contador reiniciado)");
 		Serial.println("\n[MJS]\tReinicia el equipo manualmente...");
     delay(99999);
@@ -48,9 +48,9 @@ void setup(){
 		Serial.println("\n[MSJ]\tCalibración automática cancelada.");
     Serial.println("[MSJ]\tCalibración por defecto.");
     manualScale = scale;
-    EEPROM.write(memoryLocation[1], 1);
+    EEPROM.put(memoryLocation[1], 1);
 		Serial.println("[MJS]\tMedicion: 1 (contador reiniciado)");
-    EEPROM.write(memoryLocation[0], manualScale);
+    EEPROM.put(memoryLocation[0], manualScale);
     Serial.print("[CAL]\tFACTOR: "); Serial.println(manualScale);
     measure.manualSetup(manualScale);
   }else if(scaleCalculation == -1){
@@ -233,6 +233,6 @@ unsigned int counter(){
   unsigned int number;
   EEPROM.get(memoryLocation[1], number);
 	number++;
-  EEPROM.write(memoryLocation[1],number);
+  EEPROM.put(memoryLocation[1],number);
   return number;
 }
