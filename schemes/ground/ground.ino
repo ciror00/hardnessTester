@@ -1,22 +1,18 @@
 #include "ground.h"
 
 LiteVisualizer display;
-//Visualizer display;
 LoadCell measure;
 Recorder recorder;
 DataHandler forceAnalyzer;
 DataHandler distanceAnalyzer;
 
 void setup(){
-	//waitForMachine(6000);
   Serial.begin(115200);
   serial_gps.begin(9600);
   Serial.println("\n\"HARDNESS TESTER (ground)\"\nFirmware: "+ (String)FIRMWARE + \
                 "\t| Environment: " + (String)ARDUINO + "\t| Compiler: "+ (String)__VERSION__);
-  //EEPROM.begin(memorySize); // Se reserva espacio en memoria | Tamaño maximo 4K (4096)
   display.begin();
   display.switcher(true);
-  //display.showImage(COP);
   display.showMessage("COPAIN SRL");
   measure.begin(DT_CELL, SCK_CELL);
   recorder.begin(CS);
@@ -36,40 +32,26 @@ void setup(){
   }else{
     Serial.println("[ERROR]\tRTC");
   }
-  //waitForMachine(9000);
 
   // Menu de configuración
   Serial.println("[MSJ]\tIngrese un peso para iniciar la calibración automática.");
   scaleCalculation = askTheUser("[INS]\tPeso: ", waitConfiguration);
   if(scaleCalculation > 0){
-    //display.showImage(TOOL);
 		manualScale = measure.calibrate(scaleCalculation);
 		Serial.print("\n[CAL]\tFACTOR: "); Serial.println(manualScale);
-    //EEPROM.put(memoryLocation[0], manualScale);
-		//EEPROM.put(memoryLocation[1], 1);
     EEPROM.update(memoryLocation[0], manualScale);
 		EEPROM.update(memoryLocation[1], 1);
 		Serial.println("[MJS]\tMedicion: 1");
-    //EEPROM.commit();
-    //EEPROM.end();
 		Serial.println("\n[MJS]\tReinicia el equipo manualmente...");
     delay(99999);
-		//waitForMachine(waitConfiguration);
-		//ESP.restart();
   }else if(scaleCalculation == 0){
 		Serial.println("\n[MSJ]\tCalibración automática cancelada.");
     Serial.println("[MSJ]\tCalibración por defecto.");
     manualScale = scale;
-		//EEPROM.put(memoryLocation[1], 1);
     EEPROM.update(memoryLocation[1], 1);
 		Serial.println("[MJS]\tMedicion: 1");
-    //EEPROM.put(memoryLocation[0], manualScale);
-    //EEPROM.commit();
     EEPROM.update(memoryLocation[0], manualScale);
     Serial.print("[CAL]\tFACTOR: "); Serial.println(manualScale);
-	  //Serial.println("[MSJ]\tConfigurando hora por defecto.");
-	  //if(dateTimeSetting)recorder.setDate(dates[2],dates[1],dates[0],times[0],times[1]);
-    //recorder.showTime();
   }else if(scaleCalculation == -1){
 		Serial.println("\n[MSJ]\tCargando configuracion guardada.");
     EEPROM.get(memoryLocation[0], manualScale);
@@ -77,7 +59,6 @@ void setup(){
     measure.manualSetup(manualScale);
     EEPROM.get(memoryLocation[1], lot);
     Serial.print("[CAL]\tMedicion: ");Serial.println(lot);
-	  //recorder.showTime();
 	}
 
   Serial.println("[MSJ]\tConfiguranndo GPS");
@@ -110,7 +91,6 @@ void setup(){
   headers= recorder.setTitles(sizeof(titles), titles[0], titles[1], titles[2], titles[3], titles[4], titles[5], titles[6], titles[7]);
   sprintf(lot_buff, "%d", lot);
  	recorder.saveRegistry(sizeof(titles), lot_buff, " ", " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
-  //EEPROM.end();
 
   // Se configurar los pines usando métodos de Arduino
   Serial.println("[MSJ]\tMidiendo jabalina.");
@@ -123,8 +103,6 @@ void setup(){
 
 void loop(){
   display.switcher(false);
-  //if(digitalRead(TOUCH))switcher();
-  //if(button == true){
   if(minimumForce(sensibility)){
     if(close){
       close = false;
@@ -132,38 +110,22 @@ void loop(){
       recorder.saveRegistry(sizeof(titles), lot_buff, " ", " ", " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
       Serial.print("[CAL]\tMEDICION: ");Serial.println(lot);
     }
-    display.switcher(true);
     flag = true;
-    //while(minimumForce(sensibility)){
-      //disposable = measure.strengthAverage(stabilizer);
-      // Medicion de fuerza
-      strength = measure.strengthAverage(stabilizer);
-      Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
-      Serial.print("|\tSEÑAL: ");Serial.println(measure.raw());
-      // Medicion de distancia
-      reducible = rule.ping_cm();
-      Serial.print("[CAL]\tALTURA: ");Serial.print(reducible);
-      depth = range - reducible;
-      Serial.print("|\tPROFUNDIDAD: ");Serial.println(depth);
-      //if(disposable < sensibility)disposable = sensibility;
-      //sprintf(disposable_buff, "%.0f", disposable);
-      //display.showMeasure(disposable_buff);
-      //if(disposable >= strength)strength = disposable;
-    //};
-    //display.showMessage("Procesando...");
-    //if(strength == 0)strength = sensibility; // Parche para evitar ceros en CSV
+    strength = measure.strengthAverage(stabilizer);
+    Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
+    Serial.print("|\tSEÑAL: ");Serial.println(measure.raw());
+    // Medicion de distancia
+    reducible = rule.ping_cm();
+    Serial.print("[CAL]\tALTURA: ");Serial.print(reducible);
+    depth = range - reducible;
+    Serial.print("|\tPROFUNDIDAD: ");Serial.println(depth);
     sprintf(strength_buff, "%.2f", strength);sprintf(depth_buff, "%.2f", reducible);
     display.showMeasure(1, strength_buff);
     display.showMeasure(2, depth_buff);
     forceAnalyzer.preLoad(strength);
     distanceAnalyzer.preLoad(reducible);
-    //sprintf(count_buff, "%d", ground);
-    //sprintf(force_buff, "%.0f g", strength);
-    //sprintf(strength_buff, "%.0f", strength);
     if(!sdModule){
-      //display.showMeasure(force_buff, " ", "No guardado. Error en SD");
       Serial.println("[ERROR]\tSD mal configurada");
-      waitForUser(" ", showMeasure);
     }else{
       Serial.println("[MJS]\tGuardando en SD");
       //|Columnas| {Medición", "Distancia", "Latitud", "Longitud", "Dist. Max", "F. Maxima", "F. Minima", "F. Promedio"}
@@ -172,24 +134,13 @@ void loop(){
       display.showMeasure(2, range_buff);
       delay(2000);
     }
-    waitForUser(" ", showMeasure);
-    //count = 0;
-    //Serial.print("[CAL]\tMEDICION: ");Serial.println(strength);
+    delay(2000);
     strength = 0;
   }else{
-    /*
-    disposable = measure.strength();
-    Serial.print("[CAL]\tFUERZA: ");Serial.print(disposable);
-    Serial.print("|\tSEÑAL: ");Serial.print(measure.raw());Serial.println("|\tFuerza insuficiente");
-    if(disposable < 0)disposable = 0;
-    sprintf(disposable_buff, "0 g"); // Se fija un cero para que se muestre por pantalla
-    display.showMeasure(disposable_buff);
-    */
     display.showMessage("Listo para medir");
   }
-  //}else{
   if(flag){
-    display.showMessage("Finalizando medicion...");
+    display.showMessage("Procesando...");
     flag = false;
     sprintf(max_buff, "%.2f", forceAnalyzer.maximum());
     sprintf(min_buff, "%.2f", forceAnalyzer.minimum());
@@ -221,22 +172,14 @@ void loop(){
     lot = counter();
     close = true;
   }
-		//display.showImage(PUSH);
-  //}
 }
 
 /*
   Se encapsulan funciones para mejorar la lectura del codigo.
 */
-/*
-void switcher(){
-  button = !button;
-  Serial.print("[CAL]\tEstado del botón cambiado: ");Serial.println(button);
-  while(digitalRead(TOUCH) == HIGH);
-}
-*/
 
 bool minimumForce(int threshold){
+  display.switcher(true);
   int t = 0;
   float s = threshold;
   while(s >= threshold && t < 5){
@@ -288,12 +231,8 @@ void waitForMachine(int period){
 
 unsigned int counter(){
   unsigned int number;
-  //EEPROM.begin(memorySize);
   EEPROM.get(memoryLocation[1], number);
 	number++;
-  //EEPROM.put(memoryLocation[1],number);
-  //EEPROM.commit();
   EEPROM.update(memoryLocation[1],number);
-  //EEPROM.end();
   return number;
 }
