@@ -32,7 +32,7 @@ long lat, lon;
 float flat, flon;
 unsigned long age, date, time, chars;
 unsigned short sentences, failed;
-int year;
+int year = 0;
 byte month, day, hour, minute, second, hundredths;
 
 bool conf = false;

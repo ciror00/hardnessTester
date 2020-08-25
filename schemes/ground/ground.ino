@@ -52,7 +52,7 @@ void setup(){
 		Serial.println("[MJS]\tMedicion: 1 (contador reiniciado)");
     EEPROM.put(memoryLocation[0], manualScale);
     Serial.print("[CAL]\tFACTOR: "); Serial.println(manualScale);
-    measure.manualSetup(manualScale);
+    //measure.manualSetup(manualScale);
   }else if(scaleCalculation == -1){
 		Serial.println("\n[MSJ]\tCargando configuracion guardada.");
     EEPROM.get(memoryLocation[0], manualScale);
@@ -62,15 +62,11 @@ void setup(){
     Serial.print("[CAL]\tMedicion: ");Serial.println(lot);
 	}
 
-  Serial.println("[MSJ]\tConfiguranndo GPS");
-  if(serial_gps.available()){
-    Serial.println("[MSJ]\tPuerto serie conectado a Modulo GPS");
-    // Se realiza un "ping" a modulo GSP
-    int c = serial_gps.read();
-    if (gps.encode(c))geo=true;
-    // Se obtienen estadisticas del sensor
+  Serial.println("[MSJ]\tConfiguranndo GPS\n> ");
+  if(connecting(4000)){
+    Serial.println("\n[MSJ]\tPuerto serie conectado a Modulo GPS");
     gps.stats(&chars, &sentences, &failed);
-    Serial.print(">Estaditicas: char: "); Serial.print(chars); Serial.print(" sentences: ");
+    Serial.print("> Estaditicas: \n> char: "); Serial.print(chars); Serial.print("| sentences: ");
     Serial.print(sentences); Serial.print(" failed checksum: "); Serial.println(failed);
     // Se obtiene posocion, fecha y hora
     Serial.println("[MSJ]\tObteniendo geolocalización");
@@ -80,7 +76,12 @@ void setup(){
     sprintf(lon_buff, "%d", flon);
     Serial.println("[MSJ]\tSincronizando RTC");
     gps.crack_datetime(&year, &month, &day, &hour, &minute, &second, &hundredths, &age); // Obtengo fecha y hora
-    if(year!=0)recorder.setDate(year,month,day,hour,minute);
+    if(year!=0){
+      recorder.setDate(year,month,day,hour,minute);
+    }else{
+      Serial.println("ERROR\tSincronizacion fallida");
+      recorder.setDate();
+    }
   }else{
     Serial.println("[ERROR]\tFalla de comunicación serie");
     Serial.println("[MSJ]\tFecha y hora por defecto.");
@@ -235,4 +236,19 @@ unsigned int counter(){
 	number++;
   EEPROM.put(memoryLocation[1],number);
   return number;
+}
+
+bool connecting(int wait){
+  unsigned long start = millis();
+  if(serial_gps.available()){
+    while (millis() - start < wait) {
+      Serial.print(".");
+      // Se realiza un "ping" a modulo GSP
+      char c = gps.encode(c);
+      if (gps.encode(c)) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
