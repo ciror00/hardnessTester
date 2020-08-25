@@ -38,9 +38,11 @@ byte month, day, hour, minute, second, hundredths;
 bool conf = false;
 bool flag = false;
 //bool button = false;
-bool geo = false;
 bool headers = false;
 bool close = false;
+bool geo = false;
+bool card = false;
+
 //int fruit = 0;
 byte memorySize = 64;
 byte memoryLocation[] = {0, memorySize/2};

@@ -21,7 +21,7 @@ void setup(){
   if(recorder.clock()){
     Serial.println("[OK]\tRTC operativo");
     if(recorder.card()){
-		sdModule = true;
+		  sdModule = true;
       //display.showImage(CARD, "SD operativa");
 	  Serial.println("[OK]\tSD");
     }else{
@@ -41,7 +41,7 @@ void setup(){
 		Serial.print("\n[CAL]\tFACTOR: "); Serial.println(manualScale);
     EEPROM.put(memoryLocation[0], manualScale);
 		EEPROM.put(memoryLocation[1], 1);
-		Serial.println("[MJS]\tMedicion: 1 (contador reiniciado)");
+		Serial.println("[MJS]\tMEDICION No: 1 (contador reiniciado)");
 		Serial.println("\n[MJS]\tReinicia el equipo manualmente...");
     delay(99999);
   }else if(scaleCalculation == 0){
@@ -49,7 +49,7 @@ void setup(){
     Serial.println("[MSJ]\tCalibración por defecto.");
     manualScale = scale;
     EEPROM.put(memoryLocation[1], 1);
-		Serial.println("[MJS]\tMedicion: 1 (contador reiniciado)");
+		Serial.println("[MJS]\tMEDICION No: 1 (contador reiniciado)");
     EEPROM.put(memoryLocation[0], manualScale);
     Serial.print("[CAL]\tFACTOR: "); Serial.println(manualScale);
     //measure.manualSetup(manualScale);
@@ -59,12 +59,13 @@ void setup(){
     Serial.print("[MSJ]\tFACTOR: "); Serial.println(manualScale);
     measure.manualSetup(manualScale);
     EEPROM.get(memoryLocation[1], lot);
-    Serial.print("[CAL]\tMedicion: ");Serial.println(lot);
+    Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
 	}
 
   Serial.println("[MSJ]\tConfiguranndo GPS\n> ");
   if(connecting(4000)){
     Serial.println("\n[MSJ]\tPuerto serie conectado a Modulo GPS");
+    geo = true;
     gps.stats(&chars, &sentences, &failed);
     Serial.print("> Estaditicas: \n> char: "); Serial.print(chars); Serial.print("| sentences: ");
     Serial.print(sentences); Serial.print(" failed checksum: "); Serial.println(failed);
@@ -101,17 +102,18 @@ void setup(){
   range = rule.ping_cm();
   Serial.print("[CAL]\tLargo de lanza medida: ");Serial.println(range);
   Serial.println("[MSJ]\tConfiguracion terminada. Listo para medir.");
+  display.showSettings(sdModule, geo);
 }
 
 void loop(){
   display.switcher(false);
+  if(close){
+    close = false;
+    sprintf(lot_buff, "%d", lot);
+    recorder.saveRegistry(sizeof(titles), lot_buff, " ", " ", " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
+    Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
+  }
   if(minimumForce(sensibility)){
-    if(close){
-      close = false;
-      sprintf(lot_buff, "%d", lot);
-      recorder.saveRegistry(sizeof(titles), lot_buff, " ", " ", " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
-      Serial.print("[CAL]\tMEDICION: ");Serial.println(lot);
-    }
     flag = true;
     strength = measure.strengthAverage(stabilizer);
     Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
@@ -154,6 +156,7 @@ void loop(){
       Serial.println("[MJS]\tGuardando en SD");
       //|Columnas| {Medición", "Distancia", "Latitud", "Longitud", "Dist. Max", "F. Maxima", "F. Minima", "F. Promedio"}
       recorder.saveRegistry(6, lot_buff, " ", " ", " ", range_buff, max_buff, min_buff, average_buff);
+      display.showMessage("Guardado");
     }
     Serial.println("[MJS]\tResumen de datos calculados");
     Serial.print("\t> PROFUNDIDAD: ");Serial.println(range_buff);
@@ -181,6 +184,7 @@ void loop(){
 
 bool minimumForce(int threshold){
   display.switcher(true);
+  display.showMessage("Iniciando medición");
   int t = 0;
   float s = threshold;
   while(s >= threshold && t < 5){
