@@ -39,18 +39,18 @@ void setup(){
   if(scaleCalculation > 0){
 		manualScale = measure.calibrate(scaleCalculation);
 		Serial.print("\n[CAL]\tFACTOR: "); Serial.println(manualScale);
-    EEPROM.update(memoryLocation[0], manualScale);
-		EEPROM.update(memoryLocation[1], 1);
-		Serial.println("[MJS]\tMedicion: 1");
+    EEPROM.write(memoryLocation[0], manualScale);
+		EEPROM.write(memoryLocation[1], 1);
+		Serial.println("[MJS]\tMedicion: 1 (contador reiniciado)");
 		Serial.println("\n[MJS]\tReinicia el equipo manualmente...");
     delay(99999);
   }else if(scaleCalculation == 0){
 		Serial.println("\n[MSJ]\tCalibración automática cancelada.");
     Serial.println("[MSJ]\tCalibración por defecto.");
     manualScale = scale;
-    EEPROM.update(memoryLocation[1], 1);
-		Serial.println("[MJS]\tMedicion: 1");
-    EEPROM.update(memoryLocation[0], manualScale);
+    EEPROM.write(memoryLocation[1], 1);
+		Serial.println("[MJS]\tMedicion: 1 (contador reiniciado)");
+    EEPROM.write(memoryLocation[0], manualScale);
     Serial.print("[CAL]\tFACTOR: "); Serial.println(manualScale);
   }else if(scaleCalculation == -1){
 		Serial.println("\n[MSJ]\tCargando configuracion guardada.");
@@ -130,10 +130,9 @@ void loop(){
       Serial.println("[MJS]\tGuardando en SD");
       //|Columnas| {Medición", "Distancia", "Latitud", "Longitud", "Dist. Max", "F. Maxima", "F. Minima", "F. Promedio"}
       recorder.saveRegistry(sizeof(titles), lot, strength_buff, range_buff, lat_buff, lon_buff, " ", " ", " ", " ");
-      display.showMeasure(1, strength_buff);
-      display.showMeasure(2, range_buff);
-      delay(2000);
     }
+    display.showMeasure(1, strength_buff);
+    display.showMeasure(2, range_buff);
     delay(2000);
     strength = 0;
   }else{
@@ -233,6 +232,6 @@ unsigned int counter(){
   unsigned int number;
   EEPROM.get(memoryLocation[1], number);
 	number++;
-  EEPROM.update(memoryLocation[1],number);
+  EEPROM.write(memoryLocation[1],number);
   return number;
 }
