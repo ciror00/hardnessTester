@@ -52,6 +52,7 @@ void setup(){
 		Serial.println("[MJS]\tMedicion: 1 (contador reiniciado)");
     EEPROM.write(memoryLocation[0], manualScale);
     Serial.print("[CAL]\tFACTOR: "); Serial.println(manualScale);
+    measure.manualSetup(manualScale);
   }else if(scaleCalculation == -1){
 		Serial.println("\n[MSJ]\tCargando configuracion guardada.");
     EEPROM.get(memoryLocation[0], manualScale);
