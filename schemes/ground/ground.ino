@@ -239,12 +239,11 @@ void switcher(){
 bool minimumForce(int threshold){
   int t = 0;
   float s = threshold;
-  while(s >= threshold){
+  while(s >= threshold && t < 5){
     t++;
     s = measure.strength();
     Serial.print("> SENSOR: ");Serial.println(s);
   }
-  Serial.print("> MUESTRAS: ");Serial.println(t);
 	bool mf = (t > 5) ? true : false;
   return mf;
 }
