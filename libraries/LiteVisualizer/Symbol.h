@@ -1,8 +1,5 @@
-byte izquierda[8] = { B00010, B00110, B01110, B11111, B01110, B00110, B00010, B00000 };
-byte derecha[8] = { B01000, B01100, B01110, B11111, B01110, B01100, B01000, B00000 };
-byte arriba[8] = { B00100, B01110, B11111, B00100, B00100, B00000, B00000, B00000 };
-byte abajo[8] = { B00000, B00000, B00000, B00100, B00100, B11111, B01110, B00100 };
-byte gradosgps[8] = { B01100, B10010, B10010, B10010, B01100, B00000, B00000, B00000 };
-byte cSD_icono[8] = { B00000, B11100, B10110, B10011, B10001, B10001, B10001, B11111 };
-byte battery_i[8] = { B01110, B11111, B10001, B10001, B10001, B10001, B10001, B11111 };
-byte icono_gps[8] = { B01110, B10001, B10001, B10001, B01010, B00100, B00100, B00000 };
+static unsigned char card_ok[] = {0x1C,0x16,0x13,0x11,0x11,0x11,0x11,0x1F};
+
+static unsigned char global[] = {0x00,0x0E,0x08,0x0A,0x0A,0x0E,0x00,0x1F};
+
+static unsigned char error[] = {0x00,0x0E,0x08,0x0C,0x08,0x0E,0x00,0x1F};
