@@ -13,9 +13,9 @@ class LiteVisualizer{
     LiteVisualizer() = default;
     void begin();
     bool switcher(bool n);
-    void showSettings(bool sd_status, bool gps_status, String banner=" ");
-    void showMessage(String text, String header = " ", String footer = " ", bool clear = false);
-    void showMeasure(int line, String value, String unit = "[Kg]", String footer = " ", bool clear = false);
+    void showSettings(bool sd_status, String status);
+    void showMessage(String text, String header = " ", String footer = " ", bool clear = true);
+    void showMeasure(int line, String label, String value, String unit, bool clear = true);
     void reset();
     ~LiteVisualizer() = default;
 };
