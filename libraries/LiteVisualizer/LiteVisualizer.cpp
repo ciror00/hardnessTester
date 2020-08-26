@@ -19,7 +19,6 @@ void LiteVisualizer::showSettings(bool sd_status, bool gps_status){
   this->lcd.clear();
   this->lcd.createChar(0, card_ok);
   this->lcd.createChar(1, global);
-  this->lcd.createChar(2, error);
   // Mensaje de SD por apntalla
   this->lcd.setCursor(0, file);
   if(sd_status){
@@ -27,7 +26,7 @@ void LiteVisualizer::showSettings(bool sd_status, bool gps_status){
     this->lcd.scrollDisplayRight();
     this->lcd.print(": OK ");
   }else{
-    this->lcd.write(2);
+    this->lcd.write(1);
     this->lcd.scrollDisplayRight();
     this->lcd.print(":ERROR");
   }

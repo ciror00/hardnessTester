@@ -22,11 +22,9 @@ void setup(){
     Serial.println("[OK]\tRTC operativo");
     if(recorder.card()){
 		  sdModule = true;
-      //display.showImage(CARD, "SD operativa");
 	  Serial.println("[OK]\tSD");
     }else{
 			sdModule = false;
-      //display.showImage(NOCARD, "Error en SD");
       Serial.println("[ERROR]\tSD");
     }
   }else{
@@ -52,7 +50,6 @@ void setup(){
 		Serial.println("[MJS]\tMEDICION No: 1 (contador reiniciado)");
     EEPROM.put(memoryLocation[0], manualScale);
     Serial.print("[CAL]\tFACTOR: "); Serial.println(manualScale);
-    //measure.manualSetup(manualScale);
   }else if(scaleCalculation == -1){
 		Serial.println("\n[MSJ]\tCargando configuracion guardada.");
     EEPROM.get(memoryLocation[0], manualScale);
@@ -72,12 +69,10 @@ void setup(){
     Serial.print(sentences); Serial.print(" failed checksum: "); Serial.println(failed);
     // Se obtiene posocion, fecha y hora
     Serial.println("[MSJ]\tObteniendo geolocalización");
-    //gps.f_get_position(&flat, &flon, &age); // Obtengo posicion
     Serial.print(">Lat: "); Serial.print(flat);Serial.print("\t|Lon: "); Serial.println(flon);
     sprintf(lat_buff, "%f", flat);
     sprintf(lon_buff, "%f", flon);
     Serial.println("[MSJ]\tSincronizando RTC");
-    //gps.crack_datetime(&year, &month, &day, &hour, &minute, &second, &hundredths, &age); // Obtengo fecha y hora
     if(year!=0){
       recorder.setDate(year,month,day,hour,minute);
     }else{
@@ -137,9 +132,9 @@ void loop(){
       Serial.print("|\tPROFUNDIDAD: ");Serial.println(depth);
       // Muestra de informacion por pantalla
       sprintf(strength_buff, "%.2f", strength);
-      sprintf(depth_buff, "%.2f", depth);
+      sprintf(depth_buff, "%.0f", depth);
       display.showMeasure(1, "F:", "[Kg]", strength_buff);
-      display.showMeasure(2, "D:", "[Kg]", depth_buff, false);
+      display.showMeasure(2, "D:", "[cm]", depth_buff, false);
       // Carga de datos en memoria para calculos posteriores
       forceAnalyzer.preLoad(strength);
       distanceAnalyzer.preLoad(depth);
@@ -150,11 +145,8 @@ void loop(){
         Serial.println("[MJS]\tGuardando en SD");
         sdModule = true;
         //|Columnas| {Medición", "Distancia", "Latitud", "Longitud", "Dist. Max", "F. Maxima", "F. Minima", "F. Promedio"}
-        recorder.saveRegistry(9, lot, strength_buff, range_buff, lat_buff, lon_buff, " ", " ", " ", " ");
+        recorder.saveRegistry(9, lot, strength_buff, depth_buff, lat_buff, lon_buff, " ", " ", " ", " ");
       }
-      //display.showMeasure(1, "F: ", strength_buff);
-      //display.showMeasure(2, "D: ", range_buff, false);
-      //delay(2000);
       strength = 0;
     }
   }else{
@@ -168,9 +160,8 @@ void loop(){
       sprintf(lat_buff, "%f", flat);
       sprintf(lon_buff, "%f", flon);
       display.showSettings(sdModule, gpsModule);
-      display.showMessage("                    ", " ", " ", false);
+      display.showMessage("Listo para medir", " ", " ", false);
     }
-    //display.showMessage("                    ", " ", " ", false);
   }
   if(flag){
     display.showMessage("Procesando...");
@@ -198,15 +189,6 @@ void loop(){
     forceAnalyzer.reset();
     distanceAnalyzer.reset();
     delay(1000);
-    /*
-    if(!recorder.card()){
-      //display.showImage(NOCARD, "Error en SD");
-      Serial.println("[ERROR]\tSD no reconocida");
-    }else{
-      Serial.println("[MJS]\tGuardando en SD");
-    }
-    Serial.print("[MJS]\t cerrador.");
-    */
     lot = counter();
     close = true;
   }
