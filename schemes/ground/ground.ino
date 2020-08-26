@@ -209,8 +209,8 @@ bool minimumForce(int threshold){
   display.switcher(true);
   display.showMessage("Estabilizando");
   int t = 0;
-  float s = threshold;
-  while(s <= threshold && t < stabilizer){
+  float s = measure.strength();
+  while(s >= threshold && t < stabilizer){
     t++;
     s = measure.strength();
     Serial.print("> SENSOR: ");Serial.print(s);Serial.print("\t| MUESTRAS: ");Serial.println(t);
