@@ -121,6 +121,7 @@ void loop(){
     sprintf(lot_buff, "%d", lot);
     recorder.saveRegistry(9, lot_buff, " ", " ", " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
     Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
+    display.showMessage("Listo para medir", " ", " ", false);
   }
   if(minimumForce(sensibility)){ // Primero descarta que no sea ruido de la lanza
     flag = true;
@@ -174,10 +175,10 @@ void loop(){
   if(flag){
     display.showMessage("Procesando...");
     flag = false;
-    sprintf(max_buff, "%.0f", forceAnalyzer.maximum());
-    sprintf(min_buff, "%.0f", forceAnalyzer.minimum());
-    sprintf(average_buff, "%.2f", forceAnalyzer.average());
-    sprintf(range_buff, "%.0f", distanceAnalyzer.maximum());
+    sprintf(max_buff, "%f", forceAnalyzer.maximum());
+    sprintf(min_buff, "%f", forceAnalyzer.minimum());
+    sprintf(average_buff, "%f", forceAnalyzer.average());
+    sprintf(range_buff, "%f", distanceAnalyzer.maximum());
     if(!recorder.card()){
       //display.showImage(NOCARD, "Error en SD");
       Serial.println("[ERROR]\tSD no reconocida");

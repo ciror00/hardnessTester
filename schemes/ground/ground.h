@@ -11,7 +11,7 @@
 
 #include "settings.h"
 
-#define FIRMWARE 0.26
+#define FIRMWARE 0.27
 
 #define SCK_CELL A12
 #define DT_CELL A11
@@ -61,7 +61,7 @@ float disposable, reducible;
 float maximum, minimum;
 
 long token = 0;
-long update = 1;
+long update = 10;
 
 char *titles[] = {"Medicion", "Distancia", "Latitud", "Longitud", "Dist. Max", "F. Maxima", "F. Minima", "F. Promedio"};
 
