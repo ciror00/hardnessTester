@@ -104,6 +104,7 @@ void setup(){
   Serial.print("[CAL]\tLargo de lanza medida: ");Serial.println(range);
   Serial.println("[MSJ]\tConfiguracion terminada. Listo para medir.");
   display.showSettings(sdModule, gpsModule);
+  display.showMessage("Listo para medir", " ", " ", false);
 }
 
 void loop(){
@@ -155,9 +156,10 @@ void loop(){
       gpsModule = (geo) ? "-OK-" : "ERROR";
       sprintf(lat_buff, "%f", flat);
       sprintf(lon_buff, "%f", flon);
+      display.showSettings(sdModule, gpsModule);
+      display.showMessage("                    ", " ", " ", false);
     }
-    display.showSettings(sdModule, gpsModule);
-    display.showMessage("                    ", " ", " ", false);
+    //display.showMessage("                    ", " ", " ", false);
   }
   if(flag){
     display.showMessage("Procesando...");
