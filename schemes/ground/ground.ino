@@ -62,7 +62,7 @@ void setup(){
     Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
 	}
 
-  Serial.println("[MSJ]\tConfiguranndo GPS\n> ");
+  Serial.println("[MSJ]\tConfiguranndo GPS");
   geo = connecting(4000);
   if(geo){
     gpsModule = true;
@@ -85,7 +85,7 @@ void setup(){
       recorder.setDate();
     }
   }else{
-    Serial.println("[ERROR]\tFalla de comunicación serie");
+    Serial.println("[ERROR]\tFalla de comunicación con GPS");
     Serial.println("[MSJ]\tFecha y hora por defecto.");
   }
   recorder.showTime();
@@ -100,8 +100,15 @@ void setup(){
   Serial.println("[MSJ]\tMidiendo jabalina.");
   pinMode(TRIG, OUTPUT);
   pinMode(ECHO, INPUT);
+  delay(500);
   range = rule.ping_cm();
-  Serial.print("[CAL]\tLargo de lanza medida: ");Serial.println(range);
+  if(range >= 0){
+    Serial.print("[CAL]\tLargo de lanza medida: ");Serial.println(range);
+  }else{
+    Serial.println("[ERROR]\tEn medicion. Configurando lanza por defecto");
+    range = spear;
+    Serial.print("[CAL]\tLargo de lanza: ");Serial.println(spear);
+  }
   Serial.println("[MSJ]\tConfiguracion terminada. Listo para medir.");
   display.showSettings(sdModule, gpsModule);
   display.showMessage("Listo para medir", " ", " ", false);
@@ -128,7 +135,8 @@ void loop(){
       depth = range - reducible;
       Serial.print("|\tPROFUNDIDAD: ");Serial.println(depth);
       // Muestra de informacion por pantalla
-      sprintf(strength_buff, "%.2f", strength);sprintf(depth_buff, "%.2f", depth);
+      sprintf(strength_buff, "%.2f", strength);
+      sprintf(depth_buff, "%.2f", depth);
       display.showMeasure(1, "F:", "[Kg]", strength_buff);
       display.showMeasure(2, "D:", "[Kg]", depth_buff, false);
       // Carga de datos en memoria para calculos posteriores
@@ -150,7 +158,7 @@ void loop(){
     token = witness(updateTime);
     if(token > update){
       display.showMessage("Sincronizando");
-      Serial.print("Actualizando GPS");
+      Serial.print("Actualizando GPS...");
       update = token;
       geo = connecting(4000);
       gpsModule = (geo) ? true : false;
@@ -164,10 +172,10 @@ void loop(){
   if(flag){
     display.showMessage("Procesando...");
     flag = false;
-    sprintf(max_buff, "%.2f", forceAnalyzer.maximum());
-    sprintf(min_buff, "%.2f", forceAnalyzer.minimum());
+    sprintf(max_buff, "%.0f", forceAnalyzer.maximum());
+    sprintf(min_buff, "%.0f", forceAnalyzer.minimum());
     sprintf(average_buff, "%.2f", forceAnalyzer.average());
-    sprintf(range_buff, "%.2f", distanceAnalyzer.maximum());
+    sprintf(range_buff, "%.0f", distanceAnalyzer.maximum());
     if(!recorder.card()){
       //display.showImage(NOCARD, "Error en SD");
       Serial.println("[ERROR]\tSD no reconocida");
@@ -180,10 +188,10 @@ void loop(){
       sdModule = false;
     }
     Serial.println("[MJS]\tResumen de datos calculados");
-    Serial.print("\t> PROFUNDIDAD: ");Serial.println(range_buff);
-    Serial.print("\t> F. MAXIMA: ");Serial.println(max_buff);
-    Serial.print("\t> F. MINIMA: ");Serial.println(min_buff);
-    Serial.print("\t> F. PROMEDIO: ");Serial.println(average_buff);
+    Serial.print("> PROFUNDIDAD: ");Serial.println(range_buff);
+    Serial.print("> F. MAXIMA: ");Serial.println(max_buff);
+    Serial.print("> F. MINIMA: ");Serial.println(min_buff);
+    Serial.print("> F. PROMEDIO: ");Serial.println(average_buff);
     forceAnalyzer.reset();
     distanceAnalyzer.reset();
     delay(1000);
@@ -257,7 +265,7 @@ void waitForMachine(int period){
 	};
 }
 
-long witness(long tht){
+long witness(unsigned long tht){
   unsigned long time_now = millis();
   float ring = round(time_now / tht);
   return ring;
@@ -282,11 +290,11 @@ bool connecting(int wait){
         gps.f_get_position(&flat, &flon, &age); // Obtengo posicion
         gps.crack_datetime(&year, &month, &day, \
           &hour, &minute, &second, &hundredths, &age); // Obtengo fecha y hora
-        Serial.println("> ... OK");
+        Serial.println("... OK");
         return true;
       }
     }
   }
-  Serial.println("> ... ERROR");
+  Serial.println("... ERROR");
   return false;
 }
