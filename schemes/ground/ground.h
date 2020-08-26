@@ -11,12 +11,11 @@
 
 #include "settings.h"
 
-#define FIRMWARE 0.13
+#define FIRMWARE 0.20
 
 #define SCK_CELL A12
 #define DT_CELL A11
 #define CS 53
-//#define TOUCH 
 #define TRIG 8
 #define ECHO 9 
 #define RXD 10
@@ -54,6 +53,7 @@ float range = 0;
 float depth = 0;
 unsigned int lot = 1;
 
+String gpsModule = "ERROR";
 bool sdModule;
 float disposable, reducible;
 float maximum, minimum;
@@ -72,7 +72,7 @@ char range_buff[10];
 char depth_buff[10];
 char lat_buff[10];
 char lon_buff[10];
-char location_buff[10];
+//char location_buff[10];
 char max_buff[10];
 char min_buff[10];
 char disposable_buff[10];

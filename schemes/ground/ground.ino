@@ -65,6 +65,7 @@ void setup(){
   Serial.println("[MSJ]\tConfiguranndo GPS\n> ");
   geo = connecting(4000);
   if(geo){
+    gpsModule = "-OK-";
     Serial.println("\n[MSJ]\tPuerto serie conectado a Modulo GPS");
     gps.stats(&chars, &sentences, &failed);
     Serial.print("> Estaditicas: \n> char: "); Serial.print(chars); Serial.print("| sentences: ");
@@ -75,7 +76,6 @@ void setup(){
     Serial.print(">Lat: "); Serial.print(flat);Serial.print("\t|Lon: "); Serial.println(flon);
     sprintf(lat_buff, "%f", flat);
     sprintf(lon_buff, "%f", flon);
-    sprintf(location_buff, "%.2f - %.2f", flat, flon);
     Serial.println("[MSJ]\tSincronizando RTC");
     //gps.crack_datetime(&year, &month, &day, &hour, &minute, &second, &hundredths, &age); // Obtengo fecha y hora
     if(year!=0){
@@ -103,7 +103,7 @@ void setup(){
   range = rule.ping_cm();
   Serial.print("[CAL]\tLargo de lanza medida: ");Serial.println(range);
   Serial.println("[MSJ]\tConfiguracion terminada. Listo para medir.");
-  display.showSettings(sdModule, geo, location_buff);
+  display.showSettings(sdModule, gpsModule);
 }
 
 void loop(){
@@ -114,45 +114,50 @@ void loop(){
     recorder.saveRegistry(sizeof(titles), lot_buff, " ", " ", " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
     Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
   }
-  if(minimumForce(sensibility)){
+  if(minimumForce(sensibility)){ // Primero descarta que no sea ruido de la lanza
     flag = true;
-    strength = measure.strengthAverage(stabilizer);
-    Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
-    Serial.print("|\tSEÑAL: ");Serial.println(measure.raw());
-    // Medicion de distancia
-    reducible = rule.ping_cm();
-    Serial.print("[CAL]\tALTURA: ");Serial.print(reducible);
-    depth = range - reducible;
-    Serial.print("|\tPROFUNDIDAD: ");Serial.println(depth);
-    sprintf(strength_buff, "%.2f", strength);sprintf(depth_buff, "%.2f", reducible);
-    display.showMeasure(1, strength_buff);
-    display.showMeasure(2, depth_buff);
-    forceAnalyzer.preLoad(strength);
-    distanceAnalyzer.preLoad(reducible);
-    if(!sdModule){
-      Serial.println("[ERROR]\tSD mal configurada");
-    }else{
-      Serial.println("[MJS]\tGuardando en SD");
-      sprintf(lat_buff, "%f", flat);
-      sprintf(lon_buff, "%f", flon);
-      sprintf(location_buff, "%.2f - %.2f", flat, flon);
-      //|Columnas| {Medición", "Distancia", "Latitud", "Longitud", "Dist. Max", "F. Maxima", "F. Minima", "F. Promedio"}
-      recorder.saveRegistry(sizeof(titles), lot, strength_buff, range_buff, lat_buff, lon_buff, " ", " ", " ", " ");
+    while(measure.strength() > sensibility){ // Hace un bucle, mientras se ejerza mas fuerza que la minima
+      // Medicion de fuerza
+      strength = measure.strengthAverage(stabilizer);
+      Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
+      Serial.print("|\tSEÑAL: ");Serial.println(measure.raw());
+      // Medicion de distancia
+      reducible = rule.ping_cm();
+      Serial.print("[CAL]\tALTURA: ");Serial.print(reducible);
+      depth = range - reducible;
+      Serial.print("|\tPROFUNDIDAD: ");Serial.println(depth);
+      // Muestra de informacion por pantalla
+      sprintf(strength_buff, "%.2f", strength);sprintf(depth_buff, "%.2f", depth);
+      display.showMeasure(1, "F:", "[Kg]", strength_buff);
+      display.showMeasure(2, "D:", "[Kg]", depth_buff, false);
+      // Carga de datos en memoria para calculos posteriores
+      forceAnalyzer.preLoad(strength);
+      distanceAnalyzer.preLoad(depth);
+      if(!sdModule){
+        Serial.println("[ERROR]\tSD mal configurada");
+      }else{
+        Serial.println("[MJS]\tGuardando en SD");
+        //|Columnas| {Medición", "Distancia", "Latitud", "Longitud", "Dist. Max", "F. Maxima", "F. Minima", "F. Promedio"}
+        recorder.saveRegistry(sizeof(titles), lot, strength_buff, range_buff, lat_buff, lon_buff, " ", " ", " ", " ");
+      }
+      //display.showMeasure(1, "F: ", strength_buff);
+      //display.showMeasure(2, "D: ", range_buff, false);
+      //delay(2000);
+      strength = 0;
     }
-    display.showMeasure(1, strength_buff);
-    display.showMeasure(2, range_buff);
-    delay(2000);
-    strength = 0;
   }else{
-    display.showMessage("Listo para medir");
     token = witness(updateTime);
     if(token > update){
       display.showMessage("Sincronizando");
       Serial.print("Actualizando GPS");
       update = token;
       geo = connecting(4000);
+      gpsModule = (geo) ? "-OK-" : "ERROR";
+      sprintf(lat_buff, "%f", flat);
+      sprintf(lon_buff, "%f", flon);
     }
-    display.showSettings(sdModule, geo, location_buff);
+    display.showSettings(sdModule, gpsModule);
+    display.showMessage("                    ", " ", " ", false);
   }
   if(flag){
     display.showMessage("Procesando...");
@@ -164,11 +169,13 @@ void loop(){
     if(!recorder.card()){
       //display.showImage(NOCARD, "Error en SD");
       Serial.println("[ERROR]\tSD no reconocida");
+      sdModule = false;
     }else{
       Serial.println("[MJS]\tGuardando en SD");
       //|Columnas| {Medición", "Distancia", "Latitud", "Longitud", "Dist. Max", "F. Maxima", "F. Minima", "F. Promedio"}
       recorder.saveRegistry(6, lot_buff, " ", " ", " ", range_buff, max_buff, min_buff, average_buff);
       display.showMessage("Guardado");
+      sdModule = false;
     }
     Serial.println("[MJS]\tResumen de datos calculados");
     Serial.print("\t> PROFUNDIDAD: ");Serial.println(range_buff);
@@ -178,13 +185,15 @@ void loop(){
     forceAnalyzer.reset();
     distanceAnalyzer.reset();
     delay(1000);
+    /*
     if(!recorder.card()){
       //display.showImage(NOCARD, "Error en SD");
       Serial.println("[ERROR]\tSD no reconocida");
     }else{
       Serial.println("[MJS]\tGuardando en SD");
     }
-    Serial.print("[MJS]\tRegistro de medicion cerrador.");
+    Serial.print("[MJS]\t cerrador.");
+    */
     lot = counter();
     close = true;
   }
@@ -196,12 +205,10 @@ void loop(){
 
 bool minimumForce(int threshold){
   display.switcher(true);
-  display.showMessage("Cargando");
-  //Serial.print("Actualizando GPS");
-  //geo = connecting(4000);
+  display.showMessage("Estabilizando");
   int t = 0;
   float s = threshold;
-  while(s >= threshold && t < 5){
+  while(s >= threshold && t < stabilizer){
     t++;
     s = measure.strength();
     Serial.print("> SENSOR: ");Serial.println(s);
@@ -264,18 +271,20 @@ unsigned int counter(){
 
 bool connecting(int wait){
   unsigned long start = millis();
+  Serial.print(">Sincronizando");
   if(serial_gps.available()){
     while (millis() - start < wait) {
-      Serial.print(".");
       // Se realiza un "ping" a modulo GSP
       char c = gps.encode(c);
       if (gps.encode(c)) {
         gps.f_get_position(&flat, &flon, &age); // Obtengo posicion
         gps.crack_datetime(&year, &month, &day, \
           &hour, &minute, &second, &hundredths, &age); // Obtengo fecha y hora
+        Serial.println("> ... OK");
         return true;
       }
     }
   }
+  Serial.println("> ... ERROR");
   return false;
 }
