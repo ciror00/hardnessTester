@@ -92,9 +92,9 @@ void setup(){
 
 	// Se agregan los titulos de archivos, que viene despues de los "Fecha" y "Hora" (titulos por defecto)
 	//|Columnas| {Medicion", "Latitud", "Longitud", "Distancia", "Dist. Max", "F. Maxima", "F. Minima", "F. Promedio"}
-  headers= recorder.setTitles(sizeof(titles), titles[0], titles[1], titles[2], titles[3], titles[4], titles[5], titles[6], titles[7]);
+  headers= recorder.setTitles(9, titles[0], titles[1], titles[2], titles[3], titles[4], titles[5], titles[6], titles[7]);
   sprintf(lot_buff, "%d", lot);
- 	recorder.saveRegistry(sizeof(titles), lot_buff, " ", " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
+ 	recorder.saveRegistry(9, lot_buff, " ", " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
 
   // Se configurar los pines usando métodos de Arduino
   Serial.println("[MSJ]\tMidiendo jabalina.");
@@ -119,7 +119,7 @@ void loop(){
   if(close){
     close = false;
     sprintf(lot_buff, "%d", lot);
-    recorder.saveRegistry(sizeof(titles), lot_buff, " ", " ", " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
+    recorder.saveRegistry(9, lot_buff, " ", " ", " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
     Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
   }
   if(minimumForce(sensibility)){ // Primero descarta que no sea ruido de la lanza
@@ -147,7 +147,7 @@ void loop(){
       }else{
         Serial.println("[MJS]\tGuardando en SD");
         //|Columnas| {Medición", "Distancia", "Latitud", "Longitud", "Dist. Max", "F. Maxima", "F. Minima", "F. Promedio"}
-        recorder.saveRegistry(sizeof(titles), lot, strength_buff, range_buff, lat_buff, lon_buff, " ", " ", " ", " ");
+        recorder.saveRegistry(9, lot, strength_buff, range_buff, lat_buff, lon_buff, " ", " ", " ", " ");
       }
       //display.showMeasure(1, "F: ", strength_buff);
       //display.showMeasure(2, "D: ", range_buff, false);
@@ -158,7 +158,7 @@ void loop(){
     token = witness(updateTime);
     if(token > update){
       display.showMessage("Sincronizando");
-      Serial.print("Actualizando GPS...");
+      Serial.println("Actualizando GPS...");
       update = token;
       geo = connecting(4000);
       gpsModule = (geo) ? true : false;
