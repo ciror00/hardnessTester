@@ -142,10 +142,12 @@ void loop(){
       // Carga de datos en memoria para calculos posteriores
       forceAnalyzer.preLoad(strength);
       distanceAnalyzer.preLoad(depth);
-      if(!sdModule){
+      if(!recorder.card()){
         Serial.println("[ERROR]\tSD mal configurada");
+        sdModule = false;
       }else{
         Serial.println("[MJS]\tGuardando en SD");
+        sdModule = true;
         //|Columnas| {Medición", "Distancia", "Latitud", "Longitud", "Dist. Max", "F. Maxima", "F. Minima", "F. Promedio"}
         recorder.saveRegistry(9, lot, strength_buff, range_buff, lat_buff, lon_buff, " ", " ", " ", " ");
       }
@@ -183,9 +185,9 @@ void loop(){
     }else{
       Serial.println("[MJS]\tGuardando en SD");
       //|Columnas| {Medición", "Distancia", "Latitud", "Longitud", "Dist. Max", "F. Maxima", "F. Minima", "F. Promedio"}
-      recorder.saveRegistry(6, lot_buff, " ", " ", " ", range_buff, max_buff, min_buff, average_buff);
+      recorder.saveRegistry(9, lot_buff, " ", " ", " ", range_buff, max_buff, min_buff, average_buff);
       display.showMessage("Guardado");
-      sdModule = false;
+      sdModule = true;
     }
     Serial.println("[MJS]\tResumen de datos calculados");
     Serial.print("> PROFUNDIDAD: ");Serial.println(range_buff);
@@ -266,6 +268,7 @@ void waitForMachine(int period){
 }
 
 long witness(unsigned long tht){
+  if(tht == 0)return 0;
   unsigned long time_now = millis();
   float ring = round(time_now / tht);
   return ring;
