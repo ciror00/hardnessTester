@@ -14,7 +14,7 @@ bool LiteVisualizer::switcher(bool n){
   }
 }
 
-void LiteVisualizer::showSettings(bool sd_status, String status){
+void LiteVisualizer::showSettings(bool sd_status, bool gps_status){
   byte file = 0;
   this->lcd.clear();
   this->lcd.createChar(0, card_ok);
@@ -24,15 +24,24 @@ void LiteVisualizer::showSettings(bool sd_status, String status){
   this->lcd.setCursor(0, file);
   if(sd_status){
     this->lcd.write(0);
+    this->lcd.scrollDisplayRight();
+    this->lcd.print(": OK ");
   }else{
     this->lcd.write(2);
+    this->lcd.scrollDisplayRight();
+    this->lcd.print(":ERROR");
   }
+  this->lcd.setCursor(6, file);
   // Mensaje de GPS por pantalla
-  this->lcd.write(1);
-  this->lcd.scrollDisplayRight();
-  this->lcd.print(":");
-  this->lcd.scrollDisplayRight();
-  this->lcd.print(status);
+  if(gps_status){
+    this->lcd.write(1);
+    this->lcd.scrollDisplayRight();
+    this->lcd.print(": OK ");
+  }else{
+    this->lcd.write(2);
+    this->lcd.scrollDisplayRight();
+    this->lcd.print(":ERROR");
+  }
 }
 
 void LiteVisualizer::showMessage(String text, String header, String footer, bool clear){
