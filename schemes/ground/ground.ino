@@ -101,7 +101,7 @@ void setup(){
     Serial.print("[CAL]\tLargo de lanza medida: ");Serial.println(range);
   }else{
     Serial.println("[ERROR]\tEn medicion. Configurando lanza por defecto");
-    range = spear;
+    range = spear*5;
     Serial.print("[CAL]\tLargo de lanza: ");Serial.println(spear);
   }
   Serial.println("[MSJ]\tConfiguracion terminada. Listo para medir.");
@@ -129,6 +129,7 @@ void loop(){
       reducible = rule.ping_cm();
       Serial.print("[CAL]\tALTURA: ");Serial.print(reducible);
       depth = range - reducible;
+      if(depth>range)depth = range; // Filtro de mediciones mayores a la lanza
       Serial.print("|\tPROFUNDIDAD: ");Serial.println(depth);
       // Muestra de informacion por pantalla
       sprintf(strength_buff, "%.2f", strength);
@@ -148,13 +149,14 @@ void loop(){
         recorder.saveRegistry(9, lot, strength_buff, depth_buff, lat_buff, lon_buff, " ", " ", " ", " ");
       }
       strength = 0;
+      depth = 0;
     }
   }else{
     token = witness(updateTime);
     if(token > update){
       display.showMessage("Sincronizando");
       Serial.println("Actualizando GPS...");
-      update = token;
+      update = token*100;
       geo = connecting(4000);
       gpsModule = (geo) ? true : false;
       sprintf(lat_buff, "%f", flat);
