@@ -53,7 +53,7 @@ float range = 0;
 float depth = 0;
 unsigned int lot = 1;
 
-String gpsModule = "ERROR";
+bool gpsModule = false;
 bool sdModule;
 float disposable, reducible;
 float maximum, minimum;

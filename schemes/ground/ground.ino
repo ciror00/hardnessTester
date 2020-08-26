@@ -65,7 +65,7 @@ void setup(){
   Serial.println("[MSJ]\tConfiguranndo GPS\n> ");
   geo = connecting(4000);
   if(geo){
-    gpsModule = "-OK-";
+    gpsModule = true;
     Serial.println("\n[MSJ]\tPuerto serie conectado a Modulo GPS");
     gps.stats(&chars, &sentences, &failed);
     Serial.print("> Estaditicas: \n> char: "); Serial.print(chars); Serial.print("| sentences: ");
@@ -153,7 +153,7 @@ void loop(){
       Serial.print("Actualizando GPS");
       update = token;
       geo = connecting(4000);
-      gpsModule = (geo) ? "-OK-" : "ERROR";
+      gpsModule = (geo) ? true : false;
       sprintf(lat_buff, "%f", flat);
       sprintf(lon_buff, "%f", flon);
       display.showSettings(sdModule, gpsModule);
@@ -210,12 +210,12 @@ bool minimumForce(int threshold){
   display.showMessage("Estabilizando");
   int t = 0;
   float s = threshold;
-  while(s >= threshold && t < stabilizer){
+  while(s <= threshold && t < stabilizer){
     t++;
     s = measure.strength();
-    Serial.print("> SENSOR: ");Serial.println(s);
+    Serial.print("> SENSOR: ");Serial.print(s);Serial.print("\t| MUESTRAS: ");Serial.println(t);
   }
-	bool mf = (t > 5) ? true : false;
+	bool mf = (t >= stabilizer) ? true : false;
   return mf;
 }
 
