@@ -16,22 +16,22 @@ void LiteVisualizer::_showSettings(bool _sd_status, bool _gps_status){
   if(_sd_status){
     this->lcd.write(0);
     this->lcd.scrollDisplayRight();
-    this->lcd.print(": OK ");
+    this->lcd.print(":OK");
   }else{
-    this->lcd.write(1);
+    this->lcd.write(0);
     this->lcd.scrollDisplayRight();
-    this->lcd.print(":ERROR");
+    this->lcd.print(":NO");
   }
-  this->lcd.setCursor(6, file);
+  this->lcd.setCursor(4, file);
   // Mensaje de GPS por pantalla
   if(_gps_status){
     this->lcd.write(1);
     this->lcd.scrollDisplayRight();
-    this->lcd.print(": OK ");
+    this->lcd.print(":OK");
   }else{
-    this->lcd.write(2);
+    this->lcd.write(1);
     this->lcd.scrollDisplayRight();
-    this->lcd.print(":ERROR");
+    this->lcd.print(":NO");
   }
 }
 
@@ -73,9 +73,9 @@ void LiteVisualizer::reset(){
 
 void LiteVisualizer::home(bool sd_status, bool gps_status){
   this->_showSettings(sd_status, gps_status);
-  this->lcd.setCursor(0, 3);
+  this->lcd.setCursor(1, 3);
   this->lcd.write(3);
-  this->lcd.setCursor(19, 3);
+  this->lcd.setCursor(18, 3);
   this->lcd.write(3);
   this->showMessage(" ", "Listo para Medir", " ", false);
 }
