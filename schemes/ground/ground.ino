@@ -70,8 +70,8 @@ void setup(){
     // Se obtiene posocion, fecha y hora
     Serial.println("[MSJ]\tObteniendo geolocalización");
     Serial.print(">Lat: "); Serial.print(flat);Serial.print("\t|Lon: "); Serial.println(flon);
-    sprintf(lat_buff, "%f", flat);
-    sprintf(lon_buff, "%f", flon);
+    //sprintf(lat_buff, "%f", flat);
+    //sprintf(lon_buff, "%f", flon);
     Serial.println("[MSJ]\tSincronizando RTC");
     if(year!=0){
       recorder.setDate(year,month,day,hour,minute);
@@ -83,6 +83,8 @@ void setup(){
     Serial.println("[ERROR]\tFalla de comunicación con GPS");
     Serial.println("[MSJ]\tFecha y hora por defecto.");
   }
+  sprintf(lat_buff, "%f", flat);
+  sprintf(lon_buff, "%f", flon);
   recorder.showTime();
 
 	// Se agregan los titulos de archivos, que viene despues de los "Fecha" y "Hora" (titulos por defecto)
@@ -133,7 +135,7 @@ void loop(){
       if(depth>range)depth = range; // Filtro de mediciones mayores a la lanza
       Serial.print("|\tPROFUNDIDAD: ");Serial.println(depth);
       // Muestra de informacion por pantalla
-      sprintf(strength_buff, "%.2f", strength);
+      sprintf(strength_buff, "%.0f", strength);
       sprintf(depth_buff, "%.0f", depth);
       display.showMeasure(1, "F:", "[Kg]", strength_buff);
       display.showMeasure(2, "D:", "[cm]", depth_buff, false);
@@ -147,7 +149,7 @@ void loop(){
         Serial.println("[MJS]\tGuardando en SD");
         sdModule = true;
         //|Columnas| {Medición", "Distancia", "Latitud", "Longitud", "Dist. Max", "F. Maxima", "F. Minima", "F. Promedio"}
-        recorder.saveRegistry(8, lot, strength_buff, depth_buff, lat_buff, lon_buff, " ", " ", " ", " ");
+        recorder.saveRegistry(8, lot, strength_buff, depth_buff, lat_buff, lon_buff, " ", " ", " ");
       }
       strength = 0;
       depth = 0;
@@ -169,10 +171,10 @@ void loop(){
   if(flag){
     display.showMessage("Procesando...");
     flag = false;
-    sprintf(max_buff, "%f", forceAnalyzer.maximum());
-    sprintf(min_buff, "%f", forceAnalyzer.minimum());
-    sprintf(average_buff, "%f", forceAnalyzer.average());
-    sprintf(range_buff, "%f", distanceAnalyzer.maximum());
+    sprintf(max_buff, "%.0f", forceAnalyzer.maximum());
+    sprintf(min_buff, "%.0f", forceAnalyzer.minimum());
+    sprintf(average_buff, "%.2f", forceAnalyzer.average());
+    sprintf(range_buff, "%.0f", distanceAnalyzer.maximum());
     if(!recorder.card()){
       //display.showImage(NOCARD, "Error en SD");
       Serial.println("[ERROR]\tSD no reconocida");
