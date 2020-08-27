@@ -82,8 +82,6 @@ void setup(){
     Serial.println("[ERROR]\tFalla de comunicación con GPS");
     Serial.println("[MSJ]\tFecha y hora por defecto.");
   }
-  //sprintf(lat_buff, "%f", flat);
-  //sprintf(lon_buff, "%f", flon);
   dtostrf(flat,2,4,lat_buff);
   dtostrf(flon,2,4,lon_buff);
   recorder.showTime();
@@ -108,8 +106,6 @@ void setup(){
     Serial.print("[CAL]\tLargo de lanza: ");Serial.println(spear);
   }
   Serial.println("[MSJ]\tConfiguracion terminada. Listo para medir.");
-  //display.showSettings(sdModule, gpsModule);
-  //display.showMessage("Listo para medir", " ", " ", false);
   display.home(sdModule, gpsModule);
 }
 
@@ -120,8 +116,6 @@ void loop(){
     sprintf(lot_buff, "%d", lot);
     recorder.saveRegistry(8, lot_buff, " ", " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
     Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
-    //display.showSettings(sdModule, gpsModule);
-    //display.showMessage("Listo para medir", " ", " ", false);
     display.home(sdModule, gpsModule);
   }
   if(minimumForce(sensibility)){ // Primero descarta que no sea ruido de la lanza
@@ -139,8 +133,6 @@ void loop(){
       if(depth>range)depth = range; // Filtro de mediciones mayores a la lanza
       Serial.print("|\tPROFUNDIDAD: ");Serial.println(depth);
       // Muestra de informacion por pantalla
-      //sprintf(strength_buff, "%.0f", strength);
-      //sprintf(depth_buff, "%.0f", depth);
       dtostrf(strength,4,0,strength_buff);
       dtostrf(depth,4,0,depth_buff);
       display.showMeasure(2, "F:", "[Kg]", strength_buff);
@@ -165,32 +157,23 @@ void loop(){
     if(token > update){
       display.showMessage(" ", "Sincronizando", " ");
       Serial.println("Actualizando GPS...");
-      update = token*100;
+      update = token;
       geo = connecting(4000);
       gpsModule = (geo) ? true : false;
-      //sprintf(lat_buff, "%f", flat);
-      //sprintf(lon_buff, "%f", flon);
       dtostrf(flat,2,4,lat_buff);
       dtostrf(flon,2,4,lon_buff);
-      //display.showSettings(sdModule, gpsModule);
-      //display.showMessage("Listo para medir", " ", " ", false);
       display.home(sdModule, gpsModule);
     }
   }
   if(flag){
     display.showMessage(" ", "Procesando...", " ");
     flag = false;
-    //sprintf(max_buff, "%.0f", forceAnalyzer.maximum());
-    //sprintf(min_buff, "%.0f", forceAnalyzer.minimum());
-    //sprintf(average_buff, "%.2f", forceAnalyzer.average());
-    //sprintf(range_buff, "%.0f", distanceAnalyzer.maximum());
     dtostrf(forceAnalyzer.maximum(),4,0,max_buff);
     dtostrf(forceAnalyzer.minimum(),4,0,min_buff);
     dtostrf(forceAnalyzer.average(),4,2,average_buff);
     dtostrf(distanceAnalyzer.maximum(),4,0,range_buff);
     dtostrf(point, 4, 0,point_buff);
     if(!recorder.card()){
-      //display.showImage(NOCARD, "Error en SD");
       Serial.println("[ERROR]\tSD no reconocida");
       sdModule = false;
     }else{
@@ -222,6 +205,7 @@ void loop(){
 
 bool minimumForce(int threshold){
   display.switcher(true);
+  sdModule = (recorder.card()) ? true : false; // Se chequea la SD para actualizar el la pantalla
   int t = 0;
   float s = measure.strength();
   while(s >= threshold && t < stabilizer){
