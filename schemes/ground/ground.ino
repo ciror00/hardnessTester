@@ -87,9 +87,9 @@ void setup(){
 
 	// Se agregan los titulos de archivos, que viene despues de los "Fecha" y "Hora" (titulos por defecto)
 	//|Columnas| {Medicion", "Latitud", "Longitud", "Distancia", "Dist. Max", "F. Maxima", "F. Minima", "F. Promedio"}
-  headers= recorder.setTitles(9, titles[0], titles[1], titles[2], titles[3], titles[4], titles[5], titles[6], titles[7]);
+  headers= recorder.setTitles(8, titles[0], titles[1], titles[2], titles[3], titles[4], titles[5], titles[6], titles[7]);
   sprintf(lot_buff, "%d", lot);
- 	recorder.saveRegistry(9, lot_buff, " ", " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
+ 	recorder.saveRegistry(8, lot_buff, " ", " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
 
   // Se configurar los pines usando métodos de Arduino
   Serial.println("[MSJ]\tMidiendo jabalina.");
@@ -114,7 +114,7 @@ void loop(){
   if(close){
     close = false;
     sprintf(lot_buff, "%d", lot);
-    recorder.saveRegistry(9, lot_buff, " ", " ", " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
+    recorder.saveRegistry(8, lot_buff, " ", " ", " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
     Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
     display.showMessage("Listo para medir", " ", " ", false);
   }
@@ -146,7 +146,7 @@ void loop(){
         Serial.println("[MJS]\tGuardando en SD");
         sdModule = true;
         //|Columnas| {Medición", "Distancia", "Latitud", "Longitud", "Dist. Max", "F. Maxima", "F. Minima", "F. Promedio"}
-        recorder.saveRegistry(9, lot, strength_buff, depth_buff, lat_buff, lon_buff, " ", " ", " ", " ");
+        recorder.saveRegistry(8, lot, strength_buff, depth_buff, lat_buff, lon_buff, " ", " ", " ", " ");
       }
       strength = 0;
       depth = 0;
@@ -179,7 +179,7 @@ void loop(){
     }else{
       Serial.println("[MJS]\tGuardando en SD");
       //|Columnas| {Medición", "Distancia", "Latitud", "Longitud", "Dist. Max", "F. Maxima", "F. Minima", "F. Promedio"}
-      recorder.saveRegistry(9, lot_buff, " ", " ", " ", range_buff, max_buff, min_buff, average_buff);
+      recorder.saveRegistry(8, lot_buff, " ", " ", " ", range_buff, max_buff, min_buff, average_buff);
       display.showMessage("Guardado");
       sdModule = true;
     }
