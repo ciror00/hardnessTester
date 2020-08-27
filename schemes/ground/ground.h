@@ -11,7 +11,7 @@
 
 #include "settings.h"
 
-#define FIRMWARE 0.32
+#define FIRMWARE 0.4
 
 #define SCK_CELL A12
 #define DT_CELL A11
@@ -44,7 +44,6 @@ bool close = false;
 bool geo = false;
 bool card = false;
 
-//int fruit = 0;
 byte memorySize = 64;
 byte memoryLocation[] = {0, memorySize/2};
 float patternWeight = 0;
@@ -53,6 +52,7 @@ float scaleCalculation = -1;
 float strength = 0;
 float range = 0; 
 float depth = 0;
+float point = 0;
 unsigned int lot = 1;
 
 bool gpsModule = false;
@@ -65,12 +65,14 @@ long update = 10;
 
 char *titles[] = {"Medicion", "Distancia", "Latitud", "Longitud", "Dist. Max", "F. Maxima", "F. Minima", "F. Promedio"};
 
+char float_buff[10];
 char lot_buff[10];
 char count_buff[10];
 char strength_buff[10];
 char average_buff[10];
 //char force_buff[10];
 char range_buff[10];
+char point_buff[10];
 char depth_buff[10];
 char lat_buff[10];
 char lon_buff[10];
