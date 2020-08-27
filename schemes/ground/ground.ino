@@ -116,7 +116,7 @@ void loop(){
   if(close){
     close = false;
     sprintf(lot_buff, "%d", lot);
-    recorder.saveRegistry(8, lot_buff, " ", " ", " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
+    recorder.saveRegistry(8, lot_buff, " ", " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
     Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
     display.showSettings(sdModule, gpsModule);
     display.showMessage("Listo para medir", " ", " ", false);
