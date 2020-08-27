@@ -188,7 +188,7 @@ void loop(){
     Serial.print("> F. MAXIMA: ");Serial.println(max_buff);
     Serial.print("> F. MINIMA: ");Serial.println(min_buff);
     Serial.print("> F. PROMEDIO: ");Serial.println(average_buff);
-    display.detail(sdModule, gpsModule, sdModule, lot_buff);
+    display.detail(sdModule, gpsModule, lot_buff);
     display.summary(max_buff, min_buff, average_buff, range_buff);
     forceAnalyzer.reset();
     distanceAnalyzer.reset();

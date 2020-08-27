@@ -22,7 +22,7 @@ void LiteVisualizer::_showSettings(bool _sd_status, bool _gps_status){
     this->lcd.scrollDisplayRight();
     this->lcd.print(":NO");
   }
-  this->lcd.setCurso(5, file);
+  this->lcd.setCursor(5, file);
   // Mensaje de GPS por pantalla
   if(_gps_status){
     this->lcd.write(1);
