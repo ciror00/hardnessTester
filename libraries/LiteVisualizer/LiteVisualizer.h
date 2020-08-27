@@ -18,7 +18,7 @@ class LiteVisualizer{
     void showMessage( String header, String text, String footer, bool clear = true);
     void showMeasure(int line, String label, String value, String unit, bool clear = true);
     void home(bool sd_status, bool gps_status);
-    void detail(bool sd_status, bool gps_status, bool saving, String number);
+    void detail(bool sd_status, bool gps_status, String number);
     void summary(String max, String averange, String distance, String regiter);
     void reset();
     ~LiteVisualizer() = default;

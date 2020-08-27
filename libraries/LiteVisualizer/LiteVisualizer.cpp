@@ -22,7 +22,7 @@ void LiteVisualizer::_showSettings(bool _sd_status, bool _gps_status){
     this->lcd.scrollDisplayRight();
     this->lcd.print(":NO");
   }
-  this->lcd.setCursor(4, file);
+  this->lcd.setCurso(5, file);
   // Mensaje de GPS por pantalla
   if(_gps_status){
     this->lcd.write(1);
@@ -80,15 +80,17 @@ void LiteVisualizer::home(bool sd_status, bool gps_status){
   this->showMessage(" ", "Listo para Medir", " ", false);
 }
 
-void LiteVisualizer::detail(bool sd_status, bool gps_status, bool saving, String number){
-  char buff[10];
+void LiteVisualizer::detail(bool sd_status, bool gps_status, String number){
+  //char buff[10];
   this->lcd.clear();
   this->_showSettings(sd_status, gps_status);
   this->lcd.setCursor(0, 1);
-  if(saving){
-    sprintf(buff, "Guardado SD N°%04d", number);
+  this->lcd.print("Guardado SD N°");
+  this->lcd.setCursor(14, 1);
+  if(sd_status){
+    this->lcd.print(number);
   }else{
-    sprintf(buff, "No SD. No Guardado");
+    this->lcd.print(number);
   }
 }
 
