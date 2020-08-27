@@ -104,7 +104,7 @@ void LiteVisualizer::summary(String max, String averange, String distance, Strin
   // Lado derecho
   this->lcd.setCursor(0, 3);
   this->lcd.print(distance);
-  this->lcd.setCursor(4, 2);
+  this->lcd.setCursor(4, 3);
   this->lcd.print("cm Dmax:");
   this->lcd.print(regiter);
 }
