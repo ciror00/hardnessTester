@@ -129,9 +129,9 @@ void loop(){
       reducible = rule.ping_cm();
       Serial.print("[CAL]\tALTURA: ");Serial.print(reducible);
       depth = range - reducible;
-      if(point<strength)point = strength; // Se punto de maxima fuerza
       if(depth>range)depth = range; // Filtro de mediciones mayores a la lanza
       Serial.print("|\tPROFUNDIDAD: ");Serial.println(depth);
+      if(point<depth)point = depth; // Se punto de maxima fuerza
       // Muestra de informacion por pantalla
       dtostrf(strength,4,1,strength_buff);
       dtostrf(depth,4,1,depth_buff);
