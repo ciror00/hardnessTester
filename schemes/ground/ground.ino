@@ -13,7 +13,7 @@ void setup(){
                 "\t| Environment: " + (String)ARDUINO + "\t| Compiler: "+ (String)__VERSION__);
   display.begin();
   display.switcher(true);
-  display.showMessage("  COPAIN S.R.L.", " ", "Iniciando...");
+  display.showMessage("  COPAINS S.R.L.", " ", "Iniciando...");
   measure.begin(DT_CELL, SCK_CELL);
   recorder.begin(CS);
   // Configuacion de modulo
