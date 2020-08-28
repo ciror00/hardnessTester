@@ -13,7 +13,7 @@ void setup(){
                 "\t| Environment: " + (String)ARDUINO + "\t| Compiler: "+ (String)__VERSION__);
   display.begin();
   display.switcher(true);
-  display.showMessage("COPAIN S.R.L.", " ", "Iniciando...");
+  display.showMessage("  COPAIN S.R.L.", " ", "Iniciando...");
   measure.begin(DT_CELL, SCK_CELL);
   recorder.begin(CS);
   // Configuacion de modulo
@@ -87,10 +87,10 @@ void setup(){
   recorder.showTime();
 
 	// Se agregan los titulos de archivos, que viene despues de los "Fecha" y "Hora" (titulos por defecto)
-	//|Columnas| {"#", Medicion", "Latitud", "Longitud", "Distancia", "Dist. Max", "F. Maxima", "F. Minima", "F. Promedio"}
+  // {"Latitud", "Longitud", "Medicion", "Fuerza [KG]", "Distancia [CM]", "Distancia total", "Fuerza Promedio", "Fuerza Maxima", "Distancia Fuerza Maxima"};
   headers= recorder.setTitles(9, titles[0], titles[1], titles[2], titles[3], titles[4], titles[5], titles[6], titles[7], titles[8]);
   sprintf(lot_buff, "%05d", lot);
- 	recorder.saveRegistry(9, lot_buff, " ", " ", " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
+ 	recorder.saveRegistry(9, lat_buff, lon_buff, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
 
   // Se configurar los pines usando métodos de Arduino
   Serial.println("[MSJ]\tMidiendo jabalina.");
@@ -114,7 +114,7 @@ void loop(){
   if(close){
     close = false;
     sprintf(lot_buff, "%05d", lot);
-    recorder.saveRegistry(9, lot_buff, " ", " ", " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
+    recorder.saveRegistry(9, lat_buff, lon_buff, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
     Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
     display.home(sdModule, gpsModule);
   }
@@ -146,8 +146,8 @@ void loop(){
       }else{
         Serial.println("[MJS]\tGuardando en SD");
         sdModule = true;
-        //|Columnas| {Medición", "Distancia", "Latitud", "Longitud", "Dist. Max", "F. Maxima", "F. Minima", "F. Promedio"}
-        recorder.saveRegistry(9, " ", strength_buff, depth_buff, lat_buff, lon_buff, " ", " ", " ", " ");
+      // {"Latitud", "Longitud", "Medicion", "Fuerza [KG]", "Distancia [CM]", "Distancia total", "Fuerza Promedio", "Fuerza Maxima", "Distancia Fuerza Maxima"};
+        recorder.saveRegistry(9, " ", " ", " ", strength_buff, depth_buff, " ", " ", " ", " ");
       }
       strength = 0;
       depth = 0;
@@ -183,8 +183,8 @@ void loop(){
       sdModule = false;
     }else{
       Serial.println("[MJS]\tGuardando en SD");
-      //|Columnas| {Medición", "Distancia", "Latitud", "Longitud", "Dist. Max", "F. Maxima", "F. Minima", "F. Promedio"}
-      recorder.saveRegistry(9," ", " ", " ", " ", " ", range_buff, max_buff, min_buff, average_buff);
+    // {"Latitud", "Longitud", "Medicion", "Fuerza [KG]", "Distancia [CM]", "Distancia total", "Fuerza Promedio", "Fuerza Maxima", "Distancia Fuerza Maxima"};
+      recorder.saveRegistry(9," ", " ", " ", " ", " ", range_buff, average_buff, max_buff, point_buff);
       sdModule = true;
     }
     Serial.println("[MJS]\tResumen de datos calculados");
