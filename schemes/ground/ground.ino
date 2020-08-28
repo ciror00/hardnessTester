@@ -209,10 +209,10 @@ void loop(){
 */
 
 bool minimumForce(int threshold){
+  display.switcher(true);
   int t = 0;
   float s = measure.strength();
   while(s >= threshold && t < stabilizer){
-    display.switcher(true);
     display.showMessage("", "Estabilizando...", " ");
     t++;
     s = measure.strength();
