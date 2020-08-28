@@ -147,7 +147,7 @@ void loop(){
         Serial.println("[MJS]\tGuardando en SD");
         sdModule = true;
         //|Columnas| {Medición", "Distancia", "Latitud", "Longitud", "Dist. Max", "F. Maxima", "F. Minima", "F. Promedio"}
-        recorder.saveRegistry(9, lot, strength_buff, depth_buff, lat_buff, lon_buff, " ", " ", " ", " ");
+        recorder.saveRegistry(9, " ", strength_buff, depth_buff, lat_buff, lon_buff, " ", " ", " ", " ");
       }
       strength = 0;
       depth = 0;
@@ -162,8 +162,8 @@ void loop(){
       gpsModule = (geo) ? true : false;
       dtostrf(flat,2,4,lat_buff);
       dtostrf(flon,2,4,lon_buff);
-      display.home(sdModule, gpsModule);
     }
+    //display.home(sdModule, gpsModule);
   }
   if(flag){
     display.showMessage(" ", "Procesando...", " ");
@@ -206,6 +206,7 @@ void loop(){
 bool minimumForce(int threshold){
   display.switcher(true);
   sdModule = (recorder.card()) ? true : false; // Se chequea la SD para actualizar el la pantalla
+  display.home(sdModule, gpsModule);
   int t = 0;
   float s = measure.strength();
   while(s >= threshold && t < stabilizer){
