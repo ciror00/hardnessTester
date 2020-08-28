@@ -89,7 +89,7 @@ void setup(){
 	// Se agregan los titulos de archivos, que viene despues de los "Fecha" y "Hora" (titulos por defecto)
 	//|Columnas| {"#", Medicion", "Latitud", "Longitud", "Distancia", "Dist. Max", "F. Maxima", "F. Minima", "F. Promedio"}
   headers= recorder.setTitles(9, titles[0], titles[1], titles[2], titles[3], titles[4], titles[5], titles[6], titles[7], titles[8]);
-  sprintf(lot_buff, "%d", lot);
+  sprintf(lot_buff, "%05d", lot);
  	recorder.saveRegistry(9, lot_buff, " ", " ", " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
 
   // Se configurar los pines usando métodos de Arduino
@@ -113,7 +113,7 @@ void loop(){
   display.switcher(false);
   if(close){
     close = false;
-    sprintf(lot_buff, "%d", lot);
+    sprintf(lot_buff, "%05d", lot);
     recorder.saveRegistry(9, lot_buff, " ", " ", " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
     Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
     display.home(sdModule, gpsModule);
@@ -162,8 +162,13 @@ void loop(){
       gpsModule = (geo) ? true : false;
       dtostrf(flat,2,4,lat_buff);
       dtostrf(flon,2,4,lon_buff);
+      display.home(sdModule, gpsModule);
     }
-    //display.home(sdModule, gpsModule);
+    token = witness(updateSD);
+    if(token > update){
+      sdModule = (recorder.card()) ? true : false;
+      display.home(sdModule, gpsModule);
+    }
   }
   if(flag){
     display.showMessage(" ", "Procesando...", " ");
@@ -204,12 +209,10 @@ void loop(){
 */
 
 bool minimumForce(int threshold){
-  display.switcher(true);
-  sdModule = (recorder.card()) ? true : false; // Se chequea la SD para actualizar el la pantalla
-  display.home(sdModule, gpsModule);
   int t = 0;
   float s = measure.strength();
   while(s >= threshold && t < stabilizer){
+    display.switcher(true);
     display.showMessage("", "Estabilizando...", " ");
     t++;
     s = measure.strength();
