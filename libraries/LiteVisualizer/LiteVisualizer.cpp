@@ -2,8 +2,8 @@
 
 void LiteVisualizer::begin(){
   this->lcd.init();
-  this->lcd.createChar(0, card_ok);
-  this->lcd.createChar(1, global);
+  this->lcd.createChar(0, global);
+  this->lcd.createChar(1, card_ok);
   this->lcd.createChar(2, error);
   this->lcd.createChar(3, arrow);
 }
@@ -11,27 +11,27 @@ void LiteVisualizer::begin(){
 void LiteVisualizer::_showSettings(bool _sd_status, bool _gps_status){
   byte file = 0;
   this->lcd.clear();
-  // Mensaje de SD por apntalla
+  // Mensaje de GPS por apntalla
   this->lcd.setCursor(0, file);
   if(_sd_status){
     this->lcd.write(0);
     this->lcd.scrollDisplayRight();
-    this->lcd.print(":OK");
+    this->lcd.print("GPS.Ok");
   }else{
     this->lcd.write(0);
     this->lcd.scrollDisplayRight();
-    this->lcd.print(":NO");
+    this->lcd.print("NO.GPS");
   }
-  this->lcd.setCursor(5, file);
-  // Mensaje de GPS por pantalla
+  this->lcd.setCursor(8, file);
+  // Mensaje de SD por pantalla
   if(_gps_status){
     this->lcd.write(1);
     this->lcd.scrollDisplayRight();
-    this->lcd.print(":OK");
+    this->lcd.print("SD.OK");
   }else{
     this->lcd.write(1);
     this->lcd.scrollDisplayRight();
-    this->lcd.print(":NO");
+    this->lcd.print("NO.SD");
   }
 }
 
