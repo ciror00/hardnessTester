@@ -116,11 +116,11 @@ void loop(){
     if(close){
       close = false;
       sdModule = (recorder.card()) ? true : false;
-      display.home(sdModule, gpsModule);
       sprintf(lot_buff, "%05d", lot);
       recorder.saveRegistry(9, lat_buff, lon_buff, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
       Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
     }
+    display.home(sdModule, gpsModule);
     while(measure.strength() > sensibility){ // Hace un bucle, mientras se ejerza mas fuerza que la minima
       // Medicion de fuerza
       strength = measure.strengthAverage(stabilizer);
@@ -154,7 +154,7 @@ void loop(){
       depth = 0;
     }
   }else{
-    token = witness(updateTime);
+    token = witness(updateTime*1000*60*60); // 1K milisegundos = 1 segundo * 60 = 1 minutos
     if(token > update){
       display.showMessage(" ", "Sincronizando", " ");
       Serial.println("Actualizando GPS...");
@@ -165,7 +165,7 @@ void loop(){
       dtostrf(flon,2,4,lon_buff);
       display.home(sdModule, gpsModule);
     }
-    //token = witness(updateSD);
+    //token = witness(updateSD*1000*60*60); // 1K milisegundos = 1 segundo * 60 = 1 minutos);
     //if(token > update){
     //  sdModule = (recorder.card()) ? true : false;
     //  display.home(sdModule, gpsModule);
