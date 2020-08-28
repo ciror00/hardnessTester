@@ -76,7 +76,7 @@ void LiteVisualizer::home(bool sd_status, bool gps_status){
   this->showMessage(" ", "Listo para Medir", " ", false);
   this->lcd.setCursor(1, 3);
   this->lcd.write(3);
-  this->lcd.setCursor(18, 3);
+  this->lcd.setCursor(17, 3);
   this->lcd.write(3);
 }
 
