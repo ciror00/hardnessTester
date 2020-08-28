@@ -111,15 +111,16 @@ void setup(){
 
 void loop(){
   display.switcher(false);
-  if(close){
-    close = false;
-    sprintf(lot_buff, "%05d", lot);
-    recorder.saveRegistry(9, lat_buff, lon_buff, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
-    Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
-    display.home(sdModule, gpsModule);
-  }
   if(minimumForce(sensibility)){ // Primero descarta que no sea ruido de la lanza
     flag = true;
+    if(close){
+      close = false;
+      sdModule = (recorder.card()) ? true : false;
+      display.home(sdModule, gpsModule);
+      sprintf(lot_buff, "%05d", lot);
+      recorder.saveRegistry(9, lat_buff, lon_buff, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
+      Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
+    }
     while(measure.strength() > sensibility){ // Hace un bucle, mientras se ejerza mas fuerza que la minima
       // Medicion de fuerza
       strength = measure.strengthAverage(stabilizer);
@@ -164,11 +165,11 @@ void loop(){
       dtostrf(flon,2,4,lon_buff);
       display.home(sdModule, gpsModule);
     }
-    token = witness(updateSD);
-    if(token > update){
-      sdModule = (recorder.card()) ? true : false;
-      display.home(sdModule, gpsModule);
-    }
+    //token = witness(updateSD);
+    //if(token > update){
+    //  sdModule = (recorder.card()) ? true : false;
+    //  display.home(sdModule, gpsModule);
+    //}
   }
   if(flag){
     display.showMessage(" ", "Procesando...", " ");
