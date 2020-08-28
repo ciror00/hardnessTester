@@ -72,45 +72,49 @@ void LiteVisualizer::reset(){
 }
 
 void LiteVisualizer::home(bool sd_status, bool gps_status){
+  byte file = 3;
   this->_showSettings(sd_status, gps_status);
   this->showMessage(" ", "Listo para Medir", " ", false);
-  this->lcd.setCursor(1, 3);
+  this->lcd.setCursor(1, file);
   this->lcd.write(3);
-  this->lcd.setCursor(19, 3);
+  this->lcd.setCursor(19, file);
   this->lcd.write(3);
 }
 
 void LiteVisualizer::detail(bool sd_status, bool gps_status, String number){
-  //char buff[10];
+  byte file = 3;
   this->lcd.clear();
   this->_showSettings(sd_status, gps_status);
-  this->lcd.setCursor(0, 1);
+  this->lcd.setCursor(0, file);
   if(sd_status){
     this->lcd.print("Guardado SD N°");
-    this->lcd.setCursor(14, 1);
+    this->lcd.setCursor(14, file);
     this->lcd.print(number);
   }else{
     this->lcd.print("No guardado N°");
-    this->lcd.setCursor(14, 1);
+    this->lcd.setCursor(14, file);
     this->lcd.print(number);
   }
 }
 
 void LiteVisualizer::summary(String max, String averange, String distance, String regiter){
-  // Lado izquierdo
-  this->lcd.setCursor(0, 2);
+  byte left[] = {0,4};
+  byte rigth[] = {16};
+  byte file[] = {2,3}
+  // Fila 2
+  this->lcd.setCursor(left[0], file[0]);
   this->lcd.print(averange);
-  this->lcd.setCursor(4, 2);
+  this->lcd.setCursor(left[1], file[0]);
   this->lcd.print("Kg Pmax:");
   this->lcd.print(max);
-  this->lcd.setCursor(16, 2);
+  this->lcd.setCursor(rigth[0], file[0]);
   this->lcd.print("Kg");
-  // Lado derecho
-  this->lcd.setCursor(0, 3);
+  // Fila 3
+  this->lcd.setCursor(left[0], file[1]);
   this->lcd.print(distance);
-  this->lcd.setCursor(4, 3);
+  this->lcd.setCursor(left[1], file[1]);
   this->lcd.print("cm Dmax:");
   this->lcd.print(regiter);
-  this->lcd.setCursor(16, 3);
+  this->lcd.setCursor(rigth[0], file[1]);
   this->lcd.print("cm");
 }
