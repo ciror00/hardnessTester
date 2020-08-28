@@ -103,7 +103,7 @@ void LiteVisualizer::summary(String max, String averange, String distance, Strin
   this->lcd.setCursor(4, 2);
   this->lcd.print("Kg Pmax:");
   this->lcd.print(max);
-  this->lcd.setCursor(17, 2);
+  this->lcd.setCursor(16, 2);
   this->lcd.print("Kg");
   // Lado derecho
   this->lcd.setCursor(0, 3);
@@ -111,6 +111,6 @@ void LiteVisualizer::summary(String max, String averange, String distance, Strin
   this->lcd.setCursor(4, 3);
   this->lcd.print("cm Dmax:");
   this->lcd.print(regiter);
-  this->lcd.setCursor(17, 3);
+  this->lcd.setCursor(16, 3);
   this->lcd.print("cm");
 }
