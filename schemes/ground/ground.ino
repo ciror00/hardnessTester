@@ -18,7 +18,7 @@ void setup(){
   recorder.begin(CS);
   // Configuacion de modulo
   delay(2000);
-  display.showMessage(" ", "Mantener en vertical", "Calibrando equipo...");
+  display.showMessage("Mantener en vertical", "Calibrando equipo...", " ");
   if(recorder.clock()){
     Serial.println("[OK]\tRTC operativo");
     if(recorder.card()){
