@@ -73,11 +73,11 @@ void LiteVisualizer::reset(){
 
 void LiteVisualizer::home(bool sd_status, bool gps_status){
   this->_showSettings(sd_status, gps_status);
-  this->lcd.setCursor(0, 3);
-  this->lcd.write(3);
-  this->lcd.setCursor(19, 3);
-  this->lcd.write(3);
   this->showMessage(" ", "Listo para Medir", " ", false);
+  this->lcd.setCursor(1, 3);
+  this->lcd.write(3);
+  this->lcd.setCursor(18, 3);
+  this->lcd.write(3);
 }
 
 void LiteVisualizer::detail(bool sd_status, bool gps_status, String number){
@@ -103,7 +103,7 @@ void LiteVisualizer::summary(String max, String averange, String distance, Strin
   this->lcd.setCursor(4, 2);
   this->lcd.print("Kg Pmax:");
   this->lcd.print(max);
-  this->lcd.setCursor(18, 2);
+  this->lcd.setCursor(17, 2);
   this->lcd.print("Kg");
   // Lado derecho
   this->lcd.setCursor(0, 3);
@@ -111,6 +111,6 @@ void LiteVisualizer::summary(String max, String averange, String distance, Strin
   this->lcd.setCursor(4, 3);
   this->lcd.print("cm Dmax:");
   this->lcd.print(regiter);
-  this->lcd.setCursor(18, 3);
+  this->lcd.setCursor(17, 3);
   this->lcd.print("cm");
 }
