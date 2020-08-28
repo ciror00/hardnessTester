@@ -96,10 +96,12 @@ bool Recorder::saveRegistry(int numb, ...){
 	// Primero se chequea que el archivo exista
 	if(SD.exists(buffer)){
 		this->registry = SD.open(buffer, FILE_WRITE);
-		String data = ";";
+		String data = "";
 		//sprintf(buffer, "%02d/%02d/%04d;", this->date.day(), this->date.month(), this->date.year());
+		sprintf(buffer, ";", this->date; // se agrega solo para que meta celdas en blanco
 		data += buffer;
 		//sprintf(buffer, "%02d:%02d:%02d;", this->date.hour(), this->date.minute(), this->date.second());
+		sprintf(buffer, ";", this->date; // se agrega solo para que meta celdas en blanco
 		data += buffer;
 		// Se recorren todos los datos que se quieren ingresar en el archivo
 		va_list ap;

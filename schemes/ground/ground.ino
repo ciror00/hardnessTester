@@ -112,17 +112,24 @@ void setup(){
 void loop(){
   display.switcher(false);
   flag = true;
+  /*
   if(close){
     close = false;
     sdModule = (recorder.card()) ? true : false;
     sprintf(lot_buff, "%05d", lot);
-    //recorder.saveRegistry(9, lat_buff, lon_buff, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
-    //Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
-    display.home(sdModule, gpsModule);
-  }
-  if(minimumForce(sensibility)){ // Primero descarta que no sea ruido de la lanza
     recorder.saveRegistry(9, lat_buff, lon_buff, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
     Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
+    display.home(sdModule, gpsModule);
+  }
+  */
+  sdModule = (recorder.card()) ? true : false;
+  display.home(sdModule, gpsModule);
+  if(minimumForce(sensibility)){ // Primero descarta que no sea ruido de la lanza
+    if(close){
+      Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
+      close = false;
+      recorder.saveRegistry(9, lat_buff, lon_buff, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
+    }
     while(measure.strength() > sensibility){ // Hace un bucle, mientras se ejerza mas fuerza que la minima
       // Medicion de fuerza
       strength = measure.strengthAverage(stabilizer);
