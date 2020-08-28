@@ -111,7 +111,6 @@ void setup(){
 
 void loop(){
   display.switcher(false);
-  flag = true;
   /*
   if(close){
     close = false;
@@ -125,6 +124,7 @@ void loop(){
   sdModule = (recorder.card()) ? true : false;
   display.home(sdModule, gpsModule);
   if(minimumForce(sensibility)){ // Primero descarta que no sea ruido de la lanza
+    flag = true;
     if(close){
       Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
       close = false;
