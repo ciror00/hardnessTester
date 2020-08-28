@@ -133,8 +133,8 @@ void loop(){
       if(depth>range)depth = range; // Filtro de mediciones mayores a la lanza
       Serial.print("|\tPROFUNDIDAD: ");Serial.println(depth);
       // Muestra de informacion por pantalla
-      dtostrf(strength,4,0,strength_buff);
-      dtostrf(depth,4,0,depth_buff);
+      dtostrf(strength,4,1,strength_buff);
+      dtostrf(depth,4,1,depth_buff);
       display.showMeasure(2, "F:", "[Kg]", strength_buff);
       display.showMeasure(3, "D:", "[cm]", depth_buff, false);
       // Carga de datos en memoria para calculos posteriores
@@ -173,10 +173,10 @@ void loop(){
   if(flag){
     display.showMessage(" ", "Procesando...", " ");
     flag = false;
-    dtostrf(forceAnalyzer.maximum(),4,0,max_buff);
-    dtostrf(forceAnalyzer.minimum(),4,0,min_buff);
+    dtostrf(forceAnalyzer.maximum(),4,1,max_buff);
+    dtostrf(forceAnalyzer.minimum(),4,1,min_buff);
     dtostrf(forceAnalyzer.average(),4,2,average_buff);
-    dtostrf(distanceAnalyzer.maximum(),4,0,range_buff);
+    dtostrf(distanceAnalyzer.maximum(),4,1,range_buff);
     dtostrf(point, 4, 0,point_buff);
     if(!recorder.card()){
       Serial.println("[ERROR]\tSD no reconocida");
