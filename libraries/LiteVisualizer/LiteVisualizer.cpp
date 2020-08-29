@@ -87,11 +87,11 @@ void LiteVisualizer::detail(bool sd_status, bool gps_status, String number){
   this->_showSettings(sd_status, gps_status);
   this->lcd.setCursor(0, file);
   if(sd_status){
-    this->lcd.print("Guardado SD N°");
+    this->lcd.print("Guardado SD No");
     this->lcd.setCursor(14, file);
     this->lcd.print(number);
   }else{
-    this->lcd.print("No guardado N°");
+    this->lcd.print("No guardado No");
     this->lcd.setCursor(14, file);
     this->lcd.print(number);
   }
