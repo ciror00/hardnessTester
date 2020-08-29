@@ -13,7 +13,7 @@ void setup(){
                 "\t| Environment: " + (String)ARDUINO + "\t| Compiler: "+ (String)__VERSION__);
   display.begin();
   display.switcher(true);
-  display.showMessage("  COPAINS S.R.L.", " ", "Iniciando...");
+  display.showMessage("  COPAINS S.R.L.", " ", "  Iniciando...");
   measure.begin(DT_CELL, SCK_CELL);
   recorder.begin(CS);
   // Configuacion de modulo
@@ -111,24 +111,14 @@ void setup(){
 }
 
 void loop(){
-  /*
-  if(close){
-    close = false;
-    sdModule = (recorder.card()) ? true : false;
-    sprintf(lot_buff, "%05d", lot);
-    recorder.saveRegistry(9, lat_buff, lon_buff, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
-    Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
-    display.home(sdModule, gpsModule);
-  }
-  */
   sdModule = (recorder.card()) ? true : false;
-  display.home(sdModule, gpsModule);
-  //display.switcher(false);
+  if(close)display.home(sdModule, gpsModule);
   if(minimumForce(sensibility)){ // Primero descarta que no sea ruido de la lanza
     flag = true;
     if(close){
       Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
       close = false;
+      sprintf(lot_buff, "%04d", lot);
       recorder.saveRegistry(9, lat_buff, lon_buff, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
     }
     while(measure.strength() > sensibility){ // Hace un bucle, mientras se ejerza mas fuerza que la minima
