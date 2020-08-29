@@ -97,6 +97,35 @@ bool Recorder::saveRegistry(int numb, ...){
 	if(SD.exists(buffer)){
 		this->registry = SD.open(buffer, FILE_WRITE);
 		String data = "";
+		sprintf(buffer, "%02d/%02d/%04d;", this->date.day(), this->date.month(), this->date.year());
+		data += buffer;
+		sprintf(buffer, "%02d:%02d:%02d;", this->date.hour(), this->date.minute(), this->date.second());
+		data += buffer;
+		// Se recorren todos los datos que se quieren ingresar en el archivo
+		va_list ap;
+		va_start(ap, numb);
+		for(byte i = 0; i < numb; i++) {
+			data += va_arg(ap, const char *);
+			data += ";";
+		}
+		va_end(ap);
+		this->registry.print(data);
+		this->registry.println();
+		this->registry.close();
+		return true;
+	}else{
+		// Si el archivo NO existe, primero se tiene que setear los titulos
+		return false;
+	}
+}
+
+bool Recorder::saveRegistryTimeless(int numb, ...){
+	this->date = this->rtc.now();
+	sprintf(buffer, "%04d%02d%02d.CSV", this->date.year(), this->date.month(), this->date.day());
+	// Primero se chequea que el archivo exista
+	if(SD.exists(buffer)){
+		this->registry = SD.open(buffer, FILE_WRITE);
+		String data = "";
 		//sprintf(buffer, "%02d/%02d/%04d;", this->date.day(), this->date.month(), this->date.year());
 		sprintf(buffer, ";", this->date); // se agrega solo para que meter celdas en blanco
 		data += buffer;

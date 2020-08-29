@@ -29,6 +29,7 @@ class Recorder{
     void setUTC(int sinc);
     bool setTitles(int numb, ...);
     bool saveRegistry(int numb, ...);
+    bool saveRegistryTimeless(int numb, ...);
 		~Recorder() = default;
 };
 #endif
