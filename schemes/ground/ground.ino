@@ -107,10 +107,10 @@ void setup(){
   }
   Serial.println("[MSJ]\tConfiguracion terminada. Listo para medir.");
   display.home(sdModule, gpsModule);
+  delay(2500);
 }
 
 void loop(){
-  display.switcher(false);
   /*
   if(close){
     close = false;
@@ -123,6 +123,7 @@ void loop(){
   */
   sdModule = (recorder.card()) ? true : false;
   display.home(sdModule, gpsModule);
+  //display.switcher(false);
   if(minimumForce(sensibility)){ // Primero descarta que no sea ruido de la lanza
     flag = true;
     if(close){
@@ -174,11 +175,12 @@ void loop(){
       dtostrf(flon,2,4,lon_buff);
       display.home(sdModule, gpsModule);
     }
-    //token = witness(updateSD*1000*60*60); // 1K milisegundos = 1 segundo * 60 = 1 minutos);
-    //if(token > update){
-    //  sdModule = (recorder.card()) ? true : false;
-    //  display.home(sdModule, gpsModule);
-    //}
+    token = witness(updateSD*1000*60*60); // 1K milisegundos = 1 segundo * 60 = 1 minutos);
+    if(token > update){
+      sdModule = (recorder.card()) ? true : false;
+      display.switcher(false);
+      display.home(sdModule, gpsModule);
+    }
   }
   if(flag){
     display.showMessage(" ", "Procesando...", " ");
@@ -194,7 +196,7 @@ void loop(){
     }else{
       Serial.println("[MJS]\tGuardando en SD");
     // {"Latitud", "Longitud", "Medicion", "Fuerza [KG]", "Distancia [CM]", "Distancia total", "Fuerza Promedio", "Fuerza Maxima", "Distancia Fuerza Maxima"};
-      recorder.saveRegistry(9," ", " ", " ", " ", " ", range_buff, average_buff, max_buff, point_buff);
+      recorder.saveRegistryTimeless(9," ", " ", " ", " ", " ", range_buff, average_buff, max_buff, point_buff);
       sdModule = true;
     }
     Serial.println("[MJS]\tResumen de datos calculados");
@@ -219,9 +221,9 @@ void loop(){
 */
 
 bool minimumForce(int threshold){
-  display.switcher(true);
   int t = 0;
   float s = measure.strength();
+  display.switcher(true);
   while(s >= threshold && t < stabilizer){
     display.showMessage("", "Estabilizando...", " ");
     t++;
