@@ -6,7 +6,7 @@ bool TapeMeasure::begin(){
 
 int TapeMeasure::getSize(int iteration){
 	int period = sonar.ping_median(iteration);
-	this->spear = sonar.convert_cm(period)
+	this->spear = sonar.convert_cm(period);
 	return this->spear;
 }
 
