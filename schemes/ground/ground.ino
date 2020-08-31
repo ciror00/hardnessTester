@@ -90,8 +90,7 @@ void setup(){
   // {"Latitud", "Longitud", "Medicion", "Fuerza [KG]", "Distancia [CM]", "Distancia total", "Fuerza Promedio", "Fuerza Maxima", "Distancia Fuerza Maxima"};
   headers= recorder.setTitles(9, titles[0], titles[1], titles[2], titles[3], titles[4], titles[5], titles[6], titles[7], titles[8]);
   sprintf(lot_buff, "%d", lot);
- 	//recorder.saveRegistry(9, lat_buff, lon_buff, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
-  close = true;
+ 	recorder.saveRegistry(9, lat_buff, lon_buff, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
   // Se configurar los pines usando métodos de Arduino
   Serial.println("[MSJ]\tMidiendo jabalina.");
   pinMode(TRIG, OUTPUT);
@@ -155,7 +154,7 @@ void loop(){
       depth = 0;
     }
   }else{
-    token = witness(updateTime*1000*60*60); // 1K milisegundos = 1 segundo * 60 = 1 minutos
+    token = witness(updateTime*1000*60); // 1K milisegundos = 1 segundo * 60 = 1 minutos
     if(token > update){
       display.showMessage(" ", "Sincronizando", " ");
       Serial.println("Actualizando GPS...");
@@ -165,11 +164,12 @@ void loop(){
       dtostrf(flat,2,4,lat_buff);
       dtostrf(flon,2,4,lon_buff);
       display.home(sdModule, gpsModule);
+      display.switcher(false);
     }
-    token = witness(updateSD*1000*60*60); // 1K milisegundos = 1 segundo * 60 = 1 minutos);
+    token = witness(updateSD*1000*60); // 1K milisegundos = 1 segundo * 60 = 1 minutos);
     if(token > update){
       sdModule = (recorder.card()) ? true : false;
-      display.switcher(false);
+      //display.switcher(false);
       display.home(sdModule, gpsModule);
     }
   }
@@ -212,12 +212,12 @@ void loop(){
 */
 
 float gauge(){
-  byte steps = 5;
+  float steps = 5;
   float samples = 0;
-  for (byte i = 0; i < steps; i++){
+  for (int i = 0; i < steps; i++){
     samples += rule.ping_cm();
   }
-  return samples/(float)steps;
+  return samples/steps;
 }
 
 float bury(float range){
