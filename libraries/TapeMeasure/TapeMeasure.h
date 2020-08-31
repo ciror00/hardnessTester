@@ -6,6 +6,7 @@
 #include <NewPing.h>
 
 class TapeMeasure{
+  const int limit = 100;
   const int trig = 8;
   const int echo = 9;
 
