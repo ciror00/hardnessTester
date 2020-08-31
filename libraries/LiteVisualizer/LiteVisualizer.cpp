@@ -111,10 +111,10 @@ void LiteVisualizer::summary(String max, String averange, String distance, Strin
   this->lcd.print("Kg");
   // Fila 3
   this->lcd.setCursor(left[0], file[1]);
-  this->lcd.print(distance);
+  this->lcd.print(regiter);
   this->lcd.setCursor(left[1], file[1]);
   this->lcd.print("cm Dmax:");
-  this->lcd.print(regiter);
+  this->lcd.print(distance);
   this->lcd.setCursor(rigth[0], file[1]);
   this->lcd.print("cm");
 }
