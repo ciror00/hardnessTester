@@ -88,7 +88,7 @@ void setup(){
 
 	// Se agregan los titulos de archivos, que viene despues de los "Fecha" y "Hora" (titulos por defecto)
   // {"Latitud", "Longitud", "Medicion", "Fuerza [KG]", "Distancia [CM]", "Distancia total", "Fuerza Promedio", "Fuerza Maxima", "Distancia Fuerza Maxima"};
-  headers= recorder.setTitles(9, titles[0], titles[1], titles[2], titles[3], titles[4], titles[5], titles[6], titles[7], titles[8]);
+  headers = recorder.setTitles(9, titles[0], titles[1], titles[2], titles[3], titles[4], titles[5], titles[6], titles[7], titles[8]);
   sprintf(lot_buff, "%d", lot);
  	recorder.saveRegistry(9, lat_buff, lon_buff, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
   // Se configurar los pines usando métodos de Arduino
@@ -110,6 +110,7 @@ void setup(){
 }
 
 void loop(){
+  if(!headers && sdModule)headers = recorder.setTitles(9, titles[0], titles[1], titles[2], titles[3], titles[4], titles[5], titles[6], titles[7], titles[8]);
   if(close)display.home(sdModule, gpsModule);
   if(minimumForce(sensibility)){ // Primero descarta que no sea ruido de la lanza
     flag = true;
@@ -125,11 +126,7 @@ void loop(){
       Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
       Serial.print("|\tSEÑAL: ");Serial.println(measure.raw());
       // Medicion de distancia
-      //reducible = rule.ping_cm();
-      //Serial.print("[CAL]\tALTURA: ");Serial.print(reducible);
-      //depth = range - reducible;
       depth = bury(range);
-      if(depth>range)depth = range; // Filtro de mediciones mayores a la lanza
       Serial.print("|\tPROFUNDIDAD: ");Serial.println(depth);
       if(point<depth)point = depth; // Se punto de maxima fuerza
       // Muestra de informacion por pantalla
@@ -163,7 +160,7 @@ void loop(){
       dtostrf(flat,2,4,lat_buff);
       dtostrf(flon,2,4,lon_buff);
       display.home(sdModule, gpsModule);
-      display.switcher(false);
+      //display.switcher(false);
     }
     token = witness(updateSD*1000*60); // 1K milisegundos = 1 segundo * 60 = 1 minutos);
     if(token > update){
@@ -213,21 +210,24 @@ void loop(){
 float gauge(){
   float steps = 5;
   float samples = 0;
+  float total;
   for (int i = 0; i < steps; i++){
     samples += rule.ping_cm();
   }
-  return samples/steps;
+  total = samples / steps;
+  return total;
 }
 
 float bury(float range){
   float buried = gauge();
-  return (range - buried);
+  float total = range - buried;
+  return total;
 }
 
 bool minimumForce(int threshold){
   int t = 0;
   float s = measure.strength();
-  display.switcher(true);
+  //display.switcher(true);
   while(s >= threshold && t < stabilizer){
     display.showMessage("", "Estabilizando...", " ");
     t++;
