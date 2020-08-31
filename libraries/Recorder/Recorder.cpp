@@ -24,11 +24,10 @@ bool Recorder::clock(int gmt){
 bool Recorder::card(){
 	if (!SD.begin(this->cs)) {
 		this->setting = false;
-		return this->setting;
 	}else{
 		this->setting = true;
-		return this->setting;
 	}
+	return this->setting;
 }
 
 void Recorder::setDate(int y, int m, int d, int h, int x){
