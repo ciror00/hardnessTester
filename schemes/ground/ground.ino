@@ -295,7 +295,7 @@ unsigned int counter(){
 bool connecting(int wait){
   unsigned long start = millis();
   Serial.print(">Sincronizando");
-  if(serial_gps.available()){
+  //if(serial_gps.available()){
     while (millis() - start < wait) {
       // Se realiza un "ping" a modulo GSP
       char c = gps.encode(c);
@@ -307,7 +307,7 @@ bool connecting(int wait){
         return true;
       }
     }
-  }
+  //}
   Serial.println("... ERROR");
   return false;
 }
