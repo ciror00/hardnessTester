@@ -11,7 +11,7 @@
 
 #include "settings.h"
 
-#define FIRMWARE 0.72
+#define FIRMWARE 0.721
 
 #define SCK_CELL A12
 #define DT_CELL A11
@@ -49,9 +49,9 @@ float patternWeight = 0;
 float manualScale = 0;
 float scaleCalculation = -1;
 float strength = 0;
-float spear = 50; 
-float depth = 0;
-float point = 0;
+int point = 0;
+int spear = 50; 
+int depth = 0;
 unsigned int lot = 1;
 
 bool gpsModule = false;

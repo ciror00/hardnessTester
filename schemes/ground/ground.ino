@@ -131,7 +131,7 @@ void loop(){
       Serial.print("|\tSEÑAL: ");Serial.println(measure.raw());
       // Medicion de distancia
       depth = tapeMeasure.takeSize(5);
-      Serial.print("|\tPROFUNDIDAD: ");Serial.println(depth);
+      Serial.print("[CAL]\tPROFUNDIDAD: ");Serial.println(depth);
       if(point<depth)point = depth; // Se punto de maxima fuerza
       // Muestra de informacion por pantalla
       dtostrf(strength,4,1,strength_buff);
@@ -182,7 +182,7 @@ void loop(){
     dtostrf(forceAnalyzer.minimum(),4,1,min_buff);
     dtostrf(forceAnalyzer.average(),4,2,average_buff);
     dtostrf(distanceAnalyzer.maximum(),4,1,range_buff);
-    dtostrf(point, 4, 0,point_buff);
+    sprintf(point_buff, "%d", point);
     if(!recorder.card()){
       Serial.println("[ERROR]\tSD no reconocida");
       sdModule = false;
