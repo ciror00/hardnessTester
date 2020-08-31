@@ -151,3 +151,26 @@ bool Recorder::saveRegistryTimeless(int numb, ...){
 		return false;
 	}
 }
+
+void Recorder::logger(int numb, ...){
+	this->date = this->rtc.now();
+	String logFile = "logs.txt";
+	// Primero se chequea que el archivo exista
+	this->registry = SD.open(logFile, FILE_WRITE);
+	String data = "";
+	sprintf(buffer, "%02d/%02d/%04d-", this->date.day(), this->date.month(), this->date.year());
+	data += buffer;
+	sprintf(buffer, "%02d:%02d:%02d -> ", this->date.hour(), this->date.minute(), this->date.second());
+	data += buffer;
+	// Se recorren todos los datos que se quieren ingresar en el archivo
+	va_list ap;
+	va_start(ap, numb);
+	for(byte i = 0; i < numb; i++) {
+		data += va_arg(ap, const char *);
+		data += " | ";
+	}
+	va_end(ap);
+	this->registry.print(data);
+	this->registry.println();
+	this->registry.close();
+}

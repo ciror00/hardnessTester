@@ -30,6 +30,7 @@ class Recorder{
     bool setTitles(int numb, ...);
     bool saveRegistry(int numb, ...);
     bool saveRegistryTimeless(int numb, ...);
+    void logger(int numb, ...);
 		~Recorder() = default;
 };
 #endif
