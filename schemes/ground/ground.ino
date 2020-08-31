@@ -5,6 +5,7 @@ LoadCell measure;
 Recorder recorder;
 DataHandler forceAnalyzer;
 DataHandler distanceAnalyzer;
+TapeMeasure tapeMeasure;
 
 void setup(){
   Serial.begin(115200);
@@ -13,9 +14,16 @@ void setup(){
                 "\t| Environment: " + (String)ARDUINO + "\t| Compiler: "+ (String)__VERSION__);
   display.begin();
   display.switcher(true);
-  display.showMessage("  COPAINS S.R.L.", " ", "  Iniciando...");
+  if(LOGS){
+    display.showMessage("DEBBUGING MODE", " ", "");
+  }else{
+    display.showMessage("  COPAINS S.R.L.", " ", "  Iniciando...");
+  }
   measure.begin(DT_CELL, SCK_CELL);
   recorder.begin(CS);
+  pinMode(TRIG, OUTPUT);
+  pinMode(ECHO, INPUT);
+
   // Configuacion de modulo
   delay(2000);
   display.showMessage("Mantener en vertical", "Calibrando equipo...", " ");
@@ -78,6 +86,7 @@ void setup(){
       Serial.println("ERROR\tSincronizacion fallida");
       recorder.setDate();
     }
+    recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
   }else{
     Serial.println("[ERROR]\tFalla de comunicación con GPS");
     Serial.println("[MSJ]\tFecha y hora por defecto.");
@@ -93,15 +102,11 @@ void setup(){
  	recorder.saveRegistry(9, lat_buff, lon_buff, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
   // Se configurar los pines usando métodos de Arduino
   Serial.println("[MSJ]\tMidiendo jabalina.");
-  pinMode(TRIG, OUTPUT);
-  pinMode(ECHO, INPUT);
-  delay(500);
-  range = gauge();
-  if(range >= 0){
-    Serial.print("[CAL]\tLargo de lanza medida: ");Serial.println(range);
+  spear = tapeMeasure.getSize(5);
+  if(spear >= 0){
+    Serial.print("[CAL]\tLargo de lanza medida: ");Serial.println(spear);
   }else{
     Serial.println("[ERROR]\tEn medicion. Configurando lanza por defecto");
-    range = spear*5;
     Serial.print("[CAL]\tLargo de lanza: ");Serial.println(spear);
   }
   Serial.println("[MSJ]\tConfiguracion terminada. Listo para medir.");
@@ -111,7 +116,7 @@ void setup(){
 
 void loop(){
   if(!headers && sdModule)headers = recorder.setTitles(9, titles[0], titles[1], titles[2], titles[3], titles[4], titles[5], titles[6], titles[7], titles[8]);
-  if(close)display.home(sdModule, gpsModule);
+  //if(close)display.home(sdModule, gpsModule);
   if(minimumForce(sensibility)){ // Primero descarta que no sea ruido de la lanza
     flag = true;
     if(close){
@@ -126,7 +131,7 @@ void loop(){
       Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
       Serial.print("|\tSEÑAL: ");Serial.println(measure.raw());
       // Medicion de distancia
-      depth = bury(range);
+      depth = tapeMeasure.takeSize(5);
       Serial.print("|\tPROFUNDIDAD: ");Serial.println(depth);
       if(point<depth)point = depth; // Se punto de maxima fuerza
       // Muestra de informacion por pantalla
@@ -148,12 +153,13 @@ void loop(){
       }
       strength = 0;
       depth = 0;
+      tapeMeasure.reset();
     }
   }else{
     token = witness(updateTime*1000*60); // 1K milisegundos = 1 segundo * 60 = 1 minutos
     if(token > update){
       display.showMessage(" ", "Sincronizando", " ");
-      Serial.println("Actualizando GPS...");
+      Serial.println("[MSJ]\tActualizando GPS...");
       update = token;
       geo = connecting(4000);
       gpsModule = (geo) ? true : false;
@@ -161,9 +167,11 @@ void loop(){
       dtostrf(flon,2,4,lon_buff);
       display.home(sdModule, gpsModule);
       //display.switcher(false);
+      recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
     }
     token = witness(updateSD*1000*60); // 1K milisegundos = 1 segundo * 60 = 1 minutos);
     if(token > update){
+      Serial.println(">Chequeando SD...");
       sdModule = (recorder.card()) ? true : false;
       //display.switcher(false);
       display.home(sdModule, gpsModule);
@@ -206,23 +214,6 @@ void loop(){
 /*
   Se encapsulan funciones para mejorar la lectura del codigo.
 */
-
-float gauge(){
-  float steps = 5;
-  float samples = 0;
-  float total;
-  for (int i = 0; i < steps; i++){
-    samples += rule.ping_cm();
-  }
-  total = samples / steps;
-  return total;
-}
-
-float bury(float range){
-  float buried = gauge();
-  float total = range - buried;
-  return total;
-}
 
 bool minimumForce(int threshold){
   int t = 0;
@@ -276,10 +267,10 @@ void waitForMachine(int period){
 	};
 }
 
-long witness(unsigned long tht){
+long witness(long tht){
   if(tht == 0)return 0;
   unsigned long time_now = millis();
-  float ring = round(time_now / tht);
+  long ring = round(time_now / tht);
   return ring;
 }
 
@@ -294,19 +285,17 @@ unsigned int counter(){
 bool connecting(int wait){
   unsigned long start = millis();
   Serial.print(">Sincronizando");
-  //if(serial_gps.available()){
-    while (millis() - start < wait) {
-      // Se realiza un "ping" a modulo GSP
-      char c = gps.encode(c);
-      if (gps.encode(c)) {
-        gps.f_get_position(&flat, &flon, &age); // Obtengo posicion
-        gps.crack_datetime(&year, &month, &day, \
-          &hour, &minute, &second, &hundredths, &age); // Obtengo fecha y hora
-        Serial.println("... OK");
-        return true;
-      }
+  while (millis() - start < wait) {
+    // Se realiza un "ping" a modulo GSP
+    char c = gps.encode(c);
+    if (gps.encode(c)) {
+      gps.f_get_position(&flat, &flon, &age); // Obtengo posicion
+      gps.crack_datetime(&year, &month, &day, \
+        &hour, &minute, &second, &hundredths, &age); // Obtengo fecha y hora
+      Serial.println("... OK");
+      return true;
     }
-  //}
+  }
   Serial.println("... ERROR");
   return false;
 }

@@ -1,5 +1,4 @@
 #include <EEPROM.h>
-#include <NewPing.h>
 #include <TinyGPS.h>
 #include <SoftwareSerial.h>
 
@@ -8,21 +7,21 @@
 #include "LiteVisualizer.h"
 #include "Recorder.h"
 #include "DataHandler.h"
+#include "TapeMeasure.h"
 
 #include "settings.h"
 
-#define FIRMWARE 0.68
+#define FIRMWARE 0.7
 
 #define SCK_CELL A12
 #define DT_CELL A11
 #define CS 53
+#define ECHO 9
 #define TRIG 8
-#define ECHO 9 
 #define RXD 10
 #define TXD 11
 
 // Invocacion de funciones
-NewPing rule(TRIG, ECHO, spear);
 SoftwareSerial serial_gps(TXD, RXD);
 TinyGPS gps;
 
@@ -50,7 +49,7 @@ float patternWeight = 0;
 float manualScale = 0;
 float scaleCalculation = -1;
 float strength = 0;
-float range = 0; 
+float spear = 50; 
 float depth = 0;
 float point = 0;
 unsigned int lot = 1;
