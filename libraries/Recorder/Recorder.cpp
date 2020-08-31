@@ -9,7 +9,8 @@ bool Recorder::begin(const int cs){
 
 bool Recorder::clock(int gmt){
 	if (!this->rtc.begin()) {
-		return this->clocker;
+		this->clocker = false;
+		//return this->clocker;
 	}else{
 		this->clocker = true;
 	}
@@ -21,11 +22,13 @@ bool Recorder::clock(int gmt){
 }
 
 bool Recorder::card(){
- if (!SD.begin(this->cs)) {
-	 return this->setting;
- }
- this->setting = true;
- return this->setting;
+	if (!SD.begin(this->cs)) {
+		this->setting = false;
+		return this->setting;
+	}else{
+		this->setting = true;
+		return this->setting;
+	}
 }
 
 void Recorder::setDate(int y, int m, int d, int h, int x){
