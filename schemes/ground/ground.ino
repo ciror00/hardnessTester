@@ -141,7 +141,7 @@ void loop(){
         Serial.println("[ERROR]\tSD mal configurada");
         sdModule = false;
       }else{
-        Serial.println("[MJS]\tGuardando en SD");
+        Serial.println("[MJS]\tMedicion guarda en SD");
         sdModule = true;
       // {"Latitud", "Longitud", "Medicion", "Fuerza [KG]", "Distancia [CM]", "Distancia total", "Fuerza Promedio", "Fuerza Maxima", "Distancia Fuerza Maxima"};
         recorder.saveRegistryTimeless(9, " ", " ", " ", strength_buff, depth_buff, " ", " ", " ", " ");
@@ -181,7 +181,7 @@ void loop(){
       Serial.println("[ERROR]\tSD no reconocida");
       sdModule = false;
     }else{
-      Serial.println("[MJS]\tGuardando en SD");
+      Serial.println("[MJS]\tResumen guardado en SD");
     // {"Latitud", "Longitud", "Medicion", "Fuerza [KG]", "Distancia [CM]", "Distancia total", "Fuerza Promedio", "Fuerza Maxima", "Distancia Fuerza Maxima"};
       recorder.saveRegistryTimeless(9," ", " ", " ", " ", " ", range_buff, average_buff, max_buff, point_buff);
       sdModule = true;
