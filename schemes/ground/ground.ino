@@ -110,7 +110,6 @@ void setup(){
 }
 
 void loop(){
-  sdModule = (recorder.card()) ? true : false;
   if(close)display.home(sdModule, gpsModule);
   if(minimumForce(sensibility)){ // Primero descarta que no sea ruido de la lanza
     flag = true;
