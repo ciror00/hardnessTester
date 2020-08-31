@@ -89,15 +89,15 @@ void setup(){
 	// Se agregan los titulos de archivos, que viene despues de los "Fecha" y "Hora" (titulos por defecto)
   // {"Latitud", "Longitud", "Medicion", "Fuerza [KG]", "Distancia [CM]", "Distancia total", "Fuerza Promedio", "Fuerza Maxima", "Distancia Fuerza Maxima"};
   headers= recorder.setTitles(9, titles[0], titles[1], titles[2], titles[3], titles[4], titles[5], titles[6], titles[7], titles[8]);
-  sprintf(lot_buff, "%04d", lot);
- 	recorder.saveRegistry(9, lat_buff, lon_buff, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
-
+  sprintf(lot_buff, "%d", lot);
+ 	//recorder.saveRegistry(9, lat_buff, lon_buff, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
+  close = true;
   // Se configurar los pines usando métodos de Arduino
   Serial.println("[MSJ]\tMidiendo jabalina.");
   pinMode(TRIG, OUTPUT);
   pinMode(ECHO, INPUT);
   delay(500);
-  range = rule.ping_cm();
+  range = gauge();
   if(range >= 0){
     Serial.print("[CAL]\tLargo de lanza medida: ");Serial.println(range);
   }else{
@@ -118,7 +118,7 @@ void loop(){
     if(close){
       Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
       close = false;
-      sprintf(lot_buff, "%04d", lot);
+      sprintf(lot_buff, "%d", lot);
       recorder.saveRegistry(9, lat_buff, lon_buff, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
     }
     while(measure.strength() > sensibility){ // Hace un bucle, mientras se ejerza mas fuerza que la minima
@@ -127,17 +127,18 @@ void loop(){
       Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
       Serial.print("|\tSEÑAL: ");Serial.println(measure.raw());
       // Medicion de distancia
-      reducible = rule.ping_cm();
-      Serial.print("[CAL]\tALTURA: ");Serial.print(reducible);
-      depth = range - reducible;
+      //reducible = rule.ping_cm();
+      //Serial.print("[CAL]\tALTURA: ");Serial.print(reducible);
+      //depth = range - reducible;
+      depth = bury(range);
       if(depth>range)depth = range; // Filtro de mediciones mayores a la lanza
       Serial.print("|\tPROFUNDIDAD: ");Serial.println(depth);
       if(point<depth)point = depth; // Se punto de maxima fuerza
       // Muestra de informacion por pantalla
       dtostrf(strength,4,1,strength_buff);
       dtostrf(depth,4,1,depth_buff);
-      display.showMeasure(2, "F:", "[Kg]", strength_buff);
-      display.showMeasure(3, "D:", "[cm]", depth_buff, false);
+      display.showMeasure(1, "F:", "[Kg]", strength_buff);
+      display.showMeasure(2, "D:", "[cm]", depth_buff, false);
       // Carga de datos en memoria para calculos posteriores
       forceAnalyzer.preLoad(strength);
       distanceAnalyzer.preLoad(depth);
@@ -148,7 +149,7 @@ void loop(){
         Serial.println("[MJS]\tGuardando en SD");
         sdModule = true;
       // {"Latitud", "Longitud", "Medicion", "Fuerza [KG]", "Distancia [CM]", "Distancia total", "Fuerza Promedio", "Fuerza Maxima", "Distancia Fuerza Maxima"};
-        recorder.saveRegistry(9, " ", " ", " ", strength_buff, depth_buff, " ", " ", " ", " ");
+        recorder.saveRegistryTimeless(9, " ", " ", " ", strength_buff, depth_buff, " ", " ", " ", " ");
       }
       strength = 0;
       depth = 0;
@@ -209,6 +210,20 @@ void loop(){
 /*
   Se encapsulan funciones para mejorar la lectura del codigo.
 */
+
+float gauge(){
+  byte steps = 5;
+  float samples = 0;
+  for (byte i = 0; i < steps; i++){
+    samples += rule.ping_cm();
+  }
+  return samples/(float)steps;
+}
+
+float bury(float range){
+  float buried = gauge();
+  return (range - buried);
+}
 
 bool minimumForce(int threshold){
   int t = 0;

@@ -11,7 +11,7 @@
 
 #include "settings.h"
 
-#define FIRMWARE 0.631
+#define FIRMWARE 0.64
 
 #define SCK_CELL A12
 #define DT_CELL A11
