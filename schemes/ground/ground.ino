@@ -86,7 +86,6 @@ void setup(){
       Serial.println("ERROR\tSincronizacion fallida");
       recorder.setDate();
     }
-    recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
   }else{
     Serial.println("[ERROR]\tFalla de comunicación con GPS");
     Serial.println("[MSJ]\tFecha y hora por defecto.");
@@ -167,7 +166,6 @@ void loop(){
       dtostrf(flon,2,4,lon_buff);
       display.home(sdModule, gpsModule);
       //display.switcher(false);
-      recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
     }
     token = witness(updateSD*1000*60); // 1K milisegundos = 1 segundo * 60 = 1 minutos);
     if(token > update){
@@ -293,9 +291,11 @@ bool connecting(int wait){
       gps.crack_datetime(&year, &month, &day, \
         &hour, &minute, &second, &hundredths, &age); // Obtengo fecha y hora
       Serial.println("... OK");
+      recorder.logger(4, "LAT: " , flat, "LON: ", flon);
       return true;
     }
   }
   Serial.println("... ERROR");
+  recorder.logger(1, "Falla de comunicacion con el GPS");
   return false;
 }
