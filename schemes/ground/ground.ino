@@ -286,7 +286,7 @@ bool connecting(int wait){
   if(serial_gps.available()){
     while (millis() - start < wait) {
       // Se realiza un "ping" a modulo GSP
-      char c = gps.read();
+      char c = serial_gps.read();
       if (gps.encode(c)) {
         gps.f_get_position(&flat, &flon, &age); // Obtengo posicion
         gps.crack_datetime(&year, &month, &day, \
