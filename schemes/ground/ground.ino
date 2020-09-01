@@ -130,7 +130,7 @@ void loop(){
       Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
       Serial.print("|\tSEÑAL: ");Serial.println(measure.raw());
       // Medicion de distancia
-      depth = tapeMeasure.takeSize(5);
+      depth = tapeMeasure.takeSize();
       Serial.print("[CAL]\tPROFUNDIDAD: ");Serial.println(depth);
       if(point<depth)point = depth; // Se punto de maxima fuerza
       // Muestra de informacion por pantalla

@@ -19,7 +19,7 @@ class TapeMeasure{
 		TapeMeasure() = default;
     bool begin();
     int getSize(int iteration);
-    int takeSize(int iteration);
+    int takeSize();
     void reset();
 		~TapeMeasure() = default;
 };
