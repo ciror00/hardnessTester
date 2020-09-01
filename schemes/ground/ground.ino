@@ -281,6 +281,7 @@ unsigned int counter(){
 }
 
 bool connecting(int wait){
+  bool satelite = false;
   unsigned long start = millis();
   Serial.print(">Sincronizando");
   if(serial_gps.available()){
@@ -288,20 +289,30 @@ bool connecting(int wait){
       // Se realiza un "ping" a modulo GSP
       char c = serial_gps.read();
       if (gps.encode(c)) {
-        gps.f_get_position(&flat, &flon, &age); // Obtengo posicion
-        gps.crack_datetime(&year, &month, &day, \
-          &hour, &minute, &second, &hundredths, &age); // Obtengo fecha y hora
-        Serial.println("... OK");
-        recorder.logger(4, "LAT: " , flat, "LON: ", flon);
-        return true;
+        //gps.f_get_position(&flat, &flon, &age); // Obtengo posicion
+        //gps.crack_datetime(&year, &month, &day, \
+        //  &hour, &minute, &second, &hundredths, &age); // Obtengo fecha y hora
+        //Serial.println("... OK");
+        //recorder.logger(4, "LAT: " , flat, "LON: ", flon);
+        //return true;
+        satelite = true;
       }
+    }
+    if(satelite){
+      gps.f_get_position(&flat, &flon, &age); // Obtengo posicion
+      gps.crack_datetime(&year, &month, &day, \
+        &hour, &minute, &second, &hundredths, &age); // Obtengo fecha y hora
+      Serial.println("... OK");
+      recorder.logger(4, "LAT: " , flat, "LON: ", flon);
+      return true;
+    }else{
+      Serial.println("... TIME OUT");
+      recorder.logger(1, "No se obtuvo informacion del GPS");
+      return false;
     }
   }else{
     Serial.println("... ERROR");
     recorder.logger(1, "Falla de comunicación serie");
     return false;
   }
-  Serial.println("... TIME OUT");
-  recorder.logger(1, "No se obtuvo informacion del GPS");
-  return false;
 }
