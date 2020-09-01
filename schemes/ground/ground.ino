@@ -101,7 +101,7 @@ void setup(){
  	recorder.saveRegistry(9, lat_buff, lon_buff, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
   // Se configurar los pines usando métodos de Arduino
   Serial.println("[MSJ]\tMidiendo jabalina.");
-  spear = tapeMeasure.getSize(5);
+  spear = tapeMeasure.getSize(15);
   if(spear >= 0){
     Serial.print("[CAL]\tLargo de lanza medida: ");Serial.println(spear);
   }else{
@@ -283,16 +283,18 @@ unsigned int counter(){
 bool connecting(int wait){
   unsigned long start = millis();
   Serial.print(">Sincronizando");
-  while (millis() - start < wait) {
-    // Se realiza un "ping" a modulo GSP
-    char c = gps.encode(c);
-    if (gps.encode(c)) {
-      gps.f_get_position(&flat, &flon, &age); // Obtengo posicion
-      gps.crack_datetime(&year, &month, &day, \
-        &hour, &minute, &second, &hundredths, &age); // Obtengo fecha y hora
-      Serial.println("... OK");
-      recorder.logger(4, "LAT: " , flat, "LON: ", flon);
-      return true;
+  if(serial_gps.available()){
+    while (millis() - start < wait) {
+      // Se realiza un "ping" a modulo GSP
+      char c = gps.read();
+      if (gps.encode(c)) {
+        gps.f_get_position(&flat, &flon, &age); // Obtengo posicion
+        gps.crack_datetime(&year, &month, &day, \
+          &hour, &minute, &second, &hundredths, &age); // Obtengo fecha y hora
+        Serial.println("... OK");
+        recorder.logger(4, "LAT: " , flat, "LON: ", flon);
+        return true;
+      }
     }
   }
   Serial.println("... ERROR");
