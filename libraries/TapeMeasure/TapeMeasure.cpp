@@ -12,18 +12,19 @@ int TapeMeasure::getSize(int iteration){
 
 int TapeMeasure::takeSize(){
 	int count = 5;
-	float samples = 0;
-	float range;
+	int range, dummy;
 	unsigned int result;
+	unsigned int samples = 0;
 	while(count >= 0){
-		range = sonar.ping_cm();
+		//range = sonar.ping_cm();
+		dummy = sonar.ping_median();
+		range = sonar.convert_cm(dummy);
 		if(range <= this->spear && range >= this->dig){
 			samples += range;
 			count--;
 		}
 	}
 	result = this->spear - (samples / 5.0);
-	//this->dig = sonar.convert_cm(result);
 	this->dig = result;
 	return this->dig;
 }
