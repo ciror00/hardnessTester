@@ -101,7 +101,7 @@ void setup(){
  	recorder.saveRegistry(9, lat_buff, lon_buff, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
   // Se configurar los pines usando métodos de Arduino
   Serial.println("[MSJ]\tMidiendo jabalina.");
-  spear = tapeMeasure.getSize(15);
+  spear = tapeMeasure.calibrateLance(15);
   if(spear >= 0){
     Serial.print("[CAL]\tLargo de lanza medida: ");Serial.println(spear);
   }else{
