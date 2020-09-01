@@ -15,11 +15,13 @@ class TapeMeasure{
   int spear;
   int dig = 0;
 
+  int _getSize(int iteration = 5);
+
 	public:
 		TapeMeasure() = default;
     bool begin();
-    int getSize(int iteration = 5);
-    int takeSize();
+    int calibrateLance(int iteration = 5);
+    int takeSize(int iteration = 5);
     void reset();
 		~TapeMeasure() = default;
 };

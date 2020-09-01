@@ -4,28 +4,19 @@ bool TapeMeasure::begin(){
 	;
 }
 
-int TapeMeasure::getSize(int iteration){
+int TapeMeasure::_getSize(int iteration){
 	int period = sonar.ping_median(iteration);
-	this->spear = sonar.convert_cm(period);
+	return sonar.convert_cm(period);
+}
+
+int TapeMeasure::calibrateLance(int iteration){
+	this->spear = this->_getSize(iteration);
 	return this->spear;
 }
 
-int TapeMeasure::takeSize(){
-	int count = 5;
+int TapeMeasure::takeSize(int iteration){
 	int range, result;
-	unsigned int samples = 0;
-	/*
-	while(count >= 0){
-		//dummy = sonar.ping_median();
-		//range = sonar.convert_cm(dummy);
-		range = this->getSize();
-		if(range <= this->spear && range >= this->dig){
-			samples += range;
-			count--;
-		}
-	}
-	*/
-	range = this->getSize(15);
+	range = this->_getSize(iteration);
 	result = this->spear - range;
 	this->dig = result;
 	return this->dig;
