@@ -296,8 +296,12 @@ bool connecting(int wait){
         return true;
       }
     }
+  }else{
+    Serial.println("... ERROR");
+    recorder.logger(1, "Falla de comunicación serie");
+    return false;
   }
-  Serial.println("... ERROR");
-  recorder.logger(1, "Falla de comunicacion con el GPS");
+  Serial.println("... TIME OUT");
+  recorder.logger(1, "No se obtuvo informacion del GPS");
   return false;
 }
