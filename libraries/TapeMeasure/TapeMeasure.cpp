@@ -14,6 +14,7 @@ int TapeMeasure::takeSize(){
 	int count = 5;
 	int range, result;
 	unsigned int samples = 0;
+	/*
 	while(count >= 0){
 		//dummy = sonar.ping_median();
 		//range = sonar.convert_cm(dummy);
@@ -23,7 +24,9 @@ int TapeMeasure::takeSize(){
 			count--;
 		}
 	}
-	result = this->spear - (samples / 5);
+	*/
+	range = this->getSize(15);
+	result = this->spear - range;
 	this->dig = result;
 	return this->dig;
 }
