@@ -90,8 +90,8 @@ void setup(){
     Serial.println("[ERROR]\tFalla de comunicación con GPS");
     Serial.println("[MSJ]\tFecha y hora por defecto.");
   }
-  dtostrf(flat,1,8,lat_buff);
-  dtostrf(flon,1,8,lon_buff);
+  dtostrf(flat,3,8,lat_buff);
+  dtostrf(flon,3,8,lon_buff);
   recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
   recorder.showTime();
 
@@ -139,7 +139,7 @@ void loop(){
       if(point<depth)point = depth; // Se punto de maxima fuerza
       // Muestra de informacion por pantalla
       dtostrf(strength,4,1,strength_buff);
-      dtostrf(depth,4,1,depth_buff);
+      sprintf(depth_buff, "%d", depth);
       display.showMeasure(1, "F:", "[Kg]", strength_buff);
       display.showMeasure(2, "D:", "[cm]", depth_buff, false);
       // Carga de datos en memoria para calculos posteriores
@@ -166,8 +166,8 @@ void loop(){
       update = token;
       geo = connecting(4000);
       gpsModule = (geo) ? true : false;
-      dtostrf(flat,1,8,lat_buff);
-      dtostrf(flon,1,8,lon_buff);
+      dtostrf(flat,3,8,lat_buff);
+      dtostrf(flon,3,8,lon_buff);
       display.home(sdModule, gpsModule);
       //display.switcher(false);
     }
