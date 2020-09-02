@@ -15,13 +15,12 @@ int TapeMeasure::calibrateLance(int iteration){
 }
 
 int TapeMeasure::takeSize(int iteration){
+	if(this->spear <= 0)return 0;
 	int range, result;
 	range = this->_getSize(iteration);
 	result = this->spear - range;
 	if(result >= this->dig){
 		this->dig = result;
-	}else{
-		this->dig = this->dig;
 	}
 	return this->dig;
 }
