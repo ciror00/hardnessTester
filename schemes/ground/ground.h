@@ -10,7 +10,7 @@
 
 #include "settings.h"
 
-#define FIRMWARE 0.765
+#define FIRMWARE 0.766
 
 #define SCK_CELL A12
 #define DT_CELL A11
@@ -36,7 +36,6 @@ byte month, day, hour, minute, second, hundredths;
 
 bool conf = false;
 bool flag = false;
-//bool button = false;
 bool headers = false;
 bool close = false;
 bool geo = false;
