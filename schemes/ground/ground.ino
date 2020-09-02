@@ -92,6 +92,7 @@ void setup(){
   }
   dtostrf(flat,1,8,lat_buff);
   dtostrf(flon,1,8,lon_buff);
+  recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
   recorder.showTime();
 
 	// Se agregan los titulos de archivos, que viene despues de los "Fecha" y "Hora" (titulos por defecto)
@@ -297,11 +298,9 @@ bool connecting(int wait){
     gps.crack_datetime(&year, &month, &day, \
       &hour, &minute, &second, &hundredths, &age); // Obtengo fecha y hora
     Serial.print("... OK");
-    recorder.logger(4, "LAT: " , flat, "LON: ", flon);
     return true;
   }else{
     Serial.print("... TIME OUT");
-    recorder.logger(1, "No se obtuvo informacion del GPS");
     return false;
   }
 }
