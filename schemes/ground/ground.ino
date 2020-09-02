@@ -136,8 +136,8 @@ void loop(){
       Serial.print("|\tPROFUNDIDAD: ");Serial.println(depth);
       if(point<depth)point = depth; // Se punto de maxima fuerza
       // Muestra de informacion por pantalla
-      //dtostrf(strength,2,0,strength_buff);
-      sprintf(strength_buff, "%ld", strength);
+      dtostrf(strength,2,0,strength_buff);
+      //sprintf(strength_buff, "%ld", strength);
       sprintf(depth_buff, "%d", depth);
       display.showMeasure(1, "F:", "[Kg]", strength_buff);
       display.showMeasure(2, "D:", "[cm]", depth_buff, false);

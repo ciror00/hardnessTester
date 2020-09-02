@@ -10,7 +10,7 @@
 
 #include "settings.h"
 
-#define FIRMWARE 0.761
+#define FIRMWARE 0.765
 
 #define SCK_CELL A12
 #define DT_CELL A11
@@ -47,7 +47,7 @@ byte memoryLocation[] = {0, memorySize/2};
 float patternWeight = 0;
 float manualScale = 0;
 float scaleCalculation = -1;
-long strength = 0;
+float strength = 0;
 int point = 0;
 int spear = 50; 
 int depth = 0;
