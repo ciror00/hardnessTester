@@ -137,7 +137,7 @@ void loop(){
       Serial.print("|\tPROFUNDIDAD: ");Serial.println(depth);
       if(point<depth)point = depth; // Se punto de maxima fuerza
       // Muestra de informacion por pantalla
-      dtostrf(strength,4,1,strength_buff);
+      dtostrf(strength,2,0,strength_buff);
       sprintf(depth_buff, "%d", depth);
       display.showMeasure(1, "F:", "[Kg]", strength_buff);
       display.showMeasure(2, "D:", "[cm]", depth_buff, false);
@@ -155,7 +155,7 @@ void loop(){
       }
       strength = 0;
       depth = 0;
-      tapeMeasure.reset();
+      //tapeMeasure.reset();
     }
   }else{
     token = witness(updateTime*1000*60); // 1K milisegundos = 1 segundo * 60 = 1 minutos
@@ -181,10 +181,10 @@ void loop(){
   if(flag){
     display.showMessage(" ", "Procesando...", " ");
     flag = false;
-    dtostrf(forceAnalyzer.maximum(),4,1,max_buff);
-    dtostrf(forceAnalyzer.minimum(),4,1,min_buff);
-    dtostrf(forceAnalyzer.average(),4,2,average_buff);
-    dtostrf(distanceAnalyzer.maximum(),4,1,range_buff);
+    dtostrf(forceAnalyzer.maximum(),2,1,max_buff);
+    //dtostrf(forceAnalyzer.minimum(),2,1,min_buff);
+    dtostrf(forceAnalyzer.average(),2,2,average_buff);
+    dtostrf(distanceAnalyzer.maximum(),2,1,range_buff);
     sprintf(point_buff, "%d", point);
     if(!sdModule){
       Serial.println("[ERROR]\tSD no reconocida");
@@ -205,6 +205,7 @@ void loop(){
     display.summary(average_buff, max_buff, range_buff, point_buff);
     forceAnalyzer.reset();
     distanceAnalyzer.reset();
+    tapeMeasure.reset();
     delay(5000);
     lot = counter();
     close = true;
