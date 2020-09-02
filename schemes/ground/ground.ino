@@ -4,7 +4,7 @@ LiteVisualizer display;
 LoadCell measure;
 Recorder recorder;
 DataHandler forceAnalyzer;
-DataHandler distanceAnalyzer;
+//DataHandler distanceAnalyzer;
 TapeMeasure tapeMeasure;
 
 void setup(){
@@ -131,7 +131,6 @@ void loop(){
       // Medicion de fuerza
       strength = measure.strengthAverage(stabilizer);
       Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
-      //Serial.print("|\tSEÑAL: ");Serial.print(measure.raw());
       // Medicion de distancia
       depth = tapeMeasure.makeAWell(15, tolerance);
       Serial.print("|\tPROFUNDIDAD: ");Serial.println(depth);
@@ -143,7 +142,7 @@ void loop(){
       display.showMeasure(2, "D:", "[cm]", depth_buff, false);
       // Carga de datos en memoria para calculos posteriores
       forceAnalyzer.preLoad(strength);
-      distanceAnalyzer.preLoad(depth);
+      //distanceAnalyzer.preLoad(depth);
       if(!sdModule){
         Serial.println("[ERROR]\tSD mal configurada");
         sdModule = false;
@@ -154,8 +153,8 @@ void loop(){
         recorder.saveRegistryTimeless(9, " ", " ", " ", strength_buff, depth_buff, " ", " ", " ", " ");
       }
       strength = 0;
+      top = depth;
       depth = 0;
-      //tapeMeasure.reset();
     }
   }else{
     token = witness(updateTime*1000*60); // 1K milisegundos = 1 segundo * 60 = 1 minutos
@@ -172,19 +171,14 @@ void loop(){
       recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
     }
     token = witness(updateSD*1000*60); // 1K milisegundos = 1 segundo * 60 = 1 minutos);
-    //if(token > update){
-    //  Serial.println(">Chequeando SD...");
-    //  sdModule = (recorder.card()) ? true : false;
-    //  display.home(sdModule, gpsModule);
-    //}
   }
   if(flag){
     display.showMessage(" ", "Procesando...", " ");
     flag = false;
     dtostrf(forceAnalyzer.maximum(),2,1,max_buff);
-    //dtostrf(forceAnalyzer.minimum(),2,1,min_buff);
     dtostrf(forceAnalyzer.average(),2,2,average_buff);
-    dtostrf(distanceAnalyzer.maximum(),2,1,range_buff);
+    //dtostrf(distanceAnalyzer.maximum(),2,1,range_buff);
+    sprintf(range_buff, "%d", top);
     sprintf(point_buff, "%d", point);
     if(!sdModule){
       Serial.println("[ERROR]\tSD no reconocida");
@@ -200,11 +194,11 @@ void loop(){
     Serial.print("> F. MAXIMA: ");Serial.println(max_buff);
     Serial.print("> PROFUNDIDAD: ");Serial.println(range_buff);
     Serial.print("> PROF. de F. MAXIMA: ");Serial.println(point_buff);
-    //Serial.print("> F. MINIMA: ");Serial.println(min_buff);
     display.detail(sdModule, gpsModule, lot_buff);
     display.summary(average_buff, max_buff, range_buff, point_buff);
     forceAnalyzer.reset();
-    distanceAnalyzer.reset();
+    //distanceAnalyzer.reset();
+    top = 0;
     tapeMeasure.reset();
     delay(5000);
     lot = counter();
@@ -220,7 +214,6 @@ void loop(){
 bool minimumForce(int threshold){
   int t = 0;
   float s = measure.strength();
-  //display.switcher(true);
   while(s >= threshold && t < stabilizer){
     display.showMessage("", "Estabilizando...", " ");
     t++;

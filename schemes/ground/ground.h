@@ -3,7 +3,6 @@
 #include <SoftwareSerial.h>
 
 #include "LoadCell.h"
-//#include "Visualizer.h"
 #include "LiteVisualizer.h"
 #include "Recorder.h"
 #include "DataHandler.h"
@@ -11,7 +10,7 @@
 
 #include "settings.h"
 
-#define FIRMWARE 0.753
+#define FIRMWARE 0.76
 
 #define SCK_CELL A12
 #define DT_CELL A11
@@ -52,6 +51,7 @@ float strength = 0;
 int point = 0;
 int spear = 50; 
 int depth = 0;
+int top = 0;
 unsigned int lot = 1;
 
 bool gpsModule = false;
@@ -69,13 +69,11 @@ char lot_buff[10];
 char count_buff[10];
 char strength_buff[10];
 char average_buff[10];
-//char force_buff[10];
 char range_buff[10];
 char point_buff[10];
 char depth_buff[10];
 char lat_buff[10];
 char lon_buff[10];
-//char location_buff[10];
 char max_buff[10];
 char min_buff[10];
 char disposable_buff[10];
