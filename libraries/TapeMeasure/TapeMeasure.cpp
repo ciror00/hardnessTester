@@ -18,7 +18,11 @@ int TapeMeasure::takeSize(int iteration){
 	int range, result;
 	range = this->_getSize(iteration);
 	result = this->spear - range;
-	this->dig = result;
+	if(result >= this->dig){
+		this->dig = result;
+	}else{
+		this->dig = this->dig;
+	}
 	return this->dig;
 }
 
