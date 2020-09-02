@@ -16,6 +16,7 @@ int DataHandler::getPointer(){
 
 float DataHandler::average(){
   if(this->pointer == 0)return 0;
+  Serial.print(">DEBUG: ");Serial.println(this->list);
   float setSum, value;
   for (byte i = 0; i < this->pointer; i++){
     setSum += this->list[i];
