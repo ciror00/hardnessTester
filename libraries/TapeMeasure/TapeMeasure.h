@@ -12,7 +12,7 @@ class TapeMeasure{
 
   NewPing sonar = NewPing(trig, echo, 100);
 
-  int spear;
+  int spear = 0;;
   int dig = 0;
 
   int _getSize(int iteration = 5);

@@ -5,8 +5,8 @@ bool TapeMeasure::begin(){
 }
 
 int TapeMeasure::_getSize(int iteration){
-	int period = sonar.ping_median(iteration);
-	return sonar.convert_cm(period);
+	int period = this->sonar.ping_median(iteration);
+	return this->sonar.convert_cm(period);
 }
 
 int TapeMeasure::calibrateLance(int iteration){
