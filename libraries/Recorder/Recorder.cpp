@@ -31,7 +31,7 @@ bool Recorder::card(){
 }
 
 void Recorder::setDate(int y, int m, int d, int h, int x){
-	PRINT("> Ajute de hora por defecto\n");
+	PRINT(">Ajustando hora del programa\n");
 	this->rtc.adjust(DateTime(y, m, d, h, x, 0));
 }
 
