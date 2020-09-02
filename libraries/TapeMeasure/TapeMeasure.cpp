@@ -4,8 +4,8 @@ bool TapeMeasure::begin(){
 	;
 }
 
-int TapeMeasure::_getSize(int iteration){
-	int period = this->sonar.ping_median(iteration);
+unsigned int TapeMeasure::_getSize(int iteration){
+	unsigned int period = this->sonar.ping_median(iteration);
 	return this->sonar.convert_cm(period);
 }
 
@@ -14,12 +14,13 @@ int TapeMeasure::calibrateLance(int iteration){
 	return this->spear;
 }
 
-int TapeMeasure::takeSize(int iteration){
+int TapeMeasure::makeAWell(int iteration, int tolerance){
 	if(this->spear <= 0)return 0;
-	int range, result;
+	int range, result, shifting;
 	range = this->_getSize(iteration);
 	result = this->spear - range;
-	if(result >= this->dig){
+	shifting = result - this->dig;
+	if(result >= this->dig && shifting > tolerance){
 		this->dig = result;
 	}
 	return this->dig;
