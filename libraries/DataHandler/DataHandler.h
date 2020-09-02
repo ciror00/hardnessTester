@@ -4,7 +4,6 @@
 
 class DataHandler{
   float list[50];
-  //long sampling[];
   int pointer = 0;
 
   public:

@@ -46,7 +46,7 @@ float DataHandler::percentages(long max_value, long current_value){
 }
 
 void DataHandler::reset(){
-  for (this->pointer; this->pointer > 0; this->pointer--) {
+  for (this->pointer; this->pointer >= 0; this->pointer--) {
     this->list[this->pointer] = NULL;
   };
 }
