@@ -116,7 +116,10 @@ void setup(){
 
 void loop(){
   if(!headers && sdModule)headers = recorder.setTitles(9, titles[0], titles[1], titles[2], titles[3], titles[4], titles[5], titles[6], titles[7], titles[8]);
-  if(close)display.home(sdModule, gpsModule);
+  if(close){
+    sdModule = (recorder.card()) ? true : false;
+    display.home(sdModule, gpsModule);
+  }
   if(minimumForce(sensibility)){ // Primero descarta que no sea ruido de la lanza
     flag = true;
     if(close){
@@ -142,7 +145,7 @@ void loop(){
       // Carga de datos en memoria para calculos posteriores
       forceAnalyzer.preLoad(strength);
       distanceAnalyzer.preLoad(depth);
-      if(!recorder.card()){
+      if(!sdModule){
         Serial.println("[ERROR]\tSD mal configurada");
         sdModule = false;
       }else{
@@ -169,12 +172,11 @@ void loop(){
       //display.switcher(false);
     }
     token = witness(updateSD*1000*60); // 1K milisegundos = 1 segundo * 60 = 1 minutos);
-    if(token > update){
-      Serial.println(">Chequeando SD...");
-      sdModule = (recorder.card()) ? true : false;
-      //display.switcher(false);
-      display.home(sdModule, gpsModule);
-    }
+    //if(token > update){
+    //  Serial.println(">Chequeando SD...");
+    //  sdModule = (recorder.card()) ? true : false;
+    //  display.home(sdModule, gpsModule);
+    //}
   }
   if(flag){
     display.showMessage(" ", "Procesando...", " ");
@@ -184,7 +186,7 @@ void loop(){
     dtostrf(forceAnalyzer.average(),4,2,average_buff);
     dtostrf(distanceAnalyzer.maximum(),4,1,range_buff);
     sprintf(point_buff, "%d", point);
-    if(!recorder.card()){
+    if(!sdModule){
       Serial.println("[ERROR]\tSD no reconocida");
       sdModule = false;
     }else{
