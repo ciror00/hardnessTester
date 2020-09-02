@@ -90,8 +90,8 @@ void setup(){
     Serial.println("[ERROR]\tFalla de comunicación con GPS");
     Serial.println("[MSJ]\tFecha y hora por defecto.");
   }
-  dtostrf(flat,2,4,lat_buff);
-  dtostrf(flon,2,4,lon_buff);
+  dtostrf(flat,2,6,lat_buff);
+  dtostrf(flon,2,6,lon_buff);
   recorder.showTime();
 
 	// Se agregan los titulos de archivos, que viene despues de los "Fecha" y "Hora" (titulos por defecto)
@@ -102,7 +102,7 @@ void setup(){
   // Se configurar los pines usando métodos de Arduino
   Serial.println("[MSJ]\tMidiendo jabalina.");
   spear = tapeMeasure.calibrateLance(15);
-  if(spear >= 0){
+  if(spear > 0){
     Serial.print("[CAL]\tLargo de lanza medida: ");Serial.println(spear);
   }else{
     Serial.println("[ERROR]\tEn medicion. Configurando lanza por defecto");
@@ -162,8 +162,8 @@ void loop(){
       update = token;
       geo = connecting(4000);
       gpsModule = (geo) ? true : false;
-      dtostrf(flat,2,4,lat_buff);
-      dtostrf(flon,2,4,lon_buff);
+      dtostrf(flat,2,6,lat_buff);
+      dtostrf(flon,2,6,lon_buff);
       display.home(sdModule, gpsModule);
       //display.switcher(false);
     }
@@ -296,11 +296,11 @@ bool connecting(int wait){
     gps.f_get_position(&flat, &flon, &age); // Obtengo posicion
     gps.crack_datetime(&year, &month, &day, \
       &hour, &minute, &second, &hundredths, &age); // Obtengo fecha y hora
-    Serial.println("... OK");
+    Serial.print("... OK");
     recorder.logger(4, "LAT: " , flat, "LON: ", flon);
     return true;
   }else{
-    Serial.println("... TIME OUT");
+    Serial.print("... TIME OUT");
     recorder.logger(1, "No se obtuvo informacion del GPS");
     return false;
   }
