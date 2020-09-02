@@ -72,26 +72,25 @@ void setup(){
   geo = connecting(4000);
   if(geo){
     gpsModule = true;
-    Serial.println("\n[MSJ]\tPuerto serie conectado a Modulo GPS");
     gps.stats(&chars, &sentences, &failed);
     Serial.print("> Estaditicas: \n> char: "); Serial.print(chars); Serial.print("| sentences: ");
-    Serial.print(sentences); Serial.print(" failed checksum: "); Serial.println(failed);
-    // Se obtiene posocion, fecha y hora
-    Serial.println("[MSJ]\tObteniendo geolocalización");
+    Serial.print(sentences); Serial.print(" failed: "); Serial.println(failed);
     Serial.print(">Lat: "); Serial.print(flat);Serial.print("\t|Lon: "); Serial.println(flon);
-    Serial.println("[MSJ]\tSincronizando RTC");
+    Serial.print(">Fecha: "); Serial.print(year); Serial.print(month); Serial.println(day);
+    Serial.print(">Hora: "); Serial.print(hour); Serial.print(minute); Serial.println(second);
     if(year!=0){
+      Serial.println("[MSJ]\tSincronizacion RTC (GMT -3)");
       recorder.setDate(year,month,day,hour-3,minute);
     }else{
-      Serial.println("ERROR\tSincronizacion fallida");
+      Serial.println("[ERROR]\tSincronizacion RTC fallida");
       recorder.setDate();
     }
   }else{
     Serial.println("[ERROR]\tFalla de comunicación con GPS");
     Serial.println("[MSJ]\tFecha y hora por defecto.");
   }
-  dtostrf(flat,2,6,lat_buff);
-  dtostrf(flon,2,6,lon_buff);
+  dtostrf(flat,2,2,lat_buff);
+  dtostrf(flon,2,2,lon_buff);
   recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
   recorder.showTime();
 
@@ -166,8 +165,8 @@ void loop(){
       update = token;
       geo = connecting(4000);
       gpsModule = (geo) ? true : false;
-      dtostrf(flat,2,6,lat_buff);
-      dtostrf(flon,2,6,lon_buff);
+      dtostrf(flat,2,2,lat_buff);
+      dtostrf(flon,2,2,lon_buff);
       display.home(sdModule, gpsModule);
       //display.switcher(false);
       recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
