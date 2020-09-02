@@ -6,10 +6,12 @@ class DataHandler{
   float list[200];
   int pointer = 0;
 
+
   public:
     DataHandler() = default;
     void begin(const int reserved = 50);
     void preLoad(float sampling);
+    int getPointer();
     float average();
     float maximum();
     float minimum();

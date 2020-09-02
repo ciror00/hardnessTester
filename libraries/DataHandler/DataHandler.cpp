@@ -10,6 +10,10 @@ void DataHandler::preLoad(float sampling){
   this->pointer++;
 }
 
+int DataHandler::getPointer(){
+  return this->pointer;
+}
+
 float DataHandler::average(){
   if(this->pointer == 0)return 0;
   float setSum, value;
@@ -48,6 +52,6 @@ float DataHandler::percentages(long max_value, long current_value){
 
 void DataHandler::reset(){
   for (this->pointer; this->pointer > 0; this->pointer--) {
-    this->list[this->pointer] = NULL;
+    this->list[this->pointer] = 0;
   };
 }
