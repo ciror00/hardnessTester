@@ -3,12 +3,12 @@
 #include <Arduino.h>
 
 class DataHandler{
-  float list[50];
+  float list[200];
   int pointer = 0;
 
   public:
     DataHandler() = default;
-    void begin(const int reserved);
+    void begin(const int reserved = 50);
     void preLoad(float sampling);
     float average();
     float maximum();
