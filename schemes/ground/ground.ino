@@ -81,7 +81,7 @@ void setup(){
     Serial.print(">Lat: "); Serial.print(flat);Serial.print("\t|Lon: "); Serial.println(flon);
     Serial.println("[MSJ]\tSincronizando RTC");
     if(year!=0){
-      recorder.setDate(year,month,day,hour,minute);
+      recorder.setDate(year,month,day,hour-3,minute);
     }else{
       Serial.println("ERROR\tSincronizacion fallida");
       recorder.setDate();
@@ -90,8 +90,8 @@ void setup(){
     Serial.println("[ERROR]\tFalla de comunicación con GPS");
     Serial.println("[MSJ]\tFecha y hora por defecto.");
   }
-  dtostrf(flat,2,6,lat_buff);
-  dtostrf(flon,2,6,lon_buff);
+  dtostrf(flat,1,8,lat_buff);
+  dtostrf(flon,1,8,lon_buff);
   recorder.showTime();
 
 	// Se agregan los titulos de archivos, que viene despues de los "Fecha" y "Hora" (titulos por defecto)
@@ -162,8 +162,8 @@ void loop(){
       update = token;
       geo = connecting(4000);
       gpsModule = (geo) ? true : false;
-      dtostrf(flat,2,6,lat_buff);
-      dtostrf(flon,2,6,lon_buff);
+      dtostrf(flat,1,8,lat_buff);
+      dtostrf(flon,1,8,lon_buff);
       display.home(sdModule, gpsModule);
       //display.switcher(false);
     }
