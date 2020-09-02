@@ -89,8 +89,8 @@ void setup(){
     Serial.println("[ERROR]\tFalla de comunicación con GPS");
     Serial.println("[MSJ]\tFecha y hora por defecto.");
   }
-  dtostrf(flat,2,2,lat_buff);
-  dtostrf(flon,2,2,lon_buff);
+  dtostrf(flat,2,6,lat_buff);
+  dtostrf(flon,2,6,lon_buff);
   recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
   recorder.showTime();
 
@@ -165,8 +165,8 @@ void loop(){
       update = token;
       geo = connecting(4000);
       gpsModule = (geo) ? true : false;
-      dtostrf(flat,2,2,lat_buff);
-      dtostrf(flon,2,2,lon_buff);
+      dtostrf(flat,2,6,lat_buff);
+      dtostrf(flon,2,6,lon_buff);
       display.home(sdModule, gpsModule);
       //display.switcher(false);
       recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);

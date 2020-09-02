@@ -11,7 +11,7 @@
 
 #include "settings.h"
 
-#define FIRMWARE 0.752
+#define FIRMWARE 0.753
 
 #define SCK_CELL A12
 #define DT_CELL A11
@@ -28,8 +28,8 @@ TinyGPS gps;
 // Declaraciones internas del programa
 long lat = 0;
 long lon = 0;
-float flat = 0;
-float flon = 0;
+float flat = 0.0;
+float flon = 0.0;
 unsigned long age, date, time, chars;
 unsigned short sentences, failed;
 int year = 0;
