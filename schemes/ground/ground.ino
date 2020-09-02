@@ -132,10 +132,10 @@ void loop(){
       // Medicion de fuerza
       strength = measure.strengthAverage(stabilizer);
       Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
-      Serial.print("|\tSEÑAL: ");Serial.println(measure.raw());
+      //Serial.print("|\tSEÑAL: ");Serial.print(measure.raw());
       // Medicion de distancia
-      depth = tapeMeasure.takeSize();
-      Serial.print("[CAL]\tPROFUNDIDAD: ");Serial.println(depth);
+      depth = tapeMeasure.makeAWell(15, tolerance);
+      Serial.print("|\tPROFUNDIDAD: ");Serial.println(depth);
       if(point<depth)point = depth; // Se punto de maxima fuerza
       // Muestra de informacion por pantalla
       dtostrf(strength,4,1,strength_buff);
@@ -197,13 +197,13 @@ void loop(){
       sdModule = true;
     }
     Serial.println("[MJS]\tResumen de datos calculados");
+    Serial.print("> F. PROMEDIO: ");Serial.println(average_buff);
+    Serial.print("> F. MAXIMA: ");Serial.println(max_buff);
     Serial.print("> PROFUNDIDAD: ");Serial.println(range_buff);
     Serial.print("> PROF. de F. MAXIMA: ");Serial.println(point_buff);
-    Serial.print("> F. MAXIMA: ");Serial.println(max_buff);
-    Serial.print("> F. MINIMA: ");Serial.println(min_buff);
-    Serial.print("> F. PROMEDIO: ");Serial.println(average_buff);
+    //Serial.print("> F. MINIMA: ");Serial.println(min_buff);
     display.detail(sdModule, gpsModule, lot_buff);
-    display.summary(max_buff, min_buff, average_buff, range_buff);
+    display.summary(average_buff, max_buff, range_buff, point_buff);
     forceAnalyzer.reset();
     distanceAnalyzer.reset();
     delay(5000);
@@ -292,6 +292,7 @@ bool connecting(int wait){
       // Se realiza un "ping" a modulo GSP
       char c = serial_gps.read();
       if (gps.encode(c)) {
+        Serial.print(c);
         satelite = true;
       }
     }
