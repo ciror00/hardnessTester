@@ -195,6 +195,7 @@ void loop(){
     Serial.print("> F. MAXIMA: ");Serial.println(max_buff);
     Serial.print("> PROFUNDIDAD: ");Serial.println(range_buff);
     Serial.print("> PROF. de F. MAXIMA: ");Serial.println(point_buff);
+    Serial.print("> CANT. MEDICIONES: ");Serial.println(forceAnalyzer.getPointer());
     display.detail(sdModule, gpsModule, lot_buff);
     display.summary(average_buff, max_buff, range_buff, point_buff);
     forceAnalyzer.reset();
