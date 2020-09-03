@@ -4,7 +4,6 @@ LiteVisualizer display;
 LoadCell measure;
 Recorder recorder;
 DataHandler forceAnalyzer;
-//DataHandler distanceAnalyzer;
 TapeMeasure tapeMeasure;
 
 void setup(){
@@ -114,20 +113,17 @@ void setup(){
 }
 
 void loop(){
-  if(close){
-    sdModule = (recorder.card()) ? true : false;
-    display.home(sdModule, gpsModule);
-    if(!headers)headers = recorder.setTitles(9, titles[0], titles[1], titles[2], titles[3], titles[4], titles[5], titles[6], titles[7], titles[8]);
-  }
+  if(!headers)headers = recorder.setTitles(9, titles[0], titles[1], titles[2], titles[3], titles[4], titles[5], titles[6], titles[7], titles[8]);
   if(minimumForce(sensibility)){ // Primero descarta que no sea ruido de la lanza
-    flag = true;
     if(close){
       Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
       close = false;
       sprintf(lot_buff, "%d", lot);
       recorder.saveRegistry(9, lat_buff, lon_buff, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
     }
+    flag = true;
     while(measure.strength() > sensibility){ // Hace un bucle, mientras se ejerza mas fuerza que la minima
+      //display.reset();
       // Medicion de fuerza
       strength = measure.strengthAverage(stabilizer);
       Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
@@ -204,6 +200,8 @@ void loop(){
     close = true;
     specimen = 0;
     point = 0;
+    sdModule = (recorder.card()) ? true : false;
+    display.home(sdModule, gpsModule);
   }
 }
 
