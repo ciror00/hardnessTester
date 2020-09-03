@@ -114,10 +114,10 @@ void setup(){
 }
 
 void loop(){
-  if(!headers && sdModule)headers = recorder.setTitles(9, titles[0], titles[1], titles[2], titles[3], titles[4], titles[5], titles[6], titles[7], titles[8]);
   if(close){
     sdModule = (recorder.card()) ? true : false;
     display.home(sdModule, gpsModule);
+    if(!headers)headers = recorder.setTitles(9, titles[0], titles[1], titles[2], titles[3], titles[4], titles[5], titles[6], titles[7], titles[8]);
   }
   if(minimumForce(sensibility)){ // Primero descarta que no sea ruido de la lanza
     flag = true;
@@ -139,7 +139,8 @@ void loop(){
       // Muestra de informacion por pantalla
       dtostrf(strength,2,0,strength_buff);
       sprintf(depth_buff, "%d", depth);
-      display.showMeasure(1, "F:", "[Kg]", strength_buff);
+      display.home(sdModule, gpsModule);
+      display.showMeasure(1, "F:", "[Kg]", strength_buff, false);
       display.showMeasure(2, "D:", "[cm]", depth_buff, false);
       // Carga de datos en memoria para calculos posteriores
       forceAnalyzer.preLoad(strength);
@@ -168,10 +169,8 @@ void loop(){
       dtostrf(flat,2,6,lat_buff);
       dtostrf(flon,2,6,lon_buff);
       display.home(sdModule, gpsModule);
-      //display.switcher(false);
       recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
     }
-    token = witness(updateSD*1000*60); // 1K milisegundos = 1 segundo * 60 = 1 minutos);
   }
   if(flag){
     display.showMessage(" ", "Procesando...", " ");
@@ -216,7 +215,7 @@ bool minimumForce(int threshold){
   int t = 0;
   float s = measure.strength();
   while(s >= threshold && t < stabilizer){
-    display.showMessage("", "Estabilizando...", " ");
+    //display.showMessage("", "Estabilizando...", " ");
     t++;
     s = measure.strength();
     Serial.print("> SENSOR: ");Serial.print(s);Serial.print("\t| MUESTRAS: ");Serial.println(t);
