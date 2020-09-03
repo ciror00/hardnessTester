@@ -3,7 +3,7 @@
 #include <Arduino.h>
 
 class DataHandler{
-  float list[200];
+  float list[400];
   int pointer = 0;
 
 

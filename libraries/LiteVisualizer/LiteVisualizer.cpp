@@ -101,20 +101,22 @@ void LiteVisualizer::summary(String averange, String max, String distance, Strin
   byte left[] = {0,4};
   byte rigth[] = {16};
   byte file[] = {2,3};
+  String fileOne = "Fp:"+averange+"Fm"+max;
+  String fileTwo = "Dm:"+distance+"Dfm"+regiter;
   // Fila 2
   this->lcd.setCursor(left[0], file[0]);
-  this->lcd.print(averange); //
-  this->lcd.setCursor(left[1], file[0]);
-  this->lcd.print("Kg Pmax:");
-  this->lcd.print(max);
-  this->lcd.setCursor(rigth[0], file[0]);
-  this->lcd.print("Kg");
+  this->lcd.print(fileOne); //
+  //this->lcd.setCursor(left[1], file[0]);
+  //this->lcd.print("Kg Pmax:");
+  //this->lcd.print(max);
+  //this->lcd.setCursor(rigth[0], file[0]);
+  //this->lcd.print("Kg");
   // Fila 3
   this->lcd.setCursor(left[0], file[1]);
-  this->lcd.print(distance);
-  this->lcd.setCursor(left[1], file[1]);
-  this->lcd.print("cm Dmax:");
-  this->lcd.print(regiter);
-  this->lcd.setCursor(rigth[0], file[1]);
-  this->lcd.print("cm");
+  this->lcd.print(fileTwo);
+  //this->lcd.setCursor(left[1], file[1]);
+  //this->lcd.print("cm Dmax:");
+  //this->lcd.print(regiter);
+  //this->lcd.setCursor(rigth[0], file[1]);
+  //this->lcd.print("cm");
 }
