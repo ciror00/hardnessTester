@@ -16,7 +16,8 @@ int DataHandler::getPointer(){
 
 float DataHandler::average(){
   if(this->pointer == 0)return 0;
-  float setSum, value;
+  float setSum = 0;
+  float value = 0;
   for (byte i = 0; i < this->pointer; i++){
     setSum += this->list[i];
   }
