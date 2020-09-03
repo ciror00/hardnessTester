@@ -6,6 +6,7 @@ void LiteVisualizer::begin(){
   this->lcd.createChar(1, card_ok);
   this->lcd.createChar(2, error);
   this->lcd.createChar(3, arrow);
+  this->lcd.createChar(4, clean);
 }
 
 void LiteVisualizer::_showSettings(bool _sd_status, bool _gps_status){
@@ -25,6 +26,36 @@ void LiteVisualizer::_showSettings(bool _sd_status, bool _gps_status){
   this->lcd.setCursor(8, file);
   // Mensaje de SD por pantalla
   if(_sd_status){
+    this->lcd.write(1);
+    this->lcd.scrollDisplayRight();
+    this->lcd.print("SD.OK");
+  }else{
+    this->lcd.write(1);
+    this->lcd.scrollDisplayRight();
+    this->lcd.print("NO.SD");
+  }
+}
+
+void LiteVisualizer::showHeader(bool sd_status, bool gps_status, bool clear){
+  if(clear)this->lcd.clear();
+  byte file = 0;
+  this->lcd.clear();
+  // Mensaje de GPS por apntalla
+  this->lcd.setCursor(0, file);
+  this->lcd.print("                   ");
+  //this->lcd.scrollDisplayLeft();
+  if(gps_status){
+    this->lcd.write(0);
+    this->lcd.scrollDisplayRight();
+    this->lcd.print("GPS.Ok");
+  }else{
+    this->lcd.write(0);
+    this->lcd.scrollDisplayRight();
+    this->lcd.print("NO.GPS");
+  }
+  this->lcd.setCursor(8, file);
+  // Mensaje de SD por pantalla
+  if(sd_status){
     this->lcd.write(1);
     this->lcd.scrollDisplayRight();
     this->lcd.print("SD.OK");
@@ -98,12 +129,16 @@ void LiteVisualizer::detail(bool sd_status, bool gps_status, String number){
 }
 
 void LiteVisualizer::summary(String averange, String max, String distance, String regiter){
-  byte column[] = {1};
+  byte column[] = {0};
   byte file[] = {2,3};
   String fileOne = "Fp: " + averange + "Fm:" + max;
   String fileTwo = "Dm: " + distance + "   Dfm:" + regiter;
+  this->lcd.scrollDisplayLeft(); 
+  this->lcd.scrollDisplayLeft(); 
   this->lcd.setCursor(column[0], file[0]);
   this->lcd.print(fileOne);
+  this->lcd.scrollDisplayLeft(); 
+  this->lcd.scrollDisplayLeft(); 
   this->lcd.setCursor(column[0], file[1]);
   this->lcd.print(fileTwo);
 }
