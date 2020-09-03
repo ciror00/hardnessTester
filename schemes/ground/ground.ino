@@ -137,13 +137,11 @@ void loop(){
       if(point<depth)point = depth; // Se punto de maxima fuerza
       // Muestra de informacion por pantalla
       dtostrf(strength,2,0,strength_buff);
-      //sprintf(strength_buff, "%ld", strength);
       sprintf(depth_buff, "%d", depth);
       display.showMeasure(1, "F:", "[Kg]", strength_buff);
       display.showMeasure(2, "D:", "[cm]", depth_buff, false);
       // Carga de datos en memoria para calculos posteriores
       forceAnalyzer.preLoad(strength);
-      //distanceAnalyzer.preLoad(depth);
       if(!sdModule){
         Serial.println("[ERROR]\tSD mal configurada");
         sdModule = false;
@@ -176,9 +174,8 @@ void loop(){
   if(flag){
     display.showMessage(" ", "Procesando...", " ");
     flag = false;
-    dtostrf(forceAnalyzer.maximum(),2,0,max_buff);
-    dtostrf(forceAnalyzer.average(),2,0,average_buff);
-    //dtostrf(distanceAnalyzer.maximum(),2,1,range_buff);
+    dtostrf(forceAnalyzer.maximum(),4,0,max_buff);
+    dtostrf(forceAnalyzer.average(),4,2,average_buff);
     sprintf(range_buff, "%d", top);
     sprintf(point_buff, "%d", point);
     if(!sdModule){
@@ -195,11 +192,9 @@ void loop(){
     Serial.print("> F. MAXIMA: ");Serial.println(max_buff);
     Serial.print("> PROFUNDIDAD: ");Serial.println(range_buff);
     Serial.print("> PROF. de F. MAXIMA: ");Serial.println(point_buff);
-    Serial.print("> CANT. MEDICIONES: ");Serial.println(forceAnalyzer.getPointer());
     display.detail(sdModule, gpsModule, lot_buff);
     display.summary(average_buff, max_buff, range_buff, point_buff);
     forceAnalyzer.reset();
-    //distanceAnalyzer.reset();
     top = 0;
     tapeMeasure.reset();
     delay(5000);
