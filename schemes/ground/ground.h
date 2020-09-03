@@ -10,7 +10,7 @@
 
 #include "settings.h"
 
-#define FIRMWARE 0.78
+#define FIRMWARE 0.79
 
 #define SCK_CELL A12
 #define DT_CELL A11
@@ -47,6 +47,7 @@ float patternWeight = 0;
 float manualScale = 0;
 float scaleCalculation = -1;
 float strength = 0;
+float specimen = 0;
 int point = 0;
 int spear = 50; 
 int depth = 0;

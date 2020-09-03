@@ -89,8 +89,8 @@ void setup(){
     Serial.println("[ERROR]\tFalla de comunicación con GPS");
     Serial.println("[MSJ]\tFecha y hora por defecto.");
   }
-  dtostrf(flat,2,2,lat_buff);
-  dtostrf(flon,2,2,lon_buff);
+  dtostrf(flat,2,6,lat_buff);
+  dtostrf(flon,2,6,lon_buff);
   recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
   recorder.showTime();
 
@@ -134,7 +134,8 @@ void loop(){
       // Medicion de distancia
       depth = tapeMeasure.makeAWell(15, tolerance);
       Serial.print("|\tPROFUNDIDAD: ");Serial.println(depth);
-      if(point<depth)point = depth; // Se punto de maxima fuerza
+      // Se punto de maxima fuerza
+      if(specimen > strength)point = depth; 
       // Muestra de informacion por pantalla
       dtostrf(strength,2,0,strength_buff);
       sprintf(depth_buff, "%d", depth);
@@ -151,6 +152,7 @@ void loop(){
       // {"Latitud", "Longitud", "Medicion", "Fuerza [KG]", "Distancia [CM]", "Distancia total", "Fuerza Promedio", "Fuerza Maxima", "Distancia Fuerza Maxima"};
         recorder.saveRegistryTimeless(9, " ", " ", " ", strength_buff, depth_buff, " ", " ", " ", " ");
       }
+      specimen = strength;
       strength = 0;
       top = depth;
       depth = 0;
@@ -163,8 +165,8 @@ void loop(){
       update = token;
       geo = connecting(4000);
       gpsModule = (geo) ? true : false;
-      dtostrf(flat,2,2,lat_buff);
-      dtostrf(flon,2,2,lon_buff);
+      dtostrf(flat,2,6,lat_buff);
+      dtostrf(flon,2,6,lon_buff);
       display.home(sdModule, gpsModule);
       //display.switcher(false);
       recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
@@ -193,6 +195,7 @@ void loop(){
     Serial.print("> PROFUNDIDAD: ");Serial.println(range_buff);
     Serial.print("> PROF. de F. MAXIMA: ");Serial.println(point_buff);
     display.detail(sdModule, gpsModule, lot_buff);
+    // Pantalla de resumen. Se muestra: Fuerza promedio, Fuerza maxima, Distancia Maxima, Punto de mayor fuerza
     display.summary(average_buff, max_buff, range_buff, point_buff);
     forceAnalyzer.reset();
     top = 0;
@@ -200,6 +203,7 @@ void loop(){
     delay(5000);
     lot = counter();
     close = true;
+    specimen = 0;
     point = 0;
   }
 }
