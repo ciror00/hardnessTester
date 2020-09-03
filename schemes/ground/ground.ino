@@ -123,6 +123,8 @@ void loop(){
     }
     flag = true;
     display.reset();
+sdModule = (recorder.card()) ? true : false;
+    display.showHeader(sdModule, gpsModule);
     while(measure.strength() > sensibility){ // Hace un bucle, mientras se ejerza mas fuerza que la minima
       // Medicion de fuerza
       strength = measure.strengthAverage(stabilizer);
