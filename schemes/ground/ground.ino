@@ -123,8 +123,8 @@ void loop(){
     }
     flag = true;
     display.reset();
-sdModule = (recorder.card()) ? true : false;
-    display.showHeader(sdModule, gpsModule);
+//sdModule = (recorder.card()) ? true : false;
+    //display.showHeader(sdModule, gpsModule);
     while(measure.strength() > sensibility){ // Hace un bucle, mientras se ejerza mas fuerza que la minima
       // Medicion de fuerza
       strength = measure.strengthAverage(stabilizer);
@@ -170,6 +170,7 @@ sdModule = (recorder.card()) ? true : false;
       recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
     }
   }
+sdModule = (recorder.card()) ? true : false;
   if(flag){
     display.showMessage(" ", "Procesando...", " ");
     flag = false;
@@ -202,7 +203,7 @@ sdModule = (recorder.card()) ? true : false;
     close = true;
     specimen = 0;
     point = 0;
-    sdModule = (recorder.card()) ? true : false;
+    //sdModule = (recorder.card()) ? true : false;
     display.home(sdModule, gpsModule);
   }
 }
