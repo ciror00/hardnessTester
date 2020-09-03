@@ -97,13 +97,13 @@ void LiteVisualizer::detail(bool sd_status, bool gps_status, String number){
   }
 }
 
-void LiteVisualizer::summary(String max, String averange, String distance, String regiter){
+void LiteVisualizer::summary(String averange, String max, String distance, String regiter){
   byte left[] = {0,4};
   byte rigth[] = {16};
   byte file[] = {2,3};
   // Fila 2
   this->lcd.setCursor(left[0], file[0]);
-  this->lcd.print(averange);
+  this->lcd.print(averange); //
   this->lcd.setCursor(left[1], file[0]);
   this->lcd.print("Kg Pmax:");
   this->lcd.print(max);

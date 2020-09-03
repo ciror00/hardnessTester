@@ -31,7 +31,8 @@ float LoadCell::calibrate(float patternWeight, int samples, int iteration){
     PRINT("\n> Peso incorrecto.");
     return 1;
   }
-  float layover, censusWeight, calculationWeight;
+  float layover, censusWeight;
+  float calculationWeight = 0;
   PRINT("\n> Señal: ");PRINT(this->doubleEnded.read());PRINT("\n");
   this->doubleEnded.set_scale();
   this->doubleEnded.tare(20);

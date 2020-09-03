@@ -66,7 +66,7 @@ bool Recorder::setTitles(int numb, ...){
 	if(SD.exists(buffer) != true){
 		this->registry = SD.open(buffer, FILE_WRITE);
 		// Se recorren todos los titulos requeridos y se escriben en el archivo
-		String titles;
+		String titles = "";
 		titles += "Fecha;Hora;";
 		va_list ap;
 		va_start(ap, numb);
