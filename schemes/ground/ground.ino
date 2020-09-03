@@ -122,8 +122,8 @@ void loop(){
       recorder.saveRegistry(9, lat_buff, lon_buff, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
     }
     flag = true;
+    display.reset();
     while(measure.strength() > sensibility){ // Hace un bucle, mientras se ejerza mas fuerza que la minima
-      //display.reset();
       // Medicion de fuerza
       strength = measure.strengthAverage(stabilizer);
       Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
@@ -292,10 +292,10 @@ bool connecting(int wait){
     gps.f_get_position(&flat, &flon, &age); // Obtengo posicion
     gps.crack_datetime(&year, &month, &day, \
       &hour, &minute, &second, &hundredths, &age); // Obtengo fecha y hora
-    Serial.print("... OK");
+    Serial.println("... OK");
     return true;
   }else{
-    Serial.print("... TIME OUT");
+    Serial.println("... TIME OUT");
     return false;
   }
 }
