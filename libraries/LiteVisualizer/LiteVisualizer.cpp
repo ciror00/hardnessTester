@@ -44,22 +44,18 @@ void LiteVisualizer::showHeader(bool sd_status, bool gps_status, bool clear){
   this->lcd.setCursor(0, file);
   if(gps_status){
     this->lcd.write(0);
-    //this->lcd.scrollDisplayRight();
     this->lcd.print("GPS.Ok");
   }else{
     this->lcd.write(0);
-    //this->lcd.scrollDisplayRight();
     this->lcd.print("NO.GPS");
   }
   this->lcd.setCursor(8, file);
   // Mensaje de SD por pantalla
   if(sd_status){
     this->lcd.write(1);
-    //this->lcd.scrollDisplayRight();
     this->lcd.print("SD.OK");
   }else{
     this->lcd.write(1);
-    //this->lcd.scrollDisplayRight();
     this->lcd.print("NO.SD");
   }
 }
@@ -90,7 +86,6 @@ void LiteVisualizer::showMeasure(int line, String label, String value, String un
     this->lcd.setCursor(1, line);
   }
   this->lcd.print(label);
-  //this->lcd.scrollDisplayRight();
   this->lcd.print(value);
   this->lcd.setCursor(10, line);
   this->lcd.print(unit);

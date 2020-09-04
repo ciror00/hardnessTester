@@ -126,9 +126,10 @@ void loop(){
     while(measure.strength() > sensibility){ // Hace un bucle, mientras se ejerza mas fuerza que la minima
       // Medicion de fuerza
       strength = measure.strengthAverage(stabilizer);
-      if(strength == 0){
-      flag = false;
-      break;
+      if(strength == 0){ // filtro para evitar mediciones por histeresis
+        flag = false;
+        display.home(sdModule, gpsModule);
+        break;
       }
       Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
       // Medicion de distancia
@@ -164,15 +165,15 @@ void loop(){
       display.showMessage(" ", "Sincronizando", " ");
       Serial.println("[MSJ]\tActualizando GPS...");
       update = token;
-      geo = connecting(4000);
-      gpsModule = (geo) ? true : false;
+      //geo = connecting(4000);
+      gpsModule = (connecting(4000)) ? true : false;
       dtostrf(flat,2,6,lat_buff);
       dtostrf(flon,2,6,lon_buff);
+      sdModule = (recorder.card()) ? true : false;
       display.home(sdModule, gpsModule);
       recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
     }
   }
-//sdModule = (recorder.card()) ? true : false;
   if(flag){
     display.showMessage(" ", "Procesando...", " ");
     flag = false;
@@ -205,7 +206,6 @@ void loop(){
     close = true;
     specimen = 0;
     point = 0;
-    sdModule = (recorder.card()) ? true : false;
     display.home(sdModule, gpsModule);
   }
 }
