@@ -1,5 +1,5 @@
 // Modo debbuging
-#define LOGS 1
+#define LOGS 0
 
 // Declaraciones de la configuracion
 const long sensibility = 3; // Valor minimo de fuerza para tomar un registro [kg]

@@ -88,8 +88,8 @@ void setup(){
     Serial.println("[ERROR]\tFalla de comunicación con GPS");
     Serial.println("[MSJ]\tFecha y hora por defecto.");
   }
-  dtostrf(flat,2,6,lat_buff);
-  dtostrf(flon,2,6,lon_buff);
+  dtostrf(flat,8,0,lat_buff);
+  dtostrf(flon,8,0,lon_buff);
   recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
   recorder.showTime();
 
@@ -118,7 +118,7 @@ void loop(){
     if(close){
       Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
       close = false;
-      sprintf(lot_buff, "%d", lot);
+      sprintf(lot_buff, "%04d", lot);
       recorder.saveRegistry(9, lat_buff, lon_buff, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
     }
     flag = true;
@@ -138,11 +138,11 @@ void loop(){
       // Se punto de maxima fuerza
       if(specimen > strength)point = depth; 
       // Muestra de informacion por pantalla
-      dtostrf(strength,2,0,strength_buff);
-      sprintf(depth_buff, "%d", depth);
+      dtostrf(strength,4,0,strength_buff);
+      sprintf(depth_buff, "%04d", depth);
       display.showHeader(sdModule, gpsModule);
-      display.showMeasure(1, "F:", "[Kg]", strength_buff, false);
-      display.showMeasure(2, "D:", "[cm]", depth_buff, false);
+      display.showMeasure(1, "F:", strength_buff, "[Kg]", false);
+      display.showMeasure(2, "D:", depth_buff, "[cm]", false);
       // Carga de datos en memoria para calculos posteriores
       forceAnalyzer.preLoad(strength);
       if(!sdModule){
@@ -167,8 +167,8 @@ void loop(){
       update = token;
       //geo = connecting(4000);
       gpsModule = (connecting(4000)) ? true : false;
-      dtostrf(flat,2,6,lat_buff);
-      dtostrf(flon,2,6,lon_buff);
+      dtostrf(flat,8,0,lat_buff);
+      dtostrf(flon,8,0,lon_buff);
       sdModule = (recorder.card()) ? true : false;
       display.home(sdModule, gpsModule);
       recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
@@ -177,10 +177,10 @@ void loop(){
   if(flag){
     display.showMessage(" ", "Procesando...", " ");
     flag = false;
-    dtostrf(forceAnalyzer.maximum(),4,0,max_buff);
+    dtostrf(forceAnalyzer.maximum(),4,2,max_buff);
     dtostrf(forceAnalyzer.average(),4,2,average_buff);
-    sprintf(range_buff, "%d", top);
-    sprintf(point_buff, "%d", point);
+    sprintf(range_buff, "%04d", top);
+    sprintf(point_buff, "%04d", point);
     if(!sdModule){
       Serial.println("[ERROR]\tSD no reconocida");
       sdModule = false;
