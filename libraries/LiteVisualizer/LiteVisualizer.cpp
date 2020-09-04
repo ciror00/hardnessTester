@@ -37,9 +37,9 @@ void LiteVisualizer::_showSettings(bool _sd_status, bool _gps_status){
 }
 
 void LiteVisualizer::showHeader(bool sd_status, bool gps_status, bool clear){
-  if(clear)this->lcd.clear();
+  //if(clear)this->lcd.clear();
   byte file = 0;
-  this->lcd.clear();
+  //this->lcd.clear();
   // Mensaje de GPS por apntalla
   this->lcd.setCursor(0, file);
   this->lcd.print("                   ");
