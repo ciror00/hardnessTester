@@ -90,7 +90,7 @@ void setup(){
   }
   dtostrf(flat,2,2,lat_buff);
   dtostrf(flon,2,2,lon_buff);
-  recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
+  if(LOGS)recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
   recorder.showTime();
 
 	// Se agregan los titulos de archivos, que viene despues de los "Fecha" y "Hora" (titulos por defecto)
@@ -134,7 +134,13 @@ void loop(){
       Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
       // Medicion de distancia
       depth = tapeMeasure.makeAWell(15, tolerance);
-      Serial.print("|\tPROFUNDIDAD: ");Serial.println(depth);
+      Serial.print("|\tPROFUNDIDAD: ");Serial.print(depth);
+      if(depth <= zeroHorizon){
+        depth = 0;
+        Serial.println("(=0)");
+      }else{
+        Serial.println("");
+      }
       // Se punto de maxima fuerza
       if(specimen > strength)point = depth; 
       // Muestra de informacion por pantalla
@@ -171,7 +177,7 @@ void loop(){
       dtostrf(flon,2,2,lon_buff);
       sdModule = (recorder.card()) ? true : false;
       display.home(sdModule, gpsModule);
-      recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
+      if(LOGS)recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
     }
   }
   if(flag){
