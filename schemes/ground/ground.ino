@@ -139,8 +139,8 @@ void loop(){
       // Muestra de informacion por pantalla
       dtostrf(strength,2,0,strength_buff);
       sprintf(depth_buff, "%d", depth);
-      //display.showHeader(sdModule, gpsModule);
-      display.showMeasure(1, "F:", "[Kg]", strength_buff);
+      display.showHeader(sdModule, gpsModule);
+      display.showMeasure(1, "F:", "[Kg]", strength_buff, false);
       display.showMeasure(2, "D:", "[cm]", depth_buff, false);
       // Carga de datos en memoria para calculos posteriores
       forceAnalyzer.preLoad(strength);
