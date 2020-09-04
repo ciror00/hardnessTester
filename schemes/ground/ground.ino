@@ -212,6 +212,7 @@ void loop(){
     close = true;
     specimen = 0;
     point = 0;
+    //gpsModule = (connecting(4000)) ? true : false;
     display.home(sdModule, gpsModule);
   }
 }
