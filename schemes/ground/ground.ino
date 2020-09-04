@@ -126,6 +126,10 @@ void loop(){
     while(measure.strength() > sensibility){ // Hace un bucle, mientras se ejerza mas fuerza que la minima
       // Medicion de fuerza
       strength = measure.strengthAverage(stabilizer);
+      if(strength == 0){
+      flag = false;
+      break;
+      }
       Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
       // Medicion de distancia
       depth = tapeMeasure.makeAWell(15, tolerance);
