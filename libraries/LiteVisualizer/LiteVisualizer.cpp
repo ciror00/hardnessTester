@@ -131,12 +131,12 @@ void LiteVisualizer::summary(String averange, String max, String distance, Strin
   byte file[] = {2,3};
   String fileOne = "Fp: " + averange + "Fm:" + max;
   String fileTwo = "Dm: " + distance + "   Dfm:" + regiter;
-  this->lcd.scrollDisplayLeft(); 
-  this->lcd.scrollDisplayLeft(); 
+  //this->lcd.scrollDisplayLeft(); 
+  //this->lcd.scrollDisplayLeft(); 
   this->lcd.setCursor(column[0], file[0]);
   this->lcd.print(fileOne);
-  this->lcd.scrollDisplayLeft(); 
-  this->lcd.scrollDisplayLeft(); 
+  //this->lcd.scrollDisplayLeft(); 
+  //this->lcd.scrollDisplayLeft(); 
   this->lcd.setCursor(column[0], file[1]);
   this->lcd.print(fileTwo);
 }
