@@ -88,8 +88,8 @@ void setup(){
     Serial.println("[ERROR]\tFalla de comunicación con GPS");
     Serial.println("[MSJ]\tFecha y hora por defecto.");
   }
-  dtostrf(flat,8,0,lat_buff);
-  dtostrf(flon,8,0,lon_buff);
+  dtostrf(flat,2,2,lat_buff);
+  dtostrf(flon,2,2,lon_buff);
   recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
   recorder.showTime();
 
@@ -145,7 +145,7 @@ void loop(){
       display.showMeasure(2, "D:", depth_buff, "[cm]", false);
       // Carga de datos en memoria para calculos posteriores
       forceAnalyzer.preLoad(strength);
-      if(!sdModule){
+      if(!recorder.card()){
         Serial.println("[ERROR]\tSD mal configurada");
         sdModule = false;
       }else{
@@ -167,8 +167,8 @@ void loop(){
       update = token;
       //geo = connecting(4000);
       gpsModule = (connecting(4000)) ? true : false;
-      dtostrf(flat,8,0,lat_buff);
-      dtostrf(flon,8,0,lon_buff);
+      dtostrf(flat,2,2,lat_buff);
+      dtostrf(flon,2,2,lon_buff);
       sdModule = (recorder.card()) ? true : false;
       display.home(sdModule, gpsModule);
       recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
@@ -181,13 +181,13 @@ void loop(){
     dtostrf(forceAnalyzer.average(),2,2,average_buff);
     sprintf(range_buff, "%02d", top);
     sprintf(point_buff, "%02d", point);
-    if(!sdModule){
+    if(!recorder.card()){
       Serial.println("[ERROR]\tSD no reconocida");
       sdModule = false;
     }else{
       Serial.println("[MJS]\tResumen guardado en SD");
     // {"Latitud", "Longitud", "Medicion", "Fuerza [KG]", "Distancia [CM]", "Distancia total", "Fuerza Promedio", "Fuerza Maxima", "Distancia Fuerza Maxima"};
-      recorder.saveRegistryTimeless(9," ", " ", " ", " ", " ", range_buff, average_buff, max_buff, point_buff);
+      recorder.saveRegistryTimeless(9," ", " ", " ", " ", " ", range_buff, average_buff, point_buff, max_buff);
       sdModule = true;
     }
     Serial.println("[MJS]\tResumen de datos calculados");
