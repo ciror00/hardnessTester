@@ -20,7 +20,7 @@ int TapeMeasure::makeAWell(int iteration, int tolerance){
 	range = this->_getSize(iteration);
 	result = this->spear - range;
 	shifting = result - this->dig;
-	if(result >= this->dig && shifting > tolerance){
+	if(result > this->dig && shifting > tolerance){
 		this->dig = result;
 	}
 	return this->dig;
