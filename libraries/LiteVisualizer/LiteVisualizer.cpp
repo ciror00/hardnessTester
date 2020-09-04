@@ -127,16 +127,18 @@ void LiteVisualizer::detail(bool sd_status, bool gps_status, String number){
 }
 
 void LiteVisualizer::summary(String averange, String max, String distance, String regiter){
-  byte column[] = {0};
+  byte column[] = {0, 10};
   byte file[] = {2,3};
-  String fileOne = "Fp: " + averange + "Fm:" + max;
-  String fileTwo = "Dm: " + distance + "    Dfm:" + regiter;
-  //this->lcd.scrollDisplayLeft(); 
-  //this->lcd.scrollDisplayLeft(); 
+  String Fp = "Fp: " + averange;
+  String Fm = "Fm: " + max;
+  String Dm = "Dm:" + distance;
+  String Dfm = "Dfm: " + regiter;
   this->lcd.setCursor(column[0], file[0]);
-  this->lcd.print(fileOne);
-  //this->lcd.scrollDisplayLeft(); 
-  //this->lcd.scrollDisplayLeft(); 
+  this->lcd.print(Fp);
+  this->lcd.setCursor(column[1], file[0]);
+  this->lcd.print(Fm);
   this->lcd.setCursor(column[0], file[1]);
-  this->lcd.print(fileTwo);
+  this->lcd.print(Dm);
+  this->lcd.setCursor(column[1], file[1]);
+  this->lcd.print(Dfm);
 }
