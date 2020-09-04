@@ -213,7 +213,7 @@ void loop(){
     delay(5000);
     lot = counter();
     close = true;
-    zero = false;
+    //zero = false;
     specimen = 0;
     point = 0;
     //gpsModule = (connecting(4000)) ? true : false;
