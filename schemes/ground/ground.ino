@@ -68,8 +68,8 @@ void setup(){
 	}
 
   Serial.println("[MSJ]\tConfiguranndo GPS");
-  geo = connecting(4000);
-  if(geo){
+  //geo = connecting(4000);
+  if(connecting(4000)){
     gpsModule = true;
     gps.stats(&chars, &sentences, &failed);
     Serial.print("> Estaditicas: \n> char: "); Serial.print(chars); Serial.print("| sentences: ");
@@ -139,7 +139,7 @@ void loop(){
       if(specimen > strength)point = depth; 
       // Muestra de informacion por pantalla
       dtostrf(strength,4,0,strength_buff);
-      sprintf(depth_buff, "%04d", depth);
+      sprintf(depth_buff, "%03d", depth);
       display.showHeader(sdModule, gpsModule);
       display.showMeasure(1, "F:", strength_buff, "[Kg]", false);
       display.showMeasure(2, "D:", depth_buff, "[cm]", false);
@@ -179,8 +179,8 @@ void loop(){
     flag = false;
     dtostrf(forceAnalyzer.maximum(),4,2,max_buff);
     dtostrf(forceAnalyzer.average(),4,2,average_buff);
-    sprintf(range_buff, "%04d", top);
-    sprintf(point_buff, "%04d", point);
+    sprintf(range_buff, "%03d", top);
+    sprintf(point_buff, "%03d", point);
     if(!sdModule){
       Serial.println("[ERROR]\tSD no reconocida");
       sdModule = false;
@@ -218,7 +218,6 @@ bool minimumForce(int threshold){
   int t = 0;
   float s = measure.strength();
   while(s >= threshold && t < stabilizer){
-    //display.showMessage("", "Estabilizando...", " ");
     t++;
     s = measure.strength();
     Serial.print("> SENSOR: ");Serial.print(s);Serial.print("\t| MUESTRAS: ");Serial.println(t);
