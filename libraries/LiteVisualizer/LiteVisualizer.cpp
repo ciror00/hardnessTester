@@ -16,22 +16,18 @@ void LiteVisualizer::_showSettings(bool _sd_status, bool _gps_status){
   this->lcd.setCursor(0, file);
   if(_gps_status){
     this->lcd.write(0);
-    //this->lcd.scrollDisplayRight();
     this->lcd.print("GPS.Ok");
   }else{
     this->lcd.write(0);
-    //this->lcd.scrollDisplayRight();
     this->lcd.print("NO.GPS");
   }
   this->lcd.setCursor(8, file);
   // Mensaje de SD por pantalla
   if(_sd_status){
     this->lcd.write(1);
-    //this->lcd.scrollDisplayRight();
     this->lcd.print("SD.OK");
   }else{
     this->lcd.write(1);
-    //this->lcd.scrollDisplayRight();
     this->lcd.print("NO.SD");
   }
 }
@@ -40,27 +36,6 @@ void LiteVisualizer::showHeader(bool sd_status, bool gps_status){
   this->lcd.setCursor(0, 0);
   this->lcd.print("                   ");
   this->_showSettings(sd_status, gps_status);
-  //byte file = 0;
-  // Mensaje de GPS por apntalla
-  //this->lcd.setCursor(0, file);
-  //this->lcd.print("                   ");
-  //this->lcd.setCursor(0, file);
-  //if(gps_status){
-  //  this->lcd.write(0);
-  //  this->lcd.print("GPS.Ok");
-  //}else{
-  //  this->lcd.write(0);
-  //  this->lcd.print("NO.GPS");
-  //}
-  //this->lcd.setCursor(8, file);
-  // Mensaje de SD por pantalla
-  //if(sd_status){
-  //  this->lcd.write(1);
-  //  this->lcd.print("SD.OK");
-  //}else{
-  //  this->lcd.write(1);
-  //  this->lcd.print("NO.SD");
-  //}
 }
 
 bool LiteVisualizer::switcher(bool n){
@@ -101,10 +76,10 @@ void LiteVisualizer::reset(){
 void LiteVisualizer::home(bool sd_status, bool gps_status){
   byte file = 3;
   this->_showSettings(sd_status, gps_status);
-  this->showMessage(" ", "Listo para Medir", " ", false);
+  this->showMessage(" ", "  Listo para Medir", " ", false);
   this->lcd.setCursor(1, file);
   this->lcd.write(3);
-  this->lcd.setCursor(14, file);
+  this->lcd.setCursor(18, file);
   this->lcd.write(3);
 }
 
@@ -127,10 +102,10 @@ void LiteVisualizer::detail(bool sd_status, bool gps_status, String number){
 void LiteVisualizer::summary(String averange, String max, String distance, String regiter){
   byte column[] = {0, 10};
   byte file[] = {2,3};
-  String Fp = "Fp:" + averange;
-  String Fm = "Fm:" + max;
+  String Fp = "Fp: " + averange;
+  String Fm = "Fm: " + max;
   String Dm = "Dm: " + distance;
-  String Dfm = "Dfm: " + regiter;
+  String Dfm = "Dfm:" + regiter;
   this->lcd.setCursor(column[0], file[0]);
   this->lcd.print(Fp);
   this->lcd.setCursor(column[1], file[0]);

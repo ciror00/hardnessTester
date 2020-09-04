@@ -138,8 +138,8 @@ void loop(){
       // Se punto de maxima fuerza
       if(specimen > strength)point = depth; 
       // Muestra de informacion por pantalla
-      dtostrf(strength,4,0,strength_buff);
-      sprintf(depth_buff, "%03d", depth);
+      dtostrf(strength,2,2,strength_buff);
+      sprintf(depth_buff, "%04d", depth);
       display.showHeader(sdModule, gpsModule);
       display.showMeasure(1, "F:", strength_buff, "[Kg]", false);
       display.showMeasure(2, "D:", depth_buff, "[cm]", false);
@@ -177,10 +177,10 @@ void loop(){
   if(flag){
     display.showMessage(" ", "Procesando...", " ");
     flag = false;
-    dtostrf(forceAnalyzer.maximum(),4,2,max_buff);
-    dtostrf(forceAnalyzer.average(),4,2,average_buff);
-    sprintf(range_buff, "%03d", top);
-    sprintf(point_buff, "%03d", point);
+    dtostrf(forceAnalyzer.maximum(),2,2,max_buff);
+    dtostrf(forceAnalyzer.average(),2,2,average_buff);
+    sprintf(range_buff, "%02d", top);
+    sprintf(point_buff, "%02d", point);
     if(!sdModule){
       Serial.println("[ERROR]\tSD no reconocida");
       sdModule = false;
