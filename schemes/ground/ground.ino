@@ -193,7 +193,7 @@ void loop(){
     }else{
       Serial.println("[MJS]\tResumen guardado en SD");
     // {"Latitud", "Longitud", "Medicion", "Fuerza [KG]", "Distancia [CM]", "Distancia total", "Fuerza Promedio", "Fuerza Maxima", "Distancia Fuerza Maxima"};
-      recorder.saveRegistryTimeless(9," ", " ", " ", " ", " ", range_buff, average_buff, point_buff, max_buff);
+      recorder.saveRegistryTimeless(9," ", " ", " ", " ", " ", range_buff, average_buff, max_buff, point_buff);
       sdModule = true;
     }
     Serial.println("[MJS]\tResumen de datos calculados");
