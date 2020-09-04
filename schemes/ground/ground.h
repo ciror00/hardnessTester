@@ -10,7 +10,7 @@
 
 #include "settings.h"
 
-#define FIRMWARE 0.832
+#define FIRMWARE 0.833
 
 #define SCK_CELL A12
 #define DT_CELL A11
@@ -40,6 +40,7 @@ bool headers = false;
 bool close = false;
 bool geo = false;
 bool card = false;
+bool zero = false;
 
 byte memorySize = 64;
 byte memoryLocation[] = {0, memorySize/2};

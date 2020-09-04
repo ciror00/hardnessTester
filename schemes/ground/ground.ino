@@ -135,11 +135,12 @@ void loop(){
       // Medicion de distancia
       depth = tapeMeasure.makeAWell(15, tolerance);
       Serial.print("|\tPROFUNDIDAD: ");Serial.print(depth);
-      if(depth <= zeroHorizon){
+      if(depth <= zeroHorizon && !zero){
         depth = 0;
-        Serial.println("(=0)");
+        Serial.println("( = 0 )");
       }else{
         Serial.println("");
+        zero = true;
       }
       // Se punto de maxima fuerza
       if(specimen > strength)point = depth; 
@@ -210,6 +211,7 @@ void loop(){
     delay(5000);
     lot = counter();
     close = true;
+    zero = false;
     specimen = 0;
     point = 0;
     //gpsModule = (connecting(4000)) ? true : false;
