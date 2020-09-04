@@ -15,7 +15,7 @@ class LiteVisualizer{
     void begin();
     bool switcher(bool n);
     void showMessage( String header, String text, String footer, bool clear = true);
-    void showMeasure(int line, String label, String value, String unit, bool clear = true);
+    void showMeasure(int line, String value, String label, String unit, bool clear = true);
     void showHeader(bool sd_status, bool gps_status, bool clear = true);
     void home(bool sd_status, bool gps_status);
     void detail(bool sd_status, bool gps_status, String number);

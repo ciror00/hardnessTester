@@ -80,13 +80,13 @@ void LiteVisualizer::showMessage(String header, String text, String footer, bool
   this->lcd.print(footer);
 }
 
-void LiteVisualizer::showMeasure(int line, String label, String value, String unit, bool clear){
+void LiteVisualizer::showMeasure(int line, String value, String label, String unit, bool clear){
   if(clear)this->lcd.clear();
   if(line == 1 || line == 2){
     this->lcd.setCursor(1, line);
   }
-  this->lcd.print(label);
   this->lcd.print(value);
+  this->lcd.print(label);
   this->lcd.setCursor(10, line);
   this->lcd.print(unit);
 }
@@ -111,12 +111,12 @@ void LiteVisualizer::detail(bool sd_status, bool gps_status, String number){
   this->_showSettings(sd_status, gps_status);
   this->lcd.setCursor(0, file);
   if(sd_status){
-    this->lcd.print("Guardado SD No");
-    this->lcd.setCursor(15, file);
+    this->lcd.print("Guardado OK.No");
+    this->lcd.setCursor(14, file);
     this->lcd.print(number);
   }else{
-    this->lcd.print("No guardado No");
-    this->lcd.setCursor(15, file);
+    this->lcd.print("No guardado.No");
+    this->lcd.setCursor(14, file);
     this->lcd.print(number);
   }
 }
