@@ -13,7 +13,7 @@ void LiteVisualizer::_showSettings(bool _sd_status, bool _gps_status){
   byte file = 0;
   this->lcd.clear();
   // Mensaje de GPS por apntalla
-  this->lcd.setCursor(0, file);
+  this->lcd.setCursor(2, file);
   if(_gps_status){
     this->lcd.write(0);
     this->lcd.print("GPS.Ok");
@@ -21,7 +21,7 @@ void LiteVisualizer::_showSettings(bool _sd_status, bool _gps_status){
     this->lcd.write(0);
     this->lcd.print("NO.GPS");
   }
-  this->lcd.setCursor(8, file);
+  this->lcd.setCursor(10, file);
   // Mensaje de SD por pantalla
   if(_sd_status){
     this->lcd.write(1);
