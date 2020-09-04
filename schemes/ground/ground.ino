@@ -135,8 +135,8 @@ void loop(){
       // Muestra de informacion por pantalla
       dtostrf(strength,2,0,strength_buff);
       sprintf(depth_buff, "%d", depth);
-      display.showHeader(sdModule, gpsModule);
-      display.showMeasure(1, "F:", "[Kg]", strength_buff, false);
+      //display.showHeader(sdModule, gpsModule);
+      display.showMeasure(1, "F:", "[Kg]", strength_buff);
       display.showMeasure(2, "D:", "[cm]", depth_buff, false);
       // Carga de datos en memoria para calculos posteriores
       forceAnalyzer.preLoad(strength);
@@ -168,7 +168,7 @@ void loop(){
       recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
     }
   }
-sdModule = (recorder.card()) ? true : false;
+//sdModule = (recorder.card()) ? true : false;
   if(flag){
     display.showMessage(" ", "Procesando...", " ");
     flag = false;
