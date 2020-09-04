@@ -135,6 +135,7 @@ void loop(){
       // Medicion de distancia
       depth = tapeMeasure.makeAWell(15, tolerance);
       Serial.print("|\tPROFUNDIDAD: ");Serial.print(depth);
+      /*
       if(depth <= zeroHorizon && !zero){
         depth = 0;
         Serial.println("( = 0 )");
@@ -142,6 +143,7 @@ void loop(){
         Serial.println("");
         zero = true;
       }
+      */
       // Se punto de maxima fuerza
       if(specimen > strength)point = depth; 
       // Muestra de informacion por pantalla
