@@ -73,7 +73,7 @@ void setup(){
     gps.stats(&chars, &sentences, &failed);
     Serial.print("> Estaditicas: \n> char: "); Serial.print(chars); Serial.print("| sentences: ");
     Serial.print(sentences); Serial.print(" failed: "); Serial.println(failed);
-    Serial.print(">Lat: "); Serial.print(flat, 6);Serial.print("\t|Lon: "); Serial.println(flon, 6);
+    Serial.print(">Lat: "); Serial.print(lat);Serial.print("\t|Lon: "); Serial.println(lon);
     Serial.print(">Fecha: "); Serial.print(year); Serial.print(month); Serial.println(day);
     Serial.print(">Hora: "); Serial.print(hour); Serial.print(minute); Serial.println(second);
     if(year!=0){
@@ -87,8 +87,10 @@ void setup(){
     Serial.println("[ERROR]\tFalla de comunicación con GPS");
     Serial.println("[MSJ]\tFecha y hora por defecto.");
   }
-  dtostrf(lat,2,6,lat_buff);
-  dtostrf(lon,2,6,lon_buff);
+  //dtostrf(lat,2,6,lat_buff);
+  //dtostrf(lon,2,6,lon_buff);
+  sprintf(lat_buff, "%ld", lat);
+  sprintf(lon_buff, "%ld", lon);
 
   if(LOGS)recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
   recorder.showTime();
@@ -168,8 +170,10 @@ void loop(){
       Serial.println("[MSJ]\tActualizando GPS...");
       update = token;
       gpsModule = (connecting(4000)) ? true : false;
-      dtostrf(lat,2,6,lat_buff);
-      dtostrf(lon,2,6,lon_buff);
+      //dtostrf(lat,2,6,lat_buff);
+      //dtostrf(lon,2,6,lon_buff);
+      sprintf(lat_buff, "%ld", lat);
+      sprintf(lon_buff, "%ld", lon);
       sdModule = (recorder.card()) ? true : false;
       display.home(sdModule, gpsModule);
       if(LOGS)recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
@@ -294,11 +298,8 @@ bool connecting(int wait){
     }
   }
   if(satelite){
-    gps.f_get_position(&flat, &flon, &age); // Obtengo posicion
-    //lat = 0.0000001;
-    lat = (flat, 6);
-    //lon = 0.0000001;
-    lon = (flon, 6);
+    //gps.f_get_position(&flat, &flon, &age); // Obtengo posicion
+    gps.get_position(&lat, &lon, &age);
     gps.crack_datetime(&year, &month, &day, \
       &hour, &minute, &second, &hundredths, &age); // Obtengo fecha y hora
     Serial.println("... OK");
