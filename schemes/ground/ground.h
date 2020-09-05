@@ -10,7 +10,7 @@
 
 #include "settings.h"
 
-#define FIRMWARE 0.854
+#define FIRMWARE 0.86
 
 #define SCK_CELL A12
 #define DT_CELL A11
@@ -25,7 +25,7 @@ SoftwareSerial serial_gps(TXD, RXD);
 TinyGPS gps;
 
 // Declaraciones internas del programa
-//float flat, flon;
+float flat, flon;
 long lat, lon;
 unsigned long age, date, time, chars;
 unsigned short sentences, failed;
