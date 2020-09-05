@@ -301,7 +301,7 @@ bool connecting(int wait){
     //gps.f_get_position(&flat, &flon, &age); // Obtengo posicion
     gps.get_position(&lat, &lon, &age);
 flat = lat/100000;
-flor = lot/10000;
+flon = lon/100000;
     gps.crack_datetime(&year, &month, &day, \
       &hour, &minute, &second, &hundredths, &age); // Obtengo fecha y hora
     Serial.println("... OK");
