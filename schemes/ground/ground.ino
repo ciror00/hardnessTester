@@ -295,10 +295,10 @@ bool connecting(int wait){
   }
   if(satelite){
     gps.f_get_position(&flat, &flon, &age); // Obtengo posicion
-    lat = 0.0000001;
-    lat += flat;
-    lon = 0.0000001;
-    lon += flon;
+    //lat = 0.0000001;
+    lat = (flat, 6);
+    //lon = 0.0000001;
+    lon = (flon, 6);
     gps.crack_datetime(&year, &month, &day, \
       &hour, &minute, &second, &hundredths, &age); // Obtengo fecha y hora
     Serial.println("... OK");
