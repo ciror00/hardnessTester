@@ -9,5 +9,4 @@ const float scale = 62000; // Escala para configuracion por defecto
 
 // Tiempos parametrizables
 const int waitConfiguration = 7000; // Tiempo de espera para entrar y salir de modo configuracion
-const unsigned long updateTime = 1; // Lapsos de tiempo para actualizar el GPS [minutos]
-//const unsigned long updateSD = 1; // Lapsos de tiempo para actualizar la SD [minutos]
+const unsigned long updateTime = 5; // Lapsos de tiempo para actualizar el GPS [minutos]

@@ -10,7 +10,7 @@
 
 #include "settings.h"
 
-#define FIRMWARE 0.861
+#define FIRMWARE 0.87
 
 #define SCK_CELL A12
 #define DT_CELL A11
@@ -38,7 +38,6 @@ bool headers = false;
 bool close = false;
 bool geo = false;
 bool card = false;
-//bool zero = false;
 
 byte memorySize = 64;
 byte memoryLocation[] = {0, memorySize/2};
@@ -58,8 +57,8 @@ bool sdModule;
 float disposable, reducible;
 float maximum, minimum;
 
-long token = 0;
-long update = 10;
+unsigned long token = 0;
+unsigned long update = 0;
 
 char *titles[] = {"Latitud", "Longitud", "Medicion", "Fuerza [KG]", "Distancia [CM]", "Distancia total", "Fuerza Promedio", "Fuerza Maxima", "Distancia Fuerza Maxima"};
 

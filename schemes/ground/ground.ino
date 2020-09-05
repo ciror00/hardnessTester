@@ -89,8 +89,6 @@ void setup(){
   }
   dtostrf(flat,2,6,lat_buff);
   dtostrf(flon,2,6,lon_buff);
-  //sprintf(lat_buff, "%ld", lat);
-  //sprintf(lon_buff, "%ld", lon);
 
   if(LOGS)recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
   recorder.showTime();
@@ -112,6 +110,7 @@ void setup(){
   Serial.println("[MSJ]\tConfiguracion terminada. Listo para medir.");
   display.home(sdModule, gpsModule);
   delay(2500);
+  token = witness(updateTime);
 }
 
 void loop(){
@@ -164,16 +163,14 @@ void loop(){
       depth = 0;
     }
   }else{
-    token = witness(updateTime*1000*60); // 1K milisegundos = 1 segundo * 60 = 1 minutos
-    if(token > update){
+    update = millis();
+    if(token < update){
+      token = witness(updateTime);
       display.showMessage(" ", "Sincronizando", " ");
       Serial.println("[MSJ]\tActualizando GPS...");
-      update = token;
       gpsModule = (connecting(4000)) ? true : false;
       dtostrf(flat,2,6,lat_buff);
       dtostrf(flon,2,6,lon_buff);
-      //sprintf(lat_buff, "%ld", lat);
-      //sprintf(lon_buff, "%ld", lon);
       sdModule = (recorder.card()) ? true : false;
       display.home(sdModule, gpsModule);
       if(LOGS)recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
@@ -269,11 +266,8 @@ void waitForMachine(int period){
 	};
 }
 
-long witness(long tht){
-  if(tht == 0)return 0;
-  unsigned long time_now = millis();
-  long ring = round(time_now / tht);
-  return ring;
+unsigned long witness(long tht){
+  return (millis() + tht * 1000 * 60);
 }
 
 unsigned int counter(){
@@ -300,8 +294,8 @@ bool connecting(int wait){
   if(satelite){
     //gps.f_get_position(&flat, &flon, &age); // Obtengo posicion
     gps.get_position(&lat, &lon, &age);
-flat = lat/100000;
-flon = lon/100000;
+    flat = lat/100000.00;
+    flon = lon/100000.00;
     gps.crack_datetime(&year, &month, &day, \
       &hour, &minute, &second, &hundredths, &age); // Obtengo fecha y hora
     Serial.println("... OK");
