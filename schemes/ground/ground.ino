@@ -89,8 +89,6 @@ void setup(){
   }
   //dtostrf(flat,2,6,lat_buff);
   //dtostrf(flon,2,6,lon_buff);
-  dtostrf(lat,2,6,lat_buff);
-  dtostrf(lon,2,6,lon_buff);
 
   if(LOGS)recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
   recorder.showTime();
@@ -99,7 +97,7 @@ void setup(){
   // {"Latitud", "Longitud", "Medicion", "Fuerza [KG]", "Distancia [CM]", "Distancia total", "Fuerza Promedio", "Fuerza Maxima", "Distancia Fuerza Maxima"};
   headers = recorder.setTitles(9, titles[0], titles[1], titles[2], titles[3], titles[4], titles[5], titles[6], titles[7], titles[8]);
   sprintf(lot_buff, "%d", lot);
- 	recorder.saveRegistry(9, lat_buff, lon_buff, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
+ 	recorder.saveRegistry(9, flat, flon, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
   // Se configurar los pines usando métodos de Arduino
   Serial.println("[MSJ]\tMidiendo jabalina.");
   spear = tapeMeasure.calibrateLance(15);
@@ -121,7 +119,7 @@ void loop(){
       Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
       close = false;
       sprintf(lot_buff, "%04d", lot);
-      recorder.saveRegistry(9, lat_buff, lon_buff, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
+      recorder.saveRegistry(9, flat, flon, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
     }
     flag = true;
     display.reset();
@@ -180,8 +178,6 @@ void loop(){
       gpsModule = (connecting(4000)) ? true : false;
       //dtostrf(flat,2,6,lat_buff);
       //dtostrf(flon,2,6,lon_buff);
-      dtostrf(lat,2,6,lat_buff);
-      dtostrf(lon,2,6,lon_buff);
       sdModule = (recorder.card()) ? true : false;
       display.home(sdModule, gpsModule);
       if(LOGS)recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
@@ -309,11 +305,11 @@ bool connecting(int wait){
   }
   if(satelite){
     gps.f_get_position(&flat, &flon, &age); // Obtengo posicion
+    lat = flat;
+    lon = flon;
     gps.crack_datetime(&year, &month, &day, \
       &hour, &minute, &second, &hundredths, &age); // Obtengo fecha y hora
     Serial.println("... OK");
-    lat = flat;
-    lon = flon;
     return true;
   }else{
     Serial.println("... TIME OUT");
