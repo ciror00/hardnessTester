@@ -87,8 +87,8 @@ void setup(){
     Serial.println("[ERROR]\tFalla de comunicación con GPS");
     Serial.println("[MSJ]\tFecha y hora por defecto.");
   }
-  dtostrf(flat,2,6,lat_buff);
-  dtostrf(flon,2,6,lon_buff);
+  dtostrf(lat,2,6,lat_buff);
+  dtostrf(lon,2,6,lon_buff);
 
   if(LOGS)recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
   recorder.showTime();
@@ -135,17 +135,11 @@ void loop(){
       // Medicion de distancia
       depth = tapeMeasure.makeAWell(15, tolerance);
       Serial.print("|\tPROFUNDIDAD: ");Serial.print(depth);
-      /*
-      if(depth <= zeroHorizon && !zero){
-        depth = 0;
-        Serial.println("( = 0 )");
-      }else{
-        Serial.println("");
-        zero = true;
+      // Punto de maxima fuerza
+      if(specimen <= strength){
+        specimen = strength;
+        point = depth; 
       }
-      */
-      // Se punto de maxima fuerza
-      if(specimen > strength)point = depth; 
       // Muestra de informacion por pantalla
       dtostrf(strength,2,2,strength_buff);
       sprintf(depth_buff, "%04d", depth);
@@ -163,7 +157,6 @@ void loop(){
       // {"Latitud", "Longitud", "Medicion", "Fuerza [KG]", "Distancia [CM]", "Distancia total", "Fuerza Promedio", "Fuerza Maxima", "Distancia Fuerza Maxima"};
         recorder.saveRegistryTimeless(9, " ", " ", " ", strength_buff, depth_buff, " ", " ", " ", " ");
       }
-      specimen = strength;
       strength = 0;
       top = depth;
       depth = 0;
@@ -174,10 +167,9 @@ void loop(){
       display.showMessage(" ", "Sincronizando", " ");
       Serial.println("[MSJ]\tActualizando GPS...");
       update = token;
-      //geo = connecting(4000);
       gpsModule = (connecting(4000)) ? true : false;
-      //dtostrf(flat,2,6,lat_buff);
-      //dtostrf(flon,2,6,lon_buff);
+      dtostrf(lat,2,6,lat_buff);
+      dtostrf(lon,2,6,lon_buff);
       sdModule = (recorder.card()) ? true : false;
       display.home(sdModule, gpsModule);
       if(LOGS)recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
@@ -213,10 +205,8 @@ void loop(){
     delay(5000);
     lot = counter();
     close = true;
-    //zero = false;
     specimen = 0;
     point = 0;
-    //gpsModule = (connecting(4000)) ? true : false;
     display.home(sdModule, gpsModule);
   }
 }
@@ -305,8 +295,10 @@ bool connecting(int wait){
   }
   if(satelite){
     gps.f_get_position(&flat, &flon, &age); // Obtengo posicion
-    lat = flat;
-    lon = flon;
+    lat = 0.0000001;
+    lat += flat;
+    lon = 0.0000001;
+    lon += flon;
     gps.crack_datetime(&year, &month, &day, \
       &hour, &minute, &second, &hundredths, &age); // Obtengo fecha y hora
     Serial.println("... OK");
