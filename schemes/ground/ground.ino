@@ -68,13 +68,12 @@ void setup(){
 	}
 
   Serial.println("[MSJ]\tConfiguranndo GPS");
-  //geo = connecting(4000);
   if(connecting(4000)){
     gpsModule = true;
     gps.stats(&chars, &sentences, &failed);
     Serial.print("> Estaditicas: \n> char: "); Serial.print(chars); Serial.print("| sentences: ");
     Serial.print(sentences); Serial.print(" failed: "); Serial.println(failed);
-    Serial.print(">Lat: "); Serial.print(flat);Serial.print("\t|Lon: "); Serial.println(flon);
+    Serial.print(">Lat: "); Serial.print(flat, 6);Serial.print("\t|Lon: "); Serial.println(flon, 6);
     Serial.print(">Fecha: "); Serial.print(year); Serial.print(month); Serial.println(day);
     Serial.print(">Hora: "); Serial.print(hour); Serial.print(minute); Serial.println(second);
     if(year!=0){
@@ -88,8 +87,11 @@ void setup(){
     Serial.println("[ERROR]\tFalla de comunicación con GPS");
     Serial.println("[MSJ]\tFecha y hora por defecto.");
   }
-  dtostrf(flat,2,2,lat_buff);
-  dtostrf(flon,2,2,lon_buff);
+  //dtostrf(flat,2,6,lat_buff);
+  //dtostrf(flon,2,6,lon_buff);
+  dtostrf(lat,2,6,lat_buff);
+  dtostrf(lon,2,6,lon_buff);
+
   if(LOGS)recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
   recorder.showTime();
 
@@ -176,8 +178,10 @@ void loop(){
       update = token;
       //geo = connecting(4000);
       gpsModule = (connecting(4000)) ? true : false;
-      dtostrf(flat,2,2,lat_buff);
-      dtostrf(flon,2,2,lon_buff);
+      //dtostrf(flat,2,6,lat_buff);
+      //dtostrf(flon,2,6,lon_buff);
+      dtostrf(lat,2,6,lat_buff);
+      dtostrf(lon,2,6,lon_buff);
       sdModule = (recorder.card()) ? true : false;
       display.home(sdModule, gpsModule);
       if(LOGS)recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
@@ -308,6 +312,8 @@ bool connecting(int wait){
     gps.crack_datetime(&year, &month, &day, \
       &hour, &minute, &second, &hundredths, &age); // Obtengo fecha y hora
     Serial.println("... OK");
+    lat = flat;
+    lon = flon;
     return true;
   }else{
     Serial.println("... TIME OUT");
