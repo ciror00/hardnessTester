@@ -88,8 +88,6 @@ void setup(){
     Serial.println("[ERROR]\tFalla de comunicación con GPS");
     Serial.println("[MSJ]\tFecha y hora por defecto.");
   }
-  //dtostrf(flat,fixedPoint[0],fixedPoint[1],lat_buff);
-  //dtostrf(flon,fixedPoint[0],fixedPoint[1],lon_buff);
   sprintf(lat_buff, "%ld", lat);
   sprintf(lon_buff, "%ld", lon);
 
@@ -119,15 +117,21 @@ void setup(){
 void loop(){
   if(!headers)headers = recorder.setTitles(9, titles[0], titles[1], titles[2], titles[3], titles[4], titles[5], titles[6], titles[7], titles[8]);
   if(minimumForce(sensibility)){ // Primero descarta que no sea ruido de la lanza
-    if(close){
-      Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
-      close = false;
-      sprintf(lot_buff, "%04d", lot);
-      recorder.saveRegistry(9, lat_buff, lon_buff, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
-    }
+    //if(close){
+    //  Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
+    //  close = false;
+    //  sprintf(lot_buff, "%04d", lot);
+    //  recorder.saveRegistry(9, lat_buff, lon_buff, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
+    //}
     flag = true;
     display.reset();
     while(measure.strength() > sensibility){ // Hace un bucle, mientras se ejerza mas fuerza que la minima
+      if(close){
+        Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
+        close = false;
+        sprintf(lot_buff, "%04d", lot);
+        recorder.saveRegistry(9, lat_buff, lon_buff, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
+      }
       // Medicion de fuerza
       strength = measure.strengthAverage(stabilizer);
       if(strength == 0){ // filtro para evitar mediciones por histeresis
@@ -145,7 +149,7 @@ void loop(){
         point = depth; 
       }
       // Muestra de informacion por pantalla
-      dtostrf(strength,2,2,strength_buff);
+      dtostrf(strength,4,0,strength_buff);
       sprintf(depth_buff, "%04d", depth);
       display.showHeader(sdModule, gpsModule);
       display.showMeasure(1, "F:", strength_buff, "[Kg]", false);
@@ -172,8 +176,6 @@ void loop(){
       display.showMessage(" ", "Sincronizando", " ");
       Serial.println("[MSJ]\tActualizando GPS...");
       gpsModule = (connecting(4000)) ? true : false;
-      //dtostrf(flat,fixedPoint[0],fixedPoint[1],lat_buff);
-      //dtostrf(flon,fixedPoint[0],fixedPoint[1],lon_buff);
       sprintf(lat_buff, "%ld", lat);
       sprintf(lon_buff, "%ld", lon);
       Serial.print(">Timing: "); Serial.println(age);
@@ -298,10 +300,7 @@ bool connecting(int wait){
     }
   }
   if(satelite){
-    //gps.f_get_position(&flat, &flon, &age); // Obtengo posicion
     gps.get_position(&lat, &lon, &age);
-    //flat = lat/100000.00;
-    //flon = lon/100000.00;
     gps.crack_datetime(&year, &month, &day, \
       &hour, &minute, &second, &hundredths, &age); // Obtengo fecha y hora
     Serial.println("... OK");
