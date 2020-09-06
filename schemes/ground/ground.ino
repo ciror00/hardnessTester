@@ -117,21 +117,21 @@ void setup(){
 void loop(){
   if(!headers)headers = recorder.setTitles(9, titles[0], titles[1], titles[2], titles[3], titles[4], titles[5], titles[6], titles[7], titles[8]);
   if(minimumForce(sensibility)){ // Primero descarta que no sea ruido de la lanza
-    flag = true;
     display.reset();
     while(measure.strength() > sensibility){ // Hace un bucle, mientras se ejerza mas fuerza que la minima
-      if(close){
-        Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
-        close = false;
-        sprintf(lot_buff, "%04d", lot);
-        recorder.saveRegistry(9, lat_buff, lon_buff, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
-      }
       // Medicion de fuerza
       strength = measure.strengthAverage(stabilizer);
       if(strength == 0){ // filtro para evitar mediciones por histeresis
         flag = false;
         display.home(sdModule, gpsModule);
         break;
+      }
+      if(close){
+        Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
+        flag = true;
+        close = false;
+        sprintf(lot_buff, "%04d", lot);
+        recorder.saveRegistry(9, lat_buff, lon_buff, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
       }
       Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
       // Medicion de distancia
@@ -167,7 +167,7 @@ void loop(){
     update = millis();
     if(token < update){
       token = witness(updateTime);
-      display.showMessage(" ", "Sincronizando", " ");
+      display.showMessage(" ", " Actualizando...", " ");
       Serial.println("[MSJ]\tActualizando GPS...");
       gpsModule = (connecting(4000)) ? true : false;
       sprintf(lat_buff, "%ld", lat);
