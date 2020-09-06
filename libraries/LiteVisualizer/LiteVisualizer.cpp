@@ -58,6 +58,18 @@ void LiteVisualizer::showMessage(String header, String text, String footer, bool
   this->lcd.print(footer);
 }
 
+void LiteVisualizer::updateMessage(){
+  this->lcd.clear();
+  this->lcd.setCursor(0, 1);
+  this->lcd.print("");
+  this->lcd.setCursor(0, 2);
+  this->lcd.print("");
+  this->lcd.setCursor(0, 3);
+  this->lcd.print("");
+  this->lcd.write(0);
+  this->lcd.write(1);
+}
+
 void LiteVisualizer::showMeasure(int line, String value, String label, String unit, bool clear){
   if(clear)this->lcd.clear();
   if(line == 1 || line == 2){
