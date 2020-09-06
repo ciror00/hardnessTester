@@ -73,6 +73,7 @@ void setup(){
     gps.stats(&chars, &sentences, &failed);
     Serial.print("> Estaditicas: \n> char: "); Serial.print(chars); Serial.print("| sentences: ");
     Serial.print(sentences); Serial.print(" failed: "); Serial.println(failed);
+    Serial.print(">Antigüedad: "); Serial.println(age);
     Serial.print(">Lat: "); Serial.print(lat);Serial.print("\t|Lon: "); Serial.println(lon);
     Serial.print(">Fecha: "); Serial.print(year); Serial.print(month); Serial.println(day);
     Serial.print(">Hora: "); Serial.print(hour); Serial.print(minute); Serial.println(second);
@@ -87,8 +88,10 @@ void setup(){
     Serial.println("[ERROR]\tFalla de comunicación con GPS");
     Serial.println("[MSJ]\tFecha y hora por defecto.");
   }
-  dtostrf(flat,2,6,lat_buff);
-  dtostrf(flon,2,6,lon_buff);
+  //dtostrf(flat,fixedPoint[0],fixedPoint[1],lat_buff);
+  //dtostrf(flon,fixedPoint[0],fixedPoint[1],lon_buff);
+  sprintf(lat_buff, "%ld", lat);
+  sprintf(lon_buff, "%ld", lon);
 
   if(LOGS)recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
   recorder.showTime();
@@ -169,8 +172,11 @@ void loop(){
       display.showMessage(" ", "Sincronizando", " ");
       Serial.println("[MSJ]\tActualizando GPS...");
       gpsModule = (connecting(4000)) ? true : false;
-      dtostrf(flat,2,6,lat_buff);
-      dtostrf(flon,2,6,lon_buff);
+      //dtostrf(flat,fixedPoint[0],fixedPoint[1],lat_buff);
+      //dtostrf(flon,fixedPoint[0],fixedPoint[1],lon_buff);
+      sprintf(lat_buff, "%ld", lat);
+      sprintf(lon_buff, "%ld", lon);
+      Serial.print(">Timing: "); Serial.println(age);
       sdModule = (recorder.card()) ? true : false;
       display.home(sdModule, gpsModule);
       if(LOGS)recorder.logger(4, "LAT: " , lat_buff, "LON: ", lon_buff);
@@ -294,8 +300,8 @@ bool connecting(int wait){
   if(satelite){
     //gps.f_get_position(&flat, &flon, &age); // Obtengo posicion
     gps.get_position(&lat, &lon, &age);
-    flat = lat/100000.00;
-    flon = lon/100000.00;
+    //flat = lat/100000.00;
+    //flon = lon/100000.00;
     gps.crack_datetime(&year, &month, &day, \
       &hour, &minute, &second, &hundredths, &age); // Obtengo fecha y hora
     Serial.println("... OK");

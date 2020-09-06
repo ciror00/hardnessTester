@@ -10,7 +10,7 @@
 
 #include "settings.h"
 
-#define FIRMWARE 0.87
+#define FIRMWARE 0.88
 
 #define SCK_CELL A12
 #define DT_CELL A11
@@ -31,6 +31,7 @@ unsigned long age, date, time, chars;
 unsigned short sentences, failed;
 int year = 0;
 byte month, day, hour, minute, second, hundredths;
+int fixedPoint[] = {2, 6};
 
 bool conf = false;
 bool flag = false;
