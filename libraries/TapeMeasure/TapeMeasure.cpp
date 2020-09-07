@@ -5,7 +5,8 @@ bool TapeMeasure::begin(){
 }
 
 unsigned int TapeMeasure::_getSize(int iteration){
-	unsigned int period = this->sonar.ping_median(iteration);
+	unsigned int period = 0;
+	period = this->sonar.ping_median(iteration);
 	return this->sonar.convert_cm(period);
 }
 
