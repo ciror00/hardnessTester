@@ -151,10 +151,10 @@ void loop(){
       // Carga de datos en memoria para calculos posteriores
       forceAnalyzer.preLoad(strength);
       if(!recorder.card()){
-        Serial.println("[ERROR]\tSD mal configurada");
+        Serial.println("\t(SD mal configurada)");
         sdModule = false;
       }else{
-        Serial.println("[MJS]\tMedicion guarda en SD");
+        Serial.println("\t(Medicion guarda en SD)");
         sdModule = true;
       // {"Latitud", "Longitud", "Medicion", "Fuerza [KG]", "Distancia [CM]", "Distancia total", "Fuerza Promedio", "Fuerza Maxima", "Distancia Fuerza Maxima"};
         recorder.saveRegistryTimeless(9, " ", " ", " ", strength_buff, depth_buff, " ", " ", " ", " ");
