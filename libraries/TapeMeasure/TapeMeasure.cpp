@@ -16,9 +16,10 @@ int TapeMeasure::calibrateLance(int iteration){
 
 int TapeMeasure::makeAWell(int iteration, int tolerance){
 	if(this->spear <= 0)return 0;
-	int range = 0;
-	int result = 0;
-	int shifting = 0;
+	//int range = 0;
+	//int result = 0;
+	//int shifting = 0;
+	int range, result, shifting;
 	range = this->_getSize(iteration);
 	result = this->spear - range;
 	shifting = result - this->dig;
