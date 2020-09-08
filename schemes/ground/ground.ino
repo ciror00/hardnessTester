@@ -65,7 +65,7 @@ void setup(){
     measure.manualSetup(manualScale);
     EEPROM.get(memoryLocation[1], lot);
     Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
-recorder.setDate(2020,09,08,20,15);
+recorder.setDate(2020,9,8,20,15);
 Serial.print("[MSJ]\tHora por código");
 	}
 
