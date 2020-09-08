@@ -8,7 +8,7 @@ TapeMeasure tapeMeasure;
 
 void setup(){
   Serial.begin(115200);
-  serial_gps.begin(9600);
+  serial_gps.begin(19200);
   Serial.println("\n\"HARDNESS TESTER (ground)\"\nFirmware: "+ (String)FIRMWARE + \
                 "\t| Environment: " + (String)ARDUINO + "\t| Compiler: "+ (String)__VERSION__);
   display.begin();
@@ -79,14 +79,15 @@ void setup(){
     Serial.print(">Hora: "); Serial.print(hour); Serial.print(minute); Serial.println(second);
     if(year!=0){
       Serial.println("[MSJ]\tSincronizacion RTC (GMT -3)");
-      recorder.setDate(year,month,day,hour-3,minute);
+      //recorder.setDate(year,month,day,hour-3,minute);
     }else{
       Serial.println("[ERROR]\tSincronizacion RTC fallida");
-      recorder.setDate();
+      //recorder.setDate();
     }
   }else{
     Serial.println("[ERROR]\tFalla de comunicación con GPS");
     Serial.println("[MSJ]\tFecha y hora por defecto.");
+recorder.setDate(2020,09,08,20,15);
   }
   sprintf(lat_buff, "%ld", lat);
   sprintf(lon_buff, "%ld", lon);
