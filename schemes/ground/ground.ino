@@ -65,6 +65,8 @@ void setup(){
     measure.manualSetup(manualScale);
     EEPROM.get(memoryLocation[1], lot);
     Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
+recorder.setDate(2020,09,08,20,15);
+Serial.print("[MSJ]\tHora por código");
 	}
 
   Serial.println("[MSJ]\tConfiguranndo GPS");
@@ -87,7 +89,6 @@ void setup(){
   }else{
     Serial.println("[ERROR]\tFalla de comunicación con GPS");
     Serial.println("[MSJ]\tFecha y hora por defecto.");
-recorder.setDate(2020,09,08,20,15);
   }
   sprintf(lat_buff, "%ld", lat);
   sprintf(lon_buff, "%ld", lon);
