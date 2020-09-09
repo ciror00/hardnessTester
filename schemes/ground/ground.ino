@@ -58,6 +58,8 @@ void setup(){
 		Serial.println("[MJS]\tMEDICION No: 1 (contador reiniciado)");
     EEPROM.put(memoryLocation[0], manualScale);
     Serial.print("[CAL]\tFACTOR: "); Serial.println(manualScale);
+recorder.setDate(2020,9,8,21,40);
+Serial.print("[MSJ]\tHora por código");
   }else if(scaleCalculation == -1){
 		Serial.println("\n[MSJ]\tCargando configuracion guardada.");
     EEPROM.get(memoryLocation[0], manualScale);
@@ -65,8 +67,6 @@ void setup(){
     measure.manualSetup(manualScale);
     EEPROM.get(memoryLocation[1], lot);
     Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
-recorder.setDate(2020,9,8,20,15);
-Serial.print("[MSJ]\tHora por código");
 	}
 
   Serial.println("[MSJ]\tConfiguranndo GPS");
