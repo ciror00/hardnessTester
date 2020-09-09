@@ -58,7 +58,7 @@ void setup(){
 		Serial.println("[MJS]\tMEDICION No: 1 (contador reiniciado)");
     EEPROM.put(memoryLocation[0], manualScale);
     Serial.print("[CAL]\tFACTOR: "); Serial.println(manualScale);
-recorder.setDate(2020,9,8,21,40);
+    //recorder.setDate(dates[2],dates[1],dates[0],times[0],times[1]);
 Serial.print("[MSJ]\tHora por código");
   }else if(scaleCalculation == -1){
 		Serial.println("\n[MSJ]\tCargando configuracion guardada.");
@@ -79,16 +79,16 @@ Serial.print("[MSJ]\tHora por código");
     Serial.print(">Lat: "); Serial.print(lat);Serial.print("\t|Lon: "); Serial.println(lon);
     Serial.print(">Fecha: "); Serial.print(year); Serial.print(month); Serial.println(day);
     Serial.print(">Hora: "); Serial.print(hour); Serial.print(minute); Serial.println(second);
-    if(year!=0){
+    /*if(year!=0){
       Serial.println("[MSJ]\tSincronizacion RTC (GMT -3)");
-      //recorder.setDate(year,month,day,hour-3,minute);
+      recorder.setDate(year,month,day,hour-3,minute);
     }else{
       Serial.println("[ERROR]\tSincronizacion RTC fallida");
-      //recorder.setDate();
-    }
+      recorder.setDate();
+    }*/
   }else{
     Serial.println("[ERROR]\tFalla de comunicación con GPS");
-    Serial.println("[MSJ]\tFecha y hora por defecto.");
+    //Serial.println("[MSJ]\tFecha y hora por defecto.");
   }
   sprintf(lat_buff, "%ld", lat);
   sprintf(lon_buff, "%ld", lon);
@@ -169,7 +169,7 @@ void loop(){
     update = millis();
     if(token < update){
       token = witness(updateTime);
-      display.showMessage(" ", " Actualizando...", " ");
+      display.showMessage(" ", " Actualizando GPS...", " ");
       Serial.println("[MSJ]\tActualizando GPS...");
       gpsModule = (connecting(4000)) ? true : false;
       sprintf(lat_buff, "%ld", lat);
