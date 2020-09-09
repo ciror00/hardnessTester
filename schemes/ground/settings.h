@@ -10,5 +10,5 @@ const float scale = 62000; // Escala para configuracion por defecto
 // Tiempos parametrizables
 const int waitConfiguration = 7000; // Tiempo de espera para entrar y salir de modo configuracion
 const unsigned long updateTime = 5; // Lapsos de actualizacion de estado del equipo (SD y GPS) [minutos]
-//const int dates[] = {10, 8, 2020}; // Configuracion de fecha DD/MM/AAAA
-//const int times[] = {00, 00}; // Configuracion de hora HH:MM
+const int dates[] = {8, 9, 2020}; // Configuracion de fecha DD/MM/AAAA
+const int times[] = {23, 30}; // Configuracion de hora HH:MM

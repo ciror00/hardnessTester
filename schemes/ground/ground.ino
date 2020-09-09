@@ -58,8 +58,7 @@ void setup(){
 		Serial.println("[MJS]\tMEDICION No: 1 (contador reiniciado)");
     EEPROM.put(memoryLocation[0], manualScale);
     Serial.print("[CAL]\tFACTOR: "); Serial.println(manualScale);
-    //recorder.setDate(dates[2],dates[1],dates[0],times[0],times[1]);
-Serial.print("[MSJ]\tHora por código");
+    recorder.setDate(dates[2],dates[1],dates[0],times[0],times[1]);
   }else if(scaleCalculation == -1){
 		Serial.println("\n[MSJ]\tCargando configuracion guardada.");
     EEPROM.get(memoryLocation[0], manualScale);
@@ -137,7 +136,7 @@ void loop(){
       }
       Serial.print("[CAL]\tFUERZA: ");Serial.print(strength);
       // Medicion de distancia
-      depth = tapeMeasure.makeAWell(15, tolerance);
+      depth = tapeMeasure.makeAWell(10, tolerance);
       Serial.print("|\tPROFUNDIDAD: ");Serial.print(depth);
       // Punto de maxima fuerza
       if(specimen <= strength){
