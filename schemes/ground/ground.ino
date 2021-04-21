@@ -8,7 +8,7 @@ TapeMeasure tapeMeasure;
 
 void setup(){
   Serial.begin(115200);
-  serial_gps.begin(19200);
+  Serial2.begin(19200);
   Serial.println("\n\"HARDNESS TESTER (ground)\"\nFirmware: "+ (String)FIRMWARE + \
                 "\t| Environment: " + (String)ARDUINO + "\t| Compiler: "+ (String)__VERSION__);
   display.begin();
@@ -22,6 +22,7 @@ void setup(){
   recorder.begin(CS);
   pinMode(TRIG, OUTPUT);
   pinMode(ECHO, INPUT);
+  tapeMeasure.begin(TRIG, ECHO, 100); // Dummy -> set in TapeMeasure.h
 
   // Configuacion de modulo
   delay(2000);
@@ -121,9 +122,9 @@ void loop(){
     flag = true;
     display.reset();
     while(measure.strength() > sensibility){ // Hace un bucle, mientras se ejerza mas fuerza que la minima
-      if(close){
+      if(closer){
         Serial.print("[CAL]\tMEDICION No: ");Serial.println(lot);
-        close = false;
+        closer = false;
         sprintf(lot_buff, "%04d", lot);
         recorder.saveRegistry(9, lat_buff, lon_buff, lot_buff, " ", " ", " ", " ", " ", " "); // Ejecucion estetica, no funcional
       }
@@ -165,8 +166,8 @@ void loop(){
       depth = 0;
     }
   }else{
-    update = millis();
-    if(token < update){
+    updater = millis();
+    if(token < updater){
       token = witness(updateTime);
       display.showMessage(" ", " Actualizando GPS...", " ");
       Serial.println("[MSJ]\tActualizando GPS...");
@@ -208,7 +209,7 @@ void loop(){
     tapeMeasure.reset();
     delay(5000);
     lot = counter();
-    close = true;
+    closer = true;
     specimen = 0;
     point = 0;
     display.home(sdModule, gpsModule);
@@ -285,9 +286,9 @@ bool connecting(int wait){
   bool satelite = false;
   Serial.print(">Sincronizando");
   for(unsigned long start = millis(); millis() - start < wait;){
-    while (serial_gps.available()) {
+    while (Serial2.available()) {
       // Se realiza un "ping" a modulo GSP
-      char c = serial_gps.read();
+      char c = Serial2.read();
       if (gps.encode(c)) {
         Serial.print(c);
         satelite = true;

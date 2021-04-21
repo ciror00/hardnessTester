@@ -1,6 +1,6 @@
 #include <EEPROM.h>
 #include <TinyGPS.h>
-#include <SoftwareSerial.h>
+//#include <SoftwareSerial.h>
 
 #include "LoadCell.h"
 #include "LiteVisualizer.h"
@@ -10,7 +10,7 @@
 
 #include "settings.h"
 
-#define FIRMWARE 0.922
+#define FIRMWARE 1.0
 
 #define SCK_CELL A12
 #define DT_CELL A11
@@ -21,13 +21,13 @@
 #define TXD 11
 
 // Invocacion de funciones
-SoftwareSerial serial_gps(TXD, RXD);
+//SoftwareSerial serial_gps(TXD, RXD);
 TinyGPS gps;
 
 // Declaraciones internas del programa
 float flat, flon;
 long lat, lon;
-unsigned long age, date, time, chars;
+unsigned long age, date, timer, chars;
 unsigned short sentences, failed;
 int year = 0;
 byte month, day, hour, minute, second, hundredths;
@@ -36,7 +36,7 @@ int fixedPoint[] = {2, 6};
 bool conf = false;
 bool flag = false;
 bool headers = false;
-bool close = false;
+bool closer = false;
 bool geo = false;
 bool card = false;
 
@@ -59,7 +59,7 @@ float disposable, reducible;
 float maximum, minimum;
 
 unsigned long token = 0;
-unsigned long update = 0;
+unsigned long updater = 0;
 
 char *titles[] = {"Latitud", "Longitud", "Medicion", "Fuerza [KG]", "Distancia [CM]", "Distancia total", "Fuerza Promedio", "Fuerza Maxima", "Distancia Fuerza Maxima"};
 

@@ -11,6 +11,7 @@ class TapeMeasure{
   const int echo = 9;
 
   NewPing sonar = NewPing(trig, echo, 100);
+  //NewPing sonar;
 
   int spear = 0;
   int dig = 0;
@@ -19,7 +20,7 @@ class TapeMeasure{
 
 	public:
 		TapeMeasure() = default;
-    bool begin();
+    void begin(int trig, int echo, int limit);
     int calibrateLance(int iteration = 5);
     int makeAWell(int iteration = 5, int tolerance = 0);
     void reset();

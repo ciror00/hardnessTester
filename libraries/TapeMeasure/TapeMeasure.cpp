@@ -1,7 +1,10 @@
 #include "TapeMeasure.h"
 
-bool TapeMeasure::begin(){
-	;
+void TapeMeasure::begin(int trig, int echo, int limit){
+	// Dummy
+	int t = trig;
+  int e = echo;
+	//this->sonar = NewPing(trig, echo, 100);
 }
 
 unsigned int TapeMeasure::_getSize(int iteration){
