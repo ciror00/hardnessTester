@@ -12,14 +12,21 @@
 
 #define FIRMWARE 1.0
 
-#define SCK_CELL 18
-#define DT_CELL 19
-#define CS 27
-#define ECHO 5 // dummy
-#define TRIG 4 // dummy
+#define TRIG 4
+#define ECHO 5
+
+#define TEMP 14
+
 #define RXD 16
 #define TXD 17
-#define TEMP 14
+
+#define DT_CELL
+#define SCK_CELL 
+
+//#define CLK 18
+//#define MISO 19
+//#define MOSI 23
+#define CS 27
 
 // Invocacion de funciones
 //SoftwareSerial serial_gps(TXD, RXD);
