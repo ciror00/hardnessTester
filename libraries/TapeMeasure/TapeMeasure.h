@@ -6,13 +6,7 @@
 #include <NewPing.h>
 
 class TapeMeasure{
-  const int limit = 100;
-  const int trig = 8;
-  const int echo = 9;
-
-  NewPing sonar = NewPing(trig, echo, 100);
-  //NewPing sonar;
-
+  NewPing sonar = NewPing(8, 9, 100);
   int spear = 0;
   int dig = 0;
 
@@ -20,7 +14,7 @@ class TapeMeasure{
 
 	public:
 		TapeMeasure() = default;
-    void begin(int trig, int echo, int limit);
+    void begin(int trig, int echo, int limit = 100);
     int calibrateLance(int iteration = 5);
     int makeAWell(int iteration = 5, int tolerance = 0);
     void reset();
