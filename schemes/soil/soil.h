@@ -20,13 +20,13 @@
 #define RXD 16
 #define TXD 17
 
-#define DT_CELL
-#define SCK_CELL 
-
 //#define CLK 18
 //#define MISO 19
 //#define MOSI 23
 #define CS 27
+
+#define DT_CELL 25
+#define SCK_CELL 26
 
 // Invocacion de funciones
 //SoftwareSerial serial_gps(TXD, RXD);
