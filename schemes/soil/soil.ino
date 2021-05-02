@@ -8,7 +8,7 @@ TapeMeasure tapeMeasure;
 
 void setup(){
   Serial.begin(115200);
-  Serial2.begin(19200);
+  Serial2.begin(baudrateGPS);
   Serial.println("\n\"HARDNESS TESTER (soil)\"\nFirmware: "+ (String)FIRMWARE + \
                 "\t| Environment: " + (String)ARDUINO + "\t| Compiler: "+ (String)__VERSION__);
   display.begin();
